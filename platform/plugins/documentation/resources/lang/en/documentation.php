@@ -7,4 +7,5 @@ return [
     'create' => 'New documentation',
     'title_link' => 'Link',
     'title_name' => 'Name',
+    'topics'=>'Topics',
 ];

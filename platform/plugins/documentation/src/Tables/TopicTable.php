@@ -3,6 +3,7 @@
 namespace Botble\Documentation\Tables;
 
 use Botble\Documentation\Models\Documentation;
+use Botble\Documentation\Models\Topic;
 use Botble\Table\Abstracts\TableAbstract;
 use Botble\Table\Actions\Action;
 use Botble\Table\Actions\DeleteAction;
@@ -19,31 +20,32 @@ use Botble\Table\BulkChanges\NameBulkChange;
 use Botble\Table\BulkChanges\StatusBulkChange;
 use Botble\Table\Columns\Column;
 
-class DocumentationTable extends TableAbstract
+class TopicTable extends TableAbstract
 {
+    protected ?Documentation $documentation = null;
+
+    public function setDocumentation(Documentation $documentation): self
+    {
+        $this->documentation = $documentation;
+        return $this;
+    }
+    
     public function setup(): void
     {
         $this
-            ->model(Documentation::class)
-            ->addHeaderAction(CreateHeaderAction::make()->route('documentation.create'))
+            ->model(Topic::class)
+            ->addHeaderAction(CreateHeaderAction::make()->route('documentation.topics.create'))
             ->addActions([
-                Action::make('topics-index')
-                        ->route('documentation.topics.index')
-                        ->color('success')
-                        ->label(trans('plugins/documentation::documentation.topics')),
-                EditAction::make()->route('documentation.edit'),
-                DeleteAction::make()->route('documentation.destroy'),
+                EditAction::make()->route('documentation.topics.edit'),
+                DeleteAction::make()->route('documentation.topics.destroy'),
             ])
             ->addColumns([
                 IdColumn::make(),
                 Column::make('name')->title(trans('plugins/documentation::documentation.title_name')),
-                Column::make('link')->title(trans('plugins/documentation::documentation.title_link')),
-                // This is important to allow HTML output
-                // CreatedAtColumn::make(),
                 StatusColumn::make(),
             ])
             ->addBulkActions([
-                DeleteBulkAction::make()->permission('documentation.destroy'),
+                DeleteBulkAction::make()->permission('documentation.topics.destroy'),
             ])
             ->addBulkChanges([
                 NameBulkChange::make(),
@@ -54,10 +56,12 @@ class DocumentationTable extends TableAbstract
                 $query->select([
                     'id',
                     'name',
-                    'link',
-                    // 'created_at',
-                    'status',
+                    'status'
                 ]);
+                 // Filter by documentation ID if set
+                //  if ($this->documentation) {
+                //     $query->where('documentation_id', $this->documentation->id);
+                // }
             });
     }
 }

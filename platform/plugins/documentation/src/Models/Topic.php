@@ -5,29 +5,28 @@ namespace Botble\Documentation\Models;
 use Botble\Base\Casts\SafeContent;
 use Botble\Base\Enums\BaseStatusEnum;
 use Botble\Base\Models\BaseModel;
-use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 /**
  * @method static \Botble\Base\Models\BaseQueryBuilder<static> query()
  */
-class Documentation extends BaseModel
+class Topic extends BaseModel
 {
-    protected $table = 'documentations';
+    protected $table = 'topics';
 
     protected $fillable = [
         'name',
-        'link',
-        'status',
+        'article_id',
+        'status'
     ];
 
-    protected $casts = [
-        'status' => BaseStatusEnum::class,
+    protected $casts = [ 
         'name' => SafeContent::class,
     ];
 
-    public function categories(): HasMany
+    public function documentation(): BelongsTo
     {
-        return $this->hasMany(Category::class);
+        return $this->belongsTo(Documentation::class);
     }
      
 }

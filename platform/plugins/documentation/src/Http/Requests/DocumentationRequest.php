@@ -12,6 +12,7 @@ class DocumentationRequest extends Request
     {
         return [
             'name' => ['required', 'string', 'max:220'],
+            'link' => ['required'],
             'status' => Rule::in(BaseStatusEnum::values()),
         ];
     }

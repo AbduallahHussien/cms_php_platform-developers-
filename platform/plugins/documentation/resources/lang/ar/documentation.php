@@ -7,4 +7,5 @@ return [
     'link_placeholder' => 'أدخل رابط التوثيق',
     'create' => 'توثيق جديد',
     'title_name' => 'اسم التوثيق',
+    'topics'=>'الفئات',
 ];
