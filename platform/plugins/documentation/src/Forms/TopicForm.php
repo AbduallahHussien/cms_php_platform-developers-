@@ -11,15 +11,10 @@ class TopicForm extends FormAbstract
 {
     public function setup(): void
     {
-        $documentationId = $this->getFormOption('documentation_id');
-
         $this
             ->setupModel(new Topic())
             ->setValidatorClass(DocumentationRequest::class)
-            ->withCustomFields()
-            ->add('documentation_id', 'hidden', [
-                'value' => $documentationId,
-            ])
+            ->withCustomFields() 
             ->add('name', 'text', [
                 'label' => trans('core/base::forms.name'),
                 'required' => true,
@@ -27,6 +22,9 @@ class TopicForm extends FormAbstract
                     'placeholder' => trans('core/base::forms.name_placeholder'),
                     'data-counter' => 120,
                 ],
+            ]) 
+            ->add('documentation_id', 'hidden', [ 
+                'required' => true
             ]) 
             ->add('status', 'customSelect', [
                 'label' => trans('core/base::tables.status'),

@@ -43,13 +43,7 @@ class TopicTable extends TableAbstract
                 NameBulkChange::make(),
                 StatusBulkChange::make(),
                 CreatedAtBulkChange::make(),
-            ])
-            ->queryUsing(function (Builder $query) {
-                $query->select([
-                    'id',
-                    'name',
-                    'status'
-                ]); 
-            });
+            ]);
+            
     }
 }

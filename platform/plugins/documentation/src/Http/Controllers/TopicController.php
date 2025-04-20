@@ -12,6 +12,7 @@ use Botble\Documentation\Forms\TopicForm;
 use Botble\Documentation\Http\Requests\TopicRequest;
 use Botble\Documentation\Models\Topic;
 use Botble\Table\HeaderActions\CreateHeaderAction;
+use Illuminate\Database\Eloquent\Builder;
 
 class TopicController extends BaseController
 {
@@ -30,18 +31,25 @@ class TopicController extends BaseController
             // New custom action
             CreateHeaderAction::make()
            ->route('documentation.topics.create',['documentation_id'=> $documentation_id])  // Dynamically pass the row's ID
-        ); 
+        );
+        
+        $table->queryUsing(function (Builder $query) use ($documentation_id){
+            $query->select([
+                'id',
+                'name',
+                'status'
+            ])->where('documentation_id',$documentation_id); 
+        });
 
         return $table->renderTable();
     }
 
     public function create($documentation_id)
     { 
-        $this->pageTitle(trans('plugins/documentation::topic.create'));
-
-        return TopicForm::create()
-        ->setFormOption('documentation_id', $documentation_id) // Pass it to the form
-        ->renderForm();
+        $this->pageTitle(trans('plugins/documentation::topic.create')); 
+        $topic = new Topic();
+        $topic->documentation_id = $documentation_id;
+        return TopicForm::createFromModel($topic)->renderForm();
     }
 
     public function store(TopicRequest $request)
@@ -52,7 +60,7 @@ class TopicController extends BaseController
 
         return $this
             ->httpResponse()
-            ->setPreviousUrl(route('documentation.topics.index',['documentation_id' => $form->documentation_id]))
+            ->setPreviousUrl(route('documentation.topics.index',['documentation_id' =>  $form->getModel()->documentation_id]))
             ->setNextUrl(route('documentation.topics.edit', $form->getModel()->getKey()))
             ->setMessage(trans('core/base::notices.create_success_message'));
     }
