@@ -22,19 +22,11 @@ use Botble\Table\Columns\Column;
 
 class TopicTable extends TableAbstract
 {
-    protected ?Documentation $documentation = null;
-
-    public function setDocumentation(Documentation $documentation): self
-    {
-        $this->documentation = $documentation;
-        return $this;
-    }
-    
+   
     public function setup(): void
-    {
+    {  
         $this
-            ->model(Topic::class)
-            ->addHeaderAction(CreateHeaderAction::make()->route('documentation.topics.create'))
+            ->model(Topic::class) 
             ->addActions([
                 EditAction::make()->route('documentation.topics.edit'),
                 DeleteAction::make()->route('documentation.topics.destroy'),
@@ -57,11 +49,7 @@ class TopicTable extends TableAbstract
                     'id',
                     'name',
                     'status'
-                ]);
-                 // Filter by documentation ID if set
-                //  if ($this->documentation) {
-                //     $query->where('documentation_id', $this->documentation->id);
-                // }
+                ]); 
             });
     }
 }

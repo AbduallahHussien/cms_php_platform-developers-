@@ -20,9 +20,10 @@ class DocumentationController extends BaseController
     }
 
     public function index(DocumentationTable $table)
-    {
+    { 
         $this->pageTitle(trans('plugins/documentation::documentation.name'));
 
+        
         return $table->renderTable();
     }
 

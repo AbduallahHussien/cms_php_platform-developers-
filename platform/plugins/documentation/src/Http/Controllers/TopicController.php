@@ -9,6 +9,9 @@ use Botble\Base\Facades\PageTitle;
 use Botble\Base\Http\Controllers\BaseController;
 use Botble\Documentation\Tables\TopicTable;
 use Botble\Documentation\Forms\TopicForm;
+use Botble\Documentation\Http\Requests\TopicRequest;
+use Botble\Documentation\Models\Topic;
+use Botble\Table\HeaderActions\CreateHeaderAction;
 
 class TopicController extends BaseController
 {
@@ -19,23 +22,63 @@ class TopicController extends BaseController
         //     ->add(trans(trans('plugins/documentation::documentation.name')), route('documentation.index'));
     }
 
-    // public function index(TopicTable $table)
-    public function index(Documentation $documentation,TopicTable $table)
-    {
+    public function index($documentation_id,TopicTable $table) 
+    { 
         $this->pageTitle(trans('plugins/documentation::topic.name'));
-
-         // Pass documentation to the table
-        // $table->setDocumentation($documentation);
+    
+        $table->addHeaderAction(
+            // New custom action
+            CreateHeaderAction::make()
+           ->route('documentation.topics.create',['documentation_id'=> $documentation_id])  // Dynamically pass the row's ID
+        ); 
 
         return $table->renderTable();
     }
 
-    public function create(Documentation $documentation)
-    {
-        $this->pageTitle(trans('plugins/documentation::documentation.create'));
+    public function create($documentation_id)
+    { 
+        $this->pageTitle(trans('plugins/documentation::topic.create'));
 
-        return TopicForm::create()->renderForm();
+        return TopicForm::create()
+        ->setFormOption('documentation_id', $documentation_id) // Pass it to the form
+        ->renderForm();
     }
 
+    public function store(TopicRequest $request)
+    {
+        $form = TopicForm::create()->setRequest($request);
+
+        $form->save();
+
+        return $this
+            ->httpResponse()
+            ->setPreviousUrl(route('documentation.topics.index',['documentation_id' => $form->documentation_id]))
+            ->setNextUrl(route('documentation.topics.edit', $form->getModel()->getKey()))
+            ->setMessage(trans('core/base::notices.create_success_message'));
+    }
+
+    public function edit(Topic $topic)
+    {
+        $this->pageTitle(trans('core/base::forms.edit_item', ['name' => $topic->name]));
+
+        return TopicForm::createFromModel($topic)->renderForm();
+    }
+
+    public function update(Topic $topic, TopicRequest $request)
+    {
+        TopicForm::createFromModel($topic)
+            ->setRequest($request)
+            ->save();
+
+        return $this
+            ->httpResponse()
+            ->setPreviousUrl(route('documentation.topics.index',['documentation_id'=>$topic->documentation->id]))
+            ->setMessage(trans('core/base::notices.update_success_message'));
+    }
+
+    public function destroy(Topic $topic)
+    {
+        return DeleteResourceAction::make($topic);
+    }
     
 }

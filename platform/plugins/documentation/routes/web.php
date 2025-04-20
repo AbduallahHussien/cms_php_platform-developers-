@@ -14,8 +14,13 @@ Route::group(['namespace' => 'Botble\Documentation\Http\Controllers'], function 
 
 
         Route::group(['prefix' => 'documentations', 'as' => 'documentation.topics.'], function () {
-            Route::get('/{documentation}/topics',[TopicController::class,'index'])->name('index'); 
-            Route::get('/topics/create',[TopicController::class,'create'])->name('create');
+            Route::get('/{documentation_id}/topics',[TopicController::class,'index'])->name('index'); 
+            Route::post('/{documentation_id}/topics',[TopicController::class,'index'])->name('index'); 
+            Route::get('/{documentation_id}/topics/create',[TopicController::class,'create'])->name('create');  
+            Route::post('/{documentation_id}/topics/create',[TopicController::class,'store'])->name('store');  
+            Route::get('/topics/edit/{topic}',[TopicController::class,'edit'])->name('edit'); 
+            Route::post('/topics/edit/{topic}',[TopicController::class,'update'])->name('update'); 
+            Route::delete('/topics/{topic}',[TopicController::class,'destroy'])->name('destroy'); 
    
         });
 

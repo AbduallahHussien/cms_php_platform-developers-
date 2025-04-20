@@ -15,12 +15,13 @@ class Topic extends BaseModel
     protected $table = 'topics';
 
     protected $fillable = [
+        'documentation_id',
         'name',
-        'article_id',
         'status'
     ];
 
     protected $casts = [ 
+        'status' => BaseStatusEnum::class,
         'name' => SafeContent::class,
     ];
 

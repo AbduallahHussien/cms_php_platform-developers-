@@ -25,9 +25,9 @@ class Documentation extends BaseModel
         'name' => SafeContent::class,
     ];
 
-    public function categories(): HasMany
+    public function topics(): HasMany
     {
-        return $this->hasMany(Category::class);
+        return $this->hasMany(Topic::class);
     }
      
 }
