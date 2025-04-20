@@ -17,7 +17,7 @@ return new class extends Migration
             $table->text('content');
             $table->unsignedBigInteger('documentation_id');
             $table->unsignedBigInteger('topic_id');
-            $table->unsignedBigInteger('user_id');
+            $table->unsignedBigInteger('user_id');//created_by
             $table->string('status', 60)->default('published');
             $table->timestamps();
 

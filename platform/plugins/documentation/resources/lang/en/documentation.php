@@ -8,4 +8,5 @@ return [
     'title_link' => 'Link',
     'title_name' => 'Name',
     'topics'=>'Topics',
+    'articles'=>'Articles'
 ];

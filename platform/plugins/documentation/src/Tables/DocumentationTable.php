@@ -31,6 +31,10 @@ class DocumentationTable extends TableAbstract
                         ->route('documentation.topics.index')
                         ->color('success')
                         ->label(trans('plugins/documentation::documentation.topics')),
+                Action::make('articles-index')
+                        ->route('documentation.articles.index')
+                        ->color('success')
+                        ->label(trans('plugins/documentation::documentation.articles')),
                 EditAction::make()->route('documentation.edit'),
                 DeleteAction::make()->route('documentation.destroy'),
             ])

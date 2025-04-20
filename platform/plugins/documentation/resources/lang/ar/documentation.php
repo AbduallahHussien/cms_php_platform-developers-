@@ -8,4 +8,5 @@ return [
     'create' => 'توثيق جديد',
     'title_name' => 'اسم التوثيق',
     'topics'=>'الفئات',
+    'articles'=>'المقالات',
 ];

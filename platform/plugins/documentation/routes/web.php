@@ -1,8 +1,8 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use Botble\Base\Facades\AdminHelper; 
-
+use Botble\Base\Facades\AdminHelper;
+use Botble\Documentation\Http\Controllers\ArticleController;
 use Botble\Documentation\Http\Controllers\TopicController;
 
 Route::group(['namespace' => 'Botble\Documentation\Http\Controllers'], function () {
@@ -21,6 +21,17 @@ Route::group(['namespace' => 'Botble\Documentation\Http\Controllers'], function 
             Route::get('/topics/edit/{topic}',[TopicController::class,'edit'])->name('edit'); 
             Route::post('/topics/edit/{topic}',[TopicController::class,'update'])->name('update'); 
             Route::delete('/topics/{topic}',[TopicController::class,'destroy'])->name('destroy'); 
+   
+        });
+
+        Route::group(['prefix' => 'documentations', 'as' => 'documentation.articles.'], function () {
+            Route::get('/{documentation_id}/articles',[ArticleController::class,'index'])->name('index'); 
+            Route::post('/{documentation_id}/articles',[ArticleController::class,'index'])->name('index'); 
+            Route::get('/{documentation_id}/articles/create',[ArticleController::class,'create'])->name('create');  
+            Route::post('/{documentation_id}/articles/create',[ArticleController::class,'store'])->name('store');  
+            Route::get('/articles/edit/{topic}',[ArticleController::class,'edit'])->name('edit'); 
+            Route::post('/articles/edit/{topic}',[ArticleController::class,'update'])->name('update'); 
+            Route::delete('/articles/{topic}',[ArticleController::class,'destroy'])->name('destroy'); 
    
         });
 

@@ -16,8 +16,14 @@ class Article extends BaseModel
     protected $fillable = [
         'title',
         'content',
+        'documentation_id',
         'topic_id',
         'user_id',
+    ];
+
+    protected $casts = [ 
+        'status' => BaseStatusEnum::class,
+        'title' => SafeContent::class,
     ];
 
     
