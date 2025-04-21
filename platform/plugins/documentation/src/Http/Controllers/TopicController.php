@@ -23,8 +23,17 @@ class TopicController extends BaseController
         //     ->add(trans(trans('plugins/documentation::documentation.name')), route('documentation.index'));
     }
 
+    private function setTopicBreadcrumb($documentation_id)
+    {
+        $this->breadcrumb()
+            ->add(trans(trans('plugins/documentation::documentation.name')), route('documentation.index'))
+             ->add(trans('plugins/documentation::topic.name'),route('documentation.topics.index', ['documentation_id' => $documentation_id])
+        );
+    }
     public function index($documentation_id,TopicTable $table) 
     { 
+        $this->breadcrumb()
+        ->add(trans(trans('plugins/documentation::documentation.name')), route('documentation.index'));
         $this->pageTitle(trans('plugins/documentation::topic.name'));
     
         $table->addHeaderAction(
@@ -46,6 +55,7 @@ class TopicController extends BaseController
 
     public function create($documentation_id)
     { 
+        $this->setTopicBreadcrumb($documentation_id);
         $this->pageTitle(trans('plugins/documentation::topic.create')); 
         $topic = new Topic();
         $topic->documentation_id = $documentation_id;
@@ -68,6 +78,7 @@ class TopicController extends BaseController
 
     public function edit(Topic $topic)
     {
+        $this->setTopicBreadcrumb($topic->documentation_id);
         $this->pageTitle(trans('core/base::forms.edit_item', ['name' => $topic->name]));
 
         return TopicForm::createFromModel($topic)->renderForm();

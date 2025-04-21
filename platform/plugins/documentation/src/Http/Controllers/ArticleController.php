@@ -14,18 +14,28 @@ use Botble\Documentation\Models\Article;
 use Botble\Table\HeaderActions\CreateHeaderAction;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\Auth;
-
+use Illuminate\Support\Str;
 class ArticleController extends BaseController
 {
-    public function __construct()
+    // public function __construct()
+    // {
+    //     $this
+    //         ->breadcrumb()
+    //         ->add(trans(trans('plugins/documentation::article.name')), route('documentation.articles.index'));
+    // }
+
+    private function setArticleBreadcrumb($documentation_id)
     {
-        // $this
-        //     ->breadcrumb()
-        //     ->add(trans(trans('plugins/documentation::documentation.name')), route('documentation.index'));
+        $this->breadcrumb()
+            ->add(trans(trans('plugins/documentation::documentation.name')), route('documentation.index'))
+            ->add(trans('plugins/documentation::article.name'),route('documentation.articles.index', ['documentation_id' => $documentation_id])
+        );
     }
 
     public function index($documentation_id,ArticleTable $table) 
     { 
+        $this->breadcrumb()
+        ->add(trans(trans('plugins/documentation::documentation.name')), route('documentation.index'));
         $this->pageTitle(trans('plugins/documentation::article.name'));
     
         $table->addHeaderAction(
@@ -44,7 +54,8 @@ class ArticleController extends BaseController
 
     public function create($documentation_id)
     { 
-        $this->pageTitle(trans('plugins/documentation::topic.create')); 
+        $this->setArticleBreadcrumb($documentation_id);
+        $this->pageTitle(trans('plugins/documentation::article.create')); 
         $article = new Article();
         $article->documentation_id = $documentation_id;
         $article->user_id = Auth::id();
@@ -55,7 +66,7 @@ class ArticleController extends BaseController
     {  
         $article = new Article();
         $article->documentation_id = $request->documentation_id;
-        $article->user_id = $request->user_id; 
+        // $article->user_id = Auth::id(); 
 
         $form = ArticleForm::createFromModel($article)->setRequest($request);
 
@@ -63,14 +74,15 @@ class ArticleController extends BaseController
 
         return $this
             ->httpResponse()
-            ->setPreviousUrl(route('documentation.topics.index',['documentation_id' =>  $form->getModel()->documentation_id]))
-            ->setNextUrl(route('documentation.topics.edit', $form->getModel()->getKey()))
+            ->setPreviousUrl(route('documentation.articles.index',['documentation_id' =>  $form->getModel()->documentation_id]))
+            ->setNextUrl(route('documentation.articles.edit', $form->getModel()->getKey()))
             ->setMessage(trans('core/base::notices.create_success_message'));
     }
 
     public function edit(Article $article)
-    {
-        $this->pageTitle(trans('core/base::forms.edit_item', ['name' => $article->name]));
+    { 
+        $this->setArticleBreadcrumb($article->documentation_id);
+        $this->pageTitle(trans('core/base::forms.edit_item', ['name' => Str::limit($article->title, 8)]));
 
         return ArticleForm::createFromModel($article)->renderForm();
     }
@@ -83,7 +95,7 @@ class ArticleController extends BaseController
 
         return $this
             ->httpResponse()
-            ->setPreviousUrl(route('documentation.topics.index',['documentation_id'=>$article->documentation->id]))
+            ->setPreviousUrl(route('documentation.articles.index',['documentation_id'=>$article->documentation_id]))
             ->setMessage(trans('core/base::notices.update_success_message'));
     }
 
