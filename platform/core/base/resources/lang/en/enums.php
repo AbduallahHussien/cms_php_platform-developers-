@@ -42,5 +42,9 @@ return [
             'publish_packages_assets' => 'Published packages assets successfully.',
             'clean_up' => 'Cleaned up system update files successfully.',
         ],
+        'test'=>[
+        'active'=>'Active',
+        'in_active' =>'Not Active'
+        ],
     ],
 ];

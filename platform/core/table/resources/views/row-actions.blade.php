@@ -4,6 +4,7 @@
     /** @var \Illuminate\Database\Eloquent\Model $model */
 @endphp
 
+
 <div class="table-actions">
     @if(! $table->hasDisplayActionsAsDropdown())
         @foreach ($actions as $action)

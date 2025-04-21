@@ -1,0 +1,15 @@
+{
+    "id": "wesam/customer-Tickets",
+    "name": "Customer Tickets",
+    "namespace": "Botble\\CustomerTickets\\",
+    "provider": "Botble\\CustomerTickets\\Providers\\CustomerTicketsServiceProvider",
+    "author": "",
+    "url": "",
+    "version": "1.0.0",
+    "description": "",
+    "minimum_core_version": "7.4.1"
+
+
+}
+
+

@@ -57,4 +57,16 @@ class Column extends BaseColumn
 
         return $this->addClass('no-column-visibility');
     }
+    protected $displayCallback = null;
+
+public function displayUsing(callable $callback): static
+{
+    $this->displayCallback = $callback;
+    return $this;
+}
+
+public function getDisplayCallback(): ?callable
+{
+    return $this->displayCallback;
+}
 }
