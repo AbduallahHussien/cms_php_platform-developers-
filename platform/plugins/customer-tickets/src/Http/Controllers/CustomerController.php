@@ -41,27 +41,7 @@ class CustomerController extends BaseController
 
         return back()->with('success', 'Status updated successfully!');
     }
-    // public function updateStatus(Request $request, $id)
-    // {
-    //     $customer = Customer::findOrFail($id);
 
-    //     $status = $request->input('status');
-    //     if (!in_array($status, CustomerStatusEnum::values())) {
-    //         return response()->json([
-    //             'error' => true,
-    //             'message' => __('Invalid status value'),
-    //         ], 422);
-    //     }
-
-    //     $customer->status = $status;
-    //     $customer->save();
-
-    //     return  response()->json([
-    //         'error' => false,
-    //         'message' => __('Status updated successfully'),
-    //         'status' => $customer->status,
-    //     ]);
-    // }
 
     public function create()
     {

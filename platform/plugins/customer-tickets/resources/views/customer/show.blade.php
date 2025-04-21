@@ -36,9 +36,6 @@
 
             <div class="tab-content mt-3" id="customerTabContent">
                 <div class="tab-pane fade show active" id="details" role="tabpanel" aria-labelledby="details-tab">
-                    {{-- <p><strong>Email:</strong> {{ $customer->email ?? 'N/A' }}</p>
-                        <p><strong>Phone:</strong> {{ $customer->phone ?? 'N/A' }}</p>
-                        <p><strong>Created At:</strong> {{ $customer->created_at->format('Y-m-d') }}</p> --}}
                     <p>No details available for this customer.</p>
 
                 </div>

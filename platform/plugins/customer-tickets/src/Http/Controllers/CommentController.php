@@ -10,12 +10,7 @@ class CommentController extends Controller
 {
     public function store(Request $request)
 {
-    $comment = Comment::create([
-        'ticket_id' => $request->input('ticket_id'),
-        'user_id'   => auth()->id(),
-        'text'      => $request->input('text'),
-    ]);
-
+    $comment = Comment::create($request->all());
     return response()->json([
         'status'  => 'success',
         'comment' => [
@@ -43,11 +38,7 @@ class CommentController extends Controller
 
     public function destroy($id)
     {
-        $comment = Comment::findOrFail($id);
-        $comment->delete();
+        Comment::where('id',$id)->delete();
 
-        return response()->json([
-            'status' => 'deleted',
-        ]);
     }
 }

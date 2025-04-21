@@ -37,8 +37,6 @@ class TicketsController extends BaseController
         return TicketsForm::create()->renderForm();
     }
 
-
-
     public function store(TicketsRequest $request)
     {
         $userId = auth()->id();
@@ -67,12 +65,9 @@ class TicketsController extends BaseController
     public function edit(Tickets $ticket)
     {
         $customers = Customer::pluck('name', 'id')->toArray();
-
         $ticket->load('comments');
         $this->pageTitle(trans('core/base::forms.edit_item', ['name' => $ticket->customer->name]) . 'Ticket');
-        return
-            // TicketsForm::createFromModel($ticket)->renderForm();
-            view('plugins.customer-tickets::tickets.edit', compact('customers', 'ticket'));
+        return view('plugins.customer-tickets::tickets.edit', compact('customers', 'ticket'));
     }
 
     public function update(Tickets $tickets, TicketsRequest $request)

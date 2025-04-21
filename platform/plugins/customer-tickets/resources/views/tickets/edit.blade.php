@@ -89,12 +89,14 @@
 
         {!! Form::close() !!}
     </div>
+
     <!-- Follow Up Modal -->
     <div class="modal fade" id="followUpModal" tabindex="-1" aria-labelledby="followUpModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
                 <form id="followUpForm">
                     @csrf
+                    <input type="hidden" id="user_id" name="user_id" value="{{auth()->id()}}">
                     <input type="hidden" name="ticket_id" value="{{ $ticket->id }}">
                     <input type="hidden" id="comment_id" name="comment_id"> {{-- للتعديل --}}
 
@@ -144,6 +146,7 @@
                 e.preventDefault();
 
                 let commentId = $('#comment_id').val();
+                let userId = $('#user_id').val();
                 let formData = $(this).serialize();
                 let method = commentId ? 'PUT' : 'POST';
                 let url = commentId ? `/admin/comments/${commentId}` : '{{ route('comments.store') }}';
