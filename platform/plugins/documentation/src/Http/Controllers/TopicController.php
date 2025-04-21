@@ -54,6 +54,7 @@ class TopicController extends BaseController
 
     public function store(TopicRequest $request)
     {
+        dd($request->all());
         $form = TopicForm::create()->setRequest($request);
 
         $form->save();

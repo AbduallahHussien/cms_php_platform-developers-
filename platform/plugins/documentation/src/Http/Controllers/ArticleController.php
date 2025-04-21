@@ -13,6 +13,7 @@ use Botble\Documentation\Http\Requests\ArticleRequest;
 use Botble\Documentation\Models\Article;
 use Botble\Table\HeaderActions\CreateHeaderAction;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Support\Facades\Auth;
 
 class ArticleController extends BaseController
 {
@@ -34,14 +35,8 @@ class ArticleController extends BaseController
         );
         
         $table->queryUsing(function (Builder $query) use ($documentation_id){
-            $query->select([
-                'id',
-                'title',
-                'content',
-                'user_id',
-                'topic_id',
-                'status'
-            ])->where('documentation_id',$documentation_id); 
+            $query->select(['id', 'title', 'content', 'topic_id','created_at','user_id', 'status'])->where('documentation_id', $documentation_id);
+
         });
 
         return $table->renderTable();
@@ -52,12 +47,17 @@ class ArticleController extends BaseController
         $this->pageTitle(trans('plugins/documentation::topic.create')); 
         $article = new Article();
         $article->documentation_id = $documentation_id;
+        $article->user_id = Auth::id();
         return ArticleForm::createFromModel($article)->renderForm();
     }
 
     public function store(ArticleRequest $request)
-    {
-        $form = ArticleForm::create()->setRequest($request);
+    {  
+        $article = new Article();
+        $article->documentation_id = $request->documentation_id;
+        $article->user_id = $request->user_id; 
+
+        $form = ArticleForm::createFromModel($article)->setRequest($request);
 
         $form->save();
 

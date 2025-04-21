@@ -11,15 +11,32 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('topics', function (Blueprint $table) {
-            $table->id();
-            $table->unsignedBigInteger('documentation_id');
-            $table->string('name', 255);
-            $table->string('status', 60)->default('published');
-            $table->timestamps();
+        if (! Schema::hasTable('topics')) {
+            Schema::create('topics', function (Blueprint $table) {
+                $table->id();
+                $table->unsignedBigInteger('documentation_id');
+                $table->string('name', 255);
+                $table->string('status', 60)->default('published');
+                $table->timestamps();
 
-            $table->foreign('documentation_id')->references('id')->on('documentations')->onDelete('cascade');
-        });
+                $table->foreign('documentation_id')->references('id')->on('documentations')->onDelete('cascade');
+            });
+        }
+
+        if (! Schema::hasTable('topics_translations')) {
+            Schema::create('topics_translations', function (Blueprint $table) {
+                $table->string('lang_code');
+                $table->unsignedBigInteger('topic_id');
+                $table->string('name', 255)->nullable();
+
+                $table->primary(['lang_code', 'topic_id'], 'topics_translations_primary');
+
+                $table->foreign('topic_id')
+                    ->references('id')
+                    ->on('topics')
+                    ->onDelete('cascade');
+            });
+        }
     }
 
     /**
@@ -27,6 +44,7 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('categories');
+        Schema::dropIfExists('topics');
+        Schema::dropIfExists('topics_translations');
     }
 };
