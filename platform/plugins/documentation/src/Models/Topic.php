@@ -16,6 +16,7 @@ class Topic extends BaseModel
 
     protected $fillable = [
         'documentation_id',
+        'order',
         'name',
         'status'
     ];

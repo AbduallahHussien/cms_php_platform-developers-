@@ -26,6 +26,9 @@ class TopicForm extends FormAbstract
             ->add('documentation_id', 'hidden', [ 
                 'required' => true
             ]) 
+            ->add('order', 'hidden', [ 
+                'required' => true
+            ]) 
             ->add('status', 'customSelect', [
                 'label' => trans('core/base::tables.status'),
                 'required' => true,

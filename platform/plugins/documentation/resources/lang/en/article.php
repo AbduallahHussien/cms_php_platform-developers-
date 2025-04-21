@@ -6,5 +6,6 @@ return [
     'title' => 'Title',
     'content' => 'Content',
     'topic' => 'Category',
-    'author' => 'Author'
+    'author' => 'Author',
+    'order' => 'Order',
 ];

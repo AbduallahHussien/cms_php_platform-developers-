@@ -12,6 +12,7 @@ class TopicRequest extends Request
     {
         return [
             'name' => ['required', 'string', 'max:220'],
+            'order' => ['required', 'integer', 'min:0'],
             'status' => Rule::in(BaseStatusEnum::values()),
         ];
     }

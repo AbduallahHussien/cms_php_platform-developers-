@@ -21,6 +21,7 @@ Route::group(['namespace' => 'Botble\Documentation\Http\Controllers'], function 
             Route::get('/topics/edit/{topic}',[TopicController::class,'edit'])->name('edit'); 
             Route::post('/topics/edit/{topic}',[TopicController::class,'update'])->name('update'); 
             Route::delete('/topics/{topic}',[TopicController::class,'destroy'])->name('destroy'); 
+            Route::post('/topics/update-order',[TopicController::class,'update_order'])->name('order.update'); 
    
         });
 

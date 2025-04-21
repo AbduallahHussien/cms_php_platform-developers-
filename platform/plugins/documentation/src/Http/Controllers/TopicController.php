@@ -13,6 +13,7 @@ use Botble\Documentation\Http\Requests\TopicRequest;
 use Botble\Documentation\Models\Topic;
 use Botble\Table\HeaderActions\CreateHeaderAction;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Http\Request;
 
 class TopicController extends BaseController
 {
@@ -45,6 +46,7 @@ class TopicController extends BaseController
         $table->queryUsing(function (Builder $query) use ($documentation_id){
             $query->select([
                 'id',
+                'order',
                 'name',
                 'status'
             ])->where('documentation_id',$documentation_id); 
@@ -59,16 +61,15 @@ class TopicController extends BaseController
         $this->pageTitle(trans('plugins/documentation::topic.create')); 
         $topic = new Topic();
         $topic->documentation_id = $documentation_id;
+        $maxOrder = Topic::max('order') ?? 0;
+        $topic->order = $maxOrder + 1;
         return TopicForm::createFromModel($topic)->renderForm();
     }
 
     public function store(TopicRequest $request)
-    {
-        dd($request->all());
+    { 
         $form = TopicForm::create()->setRequest($request);
-
         $form->save();
-
         return $this
             ->httpResponse()
             ->setPreviousUrl(route('documentation.topics.index',['documentation_id' =>  $form->getModel()->documentation_id]))
@@ -80,7 +81,6 @@ class TopicController extends BaseController
     {
         $this->setTopicBreadcrumb($topic->documentation_id);
         $this->pageTitle(trans('core/base::forms.edit_item', ['name' => $topic->name]));
-
         return TopicForm::createFromModel($topic)->renderForm();
     }
 
@@ -100,5 +100,18 @@ class TopicController extends BaseController
     {
         return DeleteResourceAction::make($topic);
     }
-    
+    public function update_order(Request $request)
+    {
+        $topic = Topic::find($request->input('topic_id'));
+
+        if ($topic) {
+            $topic->order = $request->input('order');
+            $topic->save();
+
+            return response()->json(['success' => true]);
+        }
+
+        return response()->json(['success' => false], 400);
+    }
+
 }

@@ -14,6 +14,7 @@ return new class extends Migration
         if (! Schema::hasTable('topics')) {
             Schema::create('topics', function (Blueprint $table) {
                 $table->id();
+                $table->unsignedInteger('order')->default(0);
                 $table->unsignedBigInteger('documentation_id');
                 $table->string('name', 255);
                 $table->string('status', 60)->default('published');
@@ -32,9 +33,9 @@ return new class extends Migration
                 $table->primary(['lang_code', 'topic_id'], 'topics_translations_primary');
 
                 $table->foreign('topic_id')
-                    ->references('id')
-                    ->on('topics')
-                    ->onDelete('cascade');
+                      ->references('id')
+                      ->on('topics')
+                      ->onDelete('cascade');
             });
         }
     }
@@ -44,6 +45,15 @@ return new class extends Migration
      */
     public function down(): void
     {
+        // Drop foreign key constraints first
+        Schema::table('topics_translations', function (Blueprint $table) {
+            $table->dropForeign(['topic_id']);
+        });
+        Schema::table('topics', function (Blueprint $table) {
+            $table->dropForeign(['documentation_id']);
+        });
+
+        // Then drop the tables
         Schema::dropIfExists('topics');
         Schema::dropIfExists('topics_translations');
     }

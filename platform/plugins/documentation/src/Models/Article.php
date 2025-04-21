@@ -15,6 +15,7 @@ class Article extends BaseModel
     protected $table = 'articles';
 
     protected $fillable = [
+        'order',
         'title',
         'content',
         'documentation_id',

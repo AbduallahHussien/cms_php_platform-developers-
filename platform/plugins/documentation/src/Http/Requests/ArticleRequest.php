@@ -11,6 +11,7 @@ class ArticleRequest extends Request
     public function rules(): array
     {
         return [
+            'order' => 'required|integer|min:0',
             'title' => 'required|string|max:255',
             'content' => 'required|string',
             'documentation_id' => 'required|exists:documentations,id',
