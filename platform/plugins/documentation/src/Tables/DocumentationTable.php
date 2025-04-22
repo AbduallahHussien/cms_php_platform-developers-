@@ -29,12 +29,14 @@ class DocumentationTable extends TableAbstract
             ->addActions([
                 Action::make('topics-index')
                         ->route('documentation.topics.index')
-                        ->color('success')
-                        ->label(trans('plugins/documentation::documentation.topics')),
+                        ->color('secondary')
+                        ->label(trans('plugins/documentation::documentation.topics'))
+                        ->icon('ti ti-tags'),
                 Action::make('articles-index')
                         ->route('documentation.articles.index')
-                        ->color('success')
-                        ->label(trans('plugins/documentation::documentation.articles')),
+                        ->color('info')
+                        ->label(trans('plugins/documentation::documentation.articles'))
+                        ->icon('ti ti-notes'),
                 EditAction::make()->route('documentation.edit'),
                 DeleteAction::make()->route('documentation.destroy'),
             ])
