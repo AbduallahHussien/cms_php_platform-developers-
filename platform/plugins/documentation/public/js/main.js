@@ -37,7 +37,7 @@ class DocumentationPluginManagement {
                         errorMessage = xhr.responseText;
                     }
 
-                    alert('Error: ' + errorMessage);
+                    toastr.error('Error: ' + errorMessage);
 
                     // Restore the original value if needed
                     orderValueEle.text(currentValue);
