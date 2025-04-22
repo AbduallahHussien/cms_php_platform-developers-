@@ -2,6 +2,9 @@
 
 namespace Botble\Documentation\Tables;
 
+use Botble\Base\Facades\Assets;
+use Botble\Base\Facades\Html;
+use Botble\Contact\Enums\ContactStatusEnum;
 use Botble\Documentation\Models\Topic;
 use Botble\Table\Abstracts\TableAbstract;
 use Botble\Table\Actions\EditAction;
@@ -19,6 +22,7 @@ class TopicTable extends TableAbstract
 {
     public function setup(): void
     {
+        Assets::addScriptsDirectly('vendor/core/plugins/documentation/js/tst.js');
         $this
             ->model(Topic::class)
             ->addActions([
@@ -29,12 +33,30 @@ class TopicTable extends TableAbstract
                 IdColumn::make(),
                 Column::make('name')->title(trans('plugins/documentation::documentation.title_name')),
                 FormattedColumn::make('order')
-                ->title(trans('plugins/documentation::topic.order'))
-                ->getValueUsing(function (FormattedColumn $column) {
-                    $topic = $column->getItem();
-                    return $this->renderOrderButtons($topic->order);
-                }),
-                // StatusColumn::make(),
+                    ->title(trans('plugins/documentation::topic.order'))
+                    ->getValueUsing(function (FormattedColumn $column) {
+                        $topic = $column->getItem();
+                        $update_order_route = route('documentation.topics.update_order');
+                        return '
+                        <div class="order-controls" data-id="' . $topic->id . '" data-url="' . $update_order_route . '">
+                            <button class="btn btn-sm btn-outline-secondary decrease_order">-</button>
+                            <span class="order-value mx-2">' . $topic->order . '</span>
+                            <button class="btn btn-sm btn-outline-secondary increase_order">+</button>
+                        </div>';
+                    }),
+                StatusColumn::make(), 
+                // FormattedColumn::make('status')
+                //                ->title('Status')
+                //                ->renderUsing(function (FormattedColumn $column) {
+                //     $topic = $column->getItem(); 
+                //         return "<input type='number'
+                //         class='form-control topic-order-input'
+                //         data-id='{$topic->id}'
+                //         value='{$topic->order}'
+                //         min='0'
+                //         step='1'
+                //         style='width: 80px;' />";
+                // })
             ])
             ->addBulkActions([
                 DeleteBulkAction::make()->permission('documentation.topics.destroy'),
@@ -46,19 +68,14 @@ class TopicTable extends TableAbstract
             ]);
     }
 
-    private function renderOrderButtons(int $order): string
+    private function renderOrderButtons(int $order, int $id = null): string
     {
-        return "
-            <div style='display: flex; align-items: center; gap: 4px;'>
-                <button type='button' 
-                        onclick='let span = this.nextElementSibling; span.innerText = parseInt(span.innerText || 0) - 1;' 
-                        style='border: none; background: none; cursor: pointer;'>▼</button>
-                <span class='text-center' 
-                      style='width: 60px; display: inline-block;'>{$order}</span>
-                <button type='button' 
-                        onclick='let span = this.previousElementSibling; span.innerText = parseInt(span.innerText || 0) + 1;' 
-                        style='border: none; background: none; cursor: pointer;'>▲</button>
-            </div>
-        ";
+        return "<input type='number'
+                 class='form-control topic-order-input'
+                 data-id='{$id}'
+                 value='{$order}'
+                 min='0'
+                 step='1'
+                 style='width: 80px;' />";
     }
 }

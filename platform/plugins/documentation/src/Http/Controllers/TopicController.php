@@ -7,10 +7,12 @@ use Botble\Documentation\Http\Requests\DocumentationRequest;
 use Botble\Documentation\Models\Documentation;
 use Botble\Base\Facades\PageTitle;
 use Botble\Base\Http\Controllers\BaseController;
+use Botble\Contact\Enums\ContactStatusEnum;
 use Botble\Documentation\Tables\TopicTable;
 use Botble\Documentation\Forms\TopicForm;
 use Botble\Documentation\Http\Requests\TopicRequest;
 use Botble\Documentation\Models\Topic;
+use Botble\Table\Columns\StatusColumn;
 use Botble\Table\HeaderActions\CreateHeaderAction;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
@@ -42,7 +44,7 @@ class TopicController extends BaseController
             CreateHeaderAction::make()
            ->route('documentation.topics.create',['documentation_id'=> $documentation_id])  // Dynamically pass the row's ID
         );
-        
+         
         $table->queryUsing(function (Builder $query) use ($documentation_id){
             $query->select([
                 'id',
@@ -100,18 +102,16 @@ class TopicController extends BaseController
     {
         return DeleteResourceAction::make($topic);
     }
-    public function update_order(Request $request)
+    
+    public function updateOrder(Request $request)
     {
-        $topic = Topic::find($request->input('topic_id'));
+        // return response()->json(['success' => true]);
+        $item = Topic::findOrFail($request->id);
+        $item->order = $request->order;
+        $item->save();
 
-        if ($topic) {
-            $topic->order = $request->input('order');
-            $topic->save();
-
-            return response()->json(['success' => true]);
-        }
-
-        return response()->json(['success' => false], 400);
+        return response()->json(['success' => true]);
     }
+
 
 }
