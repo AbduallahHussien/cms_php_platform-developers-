@@ -3,42 +3,36 @@
 namespace Botble\CustomerTickets\Http\Controllers;
 
 use App\Http\Controllers\Controller;
+use Botble\CustomerTickets\Http\Resources\CommentResource;
+use Botble\CustomerTickets\Http\Resources\UpdateCommentResource;
 use Botble\CustomerTickets\Models\Comment;
+use Botble\CustomerTickets\Services\CommentService;
 use Illuminate\Http\Request;
 
 class CommentController extends Controller
 {
+    public function __construct(private readonly CommentService $commentService)
+    {}
     public function store(Request $request)
-{
-    $comment = Comment::create($request->all());
-    return response()->json([
-        'status'  => 'success',
-        'comment' => [
-            'id'         => $comment->id,
-            'text'       => $comment->text,
-            'created_at' => $comment->created_at->format('Y-m-d H:i'),
-        ],
-    ]);
-}
+    {
+        $comment = $this->commentService->createComment($request->all());
+
+        return response()->json([
+            'status'  => 'success',
+            'comment' => new CommentResource($comment),
+        ]);
+    }
 
     public function update(Request $request, $id)
     {
-        $comment = Comment::findOrFail($id);
+        $comment = $this->commentService->updateComment($id,['text'=>$request->text]);
 
-        $comment->update([
-            'text' => $request->input('text'),
-        ]);
-
-        return response()->json([
-            'id'         => $comment->id,
-            'text'       => $comment->text,
-            'created_at' => $comment->updated_at->format('Y-m-d H:i'),
-        ]);
+        return response()->json(new UpdateCommentResource($comment->refresh()));
     }
 
     public function destroy($id)
     {
-        Comment::where('id',$id)->delete();
+       $this->commentService->deleteComment($id);
 
     }
 }

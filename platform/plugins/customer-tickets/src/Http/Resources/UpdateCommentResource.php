@@ -5,7 +5,7 @@ namespace Botble\CustomerTickets\Http\Resources;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class CommentResource extends JsonResource
+class UpdateCommentResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
@@ -18,7 +18,7 @@ class CommentResource extends JsonResource
         return [
             'id'         => $this->id,
             'text'       => $this->text,
-            'created_at' => $this->created_at->format('Y-m-d H:i'),
+            'created_at' => $this->updated_at->format('Y-m-d H:i'),
         ];
     }
 }
