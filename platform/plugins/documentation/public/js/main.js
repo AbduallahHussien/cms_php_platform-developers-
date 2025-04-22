@@ -9,7 +9,24 @@ class DocumentationPluginManagement {
             let updateOrderUrl = container.data('url');
             let currentValue = parseInt(orderValueEle.text());
 
-            let newOrderValue = $(this).hasClass('increase_order') ? currentValue + 1 : currentValue - 1;
+            let newOrderValue = currentValue;
+            if($(this).hasClass('increase_order'))
+            {
+                 newOrderValue = currentValue + 1;
+            }
+            else  
+            {
+                if(currentValue != 0)
+                {
+                    newOrderValue = currentValue - 1;
+                }
+                else 
+                {
+                    return;
+                    // newOrderValue = 0;
+                }
+            }
+            // let newOrderValue = $(this).hasClass('increase_order') ? currentValue + 1 : currentValue - 1;
 
             // 👇 Disable buttons and show spinner
             decreaseBtn.prop('disabled', true);

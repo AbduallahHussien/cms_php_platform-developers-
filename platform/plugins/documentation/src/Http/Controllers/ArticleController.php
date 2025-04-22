@@ -13,6 +13,7 @@ use Botble\Documentation\Http\Requests\ArticleRequest;
 use Botble\Documentation\Models\Article;
 use Botble\Table\HeaderActions\CreateHeaderAction;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
 class ArticleController extends BaseController
@@ -40,12 +41,12 @@ class ArticleController extends BaseController
     
         $table->addHeaderAction(
             // New custom action
-            CreateHeaderAction::make()
-           ->route('documentation.articles.create',['documentation_id'=> $documentation_id])  // Dynamically pass the row's ID
+            CreateHeaderAction::make()->route('documentation.articles.create',['documentation_id'=> $documentation_id])  // Dynamically pass the row's ID
         );
         
         $table->queryUsing(function (Builder $query) use ($documentation_id){
-            $query->select(['id','order', 'title', 'content', 'topic_id','created_at','user_id', 'status'])->where('documentation_id', $documentation_id);
+            $query->select(['id','order', 'title', 'content', 'topic_id','created_at','user_id', 'status'])
+                  ->where('documentation_id', $documentation_id);
 
         });
 
@@ -59,15 +60,15 @@ class ArticleController extends BaseController
         $article = new Article();
         $article->documentation_id = $documentation_id;
         $article->user_id = Auth::id();
+        $maxOrder = Article::max('order') ?? 0;
+        $article->order = $maxOrder + 1;
         return ArticleForm::createFromModel($article)->renderForm();
     }
 
     public function store(ArticleRequest $request)
-    {  
+    {   
         $article = new Article();
         $article->documentation_id = $request->documentation_id;
-        // $article->user_id = Auth::id(); 
-
         $form = ArticleForm::createFromModel($article)->setRequest($request);
 
         $form->save();
@@ -102,6 +103,16 @@ class ArticleController extends BaseController
     public function destroy(Article $article)
     {
         return DeleteResourceAction::make($article);
+    }
+
+    public function updateOrder(Request $request)
+    {
+        // return response()->json(['success' => true]);
+        $item = Article::findOrFail($request->id);
+        $item->order = $request->order;
+        $item->save();
+
+        return response()->json(['success' => true]);
     }
     
 }

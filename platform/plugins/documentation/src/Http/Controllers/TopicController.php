@@ -94,7 +94,7 @@ class TopicController extends BaseController
 
         return $this
             ->httpResponse()
-            ->setPreviousUrl(route('documentation.topics.index',['documentation_id'=>$topic->documentation->id]))
+            ->setPreviousUrl(route('documentation.topics.index',['documentation_id'=>$topic->documentation_id]))
             ->setMessage(trans('core/base::notices.update_success_message'));
     }
 

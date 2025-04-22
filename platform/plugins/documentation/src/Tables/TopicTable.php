@@ -22,7 +22,7 @@ class TopicTable extends TableAbstract
 {
     public function setup(): void
     {
-        Assets::addScriptsDirectly('vendor/core/plugins/documentation/js/tst.js');
+        Assets::addScriptsDirectly('vendor/core/plugins/documentation/js/main.js');
         $this
             ->model(Topic::class)
             ->addActions([
@@ -68,14 +68,14 @@ class TopicTable extends TableAbstract
             ]);
     }
 
-    private function renderOrderButtons(int $order, int $id = null): string
-    {
-        return "<input type='number'
-                 class='form-control topic-order-input'
-                 data-id='{$id}'
-                 value='{$order}'
-                 min='0'
-                 step='1'
-                 style='width: 80px;' />";
-    }
+    // private function renderOrderButtons(int $order, int $id = null): string
+    // {
+    //     return "<input type='number'
+    //              class='form-control topic-order-input'
+    //              data-id='{$id}'
+    //              value='{$order}'
+    //              min='0'
+    //              step='1'
+    //              style='width: 80px;' />";
+    // }
 }

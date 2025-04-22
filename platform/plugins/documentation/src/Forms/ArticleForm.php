@@ -34,18 +34,23 @@ class ArticleForm extends FormAbstract
                 'required' => true,
             ])
             ->add(
-                'topic_id', 
+                'topic_id',  
                 SelectField::class, 
                 SelectFieldOption::make()
                 ->label(trans('plugins/documentation::article.topic'))
-                ->choices($topics))
-            ->add('content', EditorField::class, ContentFieldOption::make()->allowedShortcodes()->toArray())
+                ->choices($topics)
+                ->required())
+            ->add('content', EditorField::class, ContentFieldOption::make()->required()->allowedShortcodes()->toArray())
             ->add('documentation_id', 'hidden', [ 
                 'required' => true
             ]) 
             ->add('user_id', 'hidden', [ 
                 'required' => true,
                 'value' => $this->getModel()->user_id
+            ])
+            ->add('order', 'hidden', [ 
+                'required' => true,
+                'value' => $this->getModel()->order
             ])
             ->add('status', 'customSelect', [
                 'label' => trans('core/base::tables.status'),

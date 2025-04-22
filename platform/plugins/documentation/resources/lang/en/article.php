@@ -5,7 +5,7 @@ return [
     'create' => 'New Article',
     'title' => 'Title',
     'content' => 'Content',
-    'topic' => 'Category',
+    'topic' => 'Topic',
     'author' => 'Author',
     'order' => 'Order',
 ];

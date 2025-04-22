@@ -31,7 +31,8 @@ Route::group(['namespace' => 'Botble\Documentation\Http\Controllers'], function 
             Route::post('/{documentation_id}/articles/create',[ArticleController::class,'store'])->name('store');  
             Route::get('/articles/edit/{article}',[ArticleController::class,'edit'])->name('edit'); 
             Route::post('/articles/edit/{article}',[ArticleController::class,'update'])->name('update'); 
-            Route::delete('/articles/{article}',[ArticleController::class,'destroy'])->name('destroy'); 
+            Route::delete('/articles/{article}',[ArticleController::class,'destroy'])->name('destroy');
+            Route::post('/articles/update-order', [ArticleController::class, 'updateOrder'])->name('update_order'); 
    
         });
 
