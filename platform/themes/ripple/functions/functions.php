@@ -42,6 +42,7 @@ app()->booted(function () {
 
     register_page_template([
         'no-sidebar' => __('No sidebar'),
+        'wesam' => 'وسام',
     ]);
 
     app('events')->listen(RenderingWidgetSettings::class, function () {
