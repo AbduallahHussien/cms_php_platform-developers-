@@ -3,6 +3,8 @@
     @php
         Theme::set('section-name', SeoHelper::getTitle());
         Theme::set('documentaion', $page);
+        Theme::set('upload_plugin', $page);
+        
         $page->loadMissing('metadata');
 
         $bannerImage = $page->getMetaData('banner_image', true);
