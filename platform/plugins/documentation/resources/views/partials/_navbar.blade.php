@@ -7,7 +7,7 @@
             <span>DevDocs</span>
         </a>
         
-        <div class="d-flex align-items-center ms-auto">
+        {{-- <div class="d-flex align-items-center ms-auto">
             <div class="search-box d-none d-md-flex">
                 <i class="bi bi-search"></i>
                 <input type="text" class="form-control" placeholder="Search docs...">
@@ -27,6 +27,6 @@
                     </ul>
                 </div>
             </div>
-        </div>
+        </div> --}}
     </div>
 </nav>
