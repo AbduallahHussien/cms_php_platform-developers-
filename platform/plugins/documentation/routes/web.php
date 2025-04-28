@@ -3,7 +3,9 @@
 use Illuminate\Support\Facades\Route;
 use Botble\Base\Facades\AdminHelper;
 use Botble\Documentation\Http\Controllers\ArticleController;
+use Botble\Documentation\Http\Controllers\Site\ArticleController as SiteArticleController;
 use Botble\Documentation\Http\Controllers\TopicController;
+use Botble\Theme\Facades\Theme;
 
 Route::group(['namespace' => 'Botble\Documentation\Http\Controllers'], function () {
     AdminHelper::registerRoutes(function () 
@@ -36,6 +38,8 @@ Route::group(['namespace' => 'Botble\Documentation\Http\Controllers'], function 
    
         });
 
+        // Route::get('articles/{article}',[SiteArticleController::class,'show'])->name('articles.show');
+
         // Route::group(['prefix' => 'documentations/topics', 'as' => 'documentation.topics.'], function () {
         //     // Route::resource('', 'TopicController')->parameters(['' => 'topic']);
         //     // admin/documentations/topics .................................... topics.index
@@ -48,4 +52,16 @@ Route::group(['namespace' => 'Botble\Documentation\Http\Controllers'], function 
         //     // Route::get('/',[TopicController::class,'index'])->name('index');
         // });
     });
+    Route::get('documentation/article/{article}', [SiteArticleController::class, 'show']);
+
+
+    // if (defined('THEME_MODULE_SCREEN_NAME')) {
+    //     Theme::registerRoutes(function () {
+    //         Route::post('articles/{article}', [
+    //             'as' => 'articles.show',
+    //             'uses' => 'SiteArticleController@show',
+    //         ]);
+    //     });
+    // }
 });
+

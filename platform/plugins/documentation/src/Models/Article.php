@@ -35,6 +35,11 @@ class Article extends BaseModel
         return $this->belongsTo(User::class,'user_id','id');
     }
 
+    public function documentation()
+    {
+        return $this->belongsTo(Documentation::class,'documentation_id','id');
+    }
+
     public function topic()
     {
         return $this->belongsTo(Topic::class,'topic_id','id');
