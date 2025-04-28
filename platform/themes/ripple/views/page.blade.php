@@ -11,6 +11,9 @@
             Theme::set('breadcrumbBannerImage', RvMedia::getImageUrl($bannerImage));
         }
 
+
+    Theme::set('wesam', $page);
+
     @endphp
     <article class="post post--single">
         <div class="post__content">

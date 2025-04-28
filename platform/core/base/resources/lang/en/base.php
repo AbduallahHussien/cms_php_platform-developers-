@@ -68,4 +68,8 @@ return [
     'showing_records' => 'Showing :from to :to of :total records',
     'copy' => 'Copy',
     'copied' => 'Copied',
+    'statuses'=>[
+        'active'=>'Active',
+        'in_active' =>'Not Active'
+    ]
 ];
