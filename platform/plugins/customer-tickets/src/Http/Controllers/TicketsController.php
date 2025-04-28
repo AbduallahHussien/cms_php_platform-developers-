@@ -10,7 +10,7 @@ use Botble\CustomerTickets\Tables\TicketsTable;
 use Botble\CustomerTickets\Forms\TicketsForm;
 use Botble\CustomerTickets\Models\Customer;
 
-require_once base_path('platform/plugins/customer-tickets/helpers/stats.php');
+
 
 class TicketsController extends BaseController
 {
@@ -20,12 +20,24 @@ class TicketsController extends BaseController
             ->breadcrumb()
             ->add(trans(trans('plugins/customer-tickets::tickets.name')), route('tickets.index'));
     }
-
+    public function getTicketStats()
+    {
+        return [
+            'total'      => Tickets::count(),
+            'open'       => Tickets::where('status', 'open')->count(),
+            'inProgress' => Tickets::where('status', 'in_progress')->count(),
+            'closed'     => Tickets::where('status', 'closed')->count(),
+            'answered'   => Tickets::where('status', 'answered')->count(),
+            'pending'    => Tickets::where('status', 'pending')->count(),
+        ];
+    }
     public function index(TicketsTable $table)
     {
+        
+    
         $this->pageTitle(trans('plugins/customer-tickets::tickets.name'));
 
-        $stats = getTicketStats();
+        $stats = $this->getTicketStats();
 
         return $table->render('plugins/customer-tickets::tickets.index', $stats);
     }

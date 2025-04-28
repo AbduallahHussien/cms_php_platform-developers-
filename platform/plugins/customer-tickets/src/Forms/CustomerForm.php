@@ -10,6 +10,41 @@ use Botble\CustomerTickets\Models\Customer;
 
 class CustomerForm extends FormAbstract
 {
+    public function get_country_codes()
+    {
+        return [
+            '966' => '+966 (Saudi Arabia)',
+            '20'  => '+20 (Egypt)',
+            '971' => '+971 (UAE)',
+            '965' => '+965 (Kuwait)',
+            '962' => '+962 (Jordan)',
+            '970' => '+970 (Palestine)',
+            '1'   => '+1 (USA)',
+            '44'  => '+44 (UK)',
+            '49'  => '+49 (Germany)',
+            '33'  => '+33 (France)',
+            '90'  => '+90 (Turkey)',
+        ];
+    }
+    public function get_nationalities()
+    {
+        return [
+            'Saudi'       => 'Saudi',
+            'Egyptian'    => 'Egyptian',
+            'Emirati'     => 'Emirati',
+            'Kuwaiti'     => 'Kuwaiti',
+            'Jordanian'   => 'Jordanian',
+            'Palestinian' => 'Palestinian',
+            'Syrian'      => 'Syrian',
+            'Lebanese'    => 'Lebanese',
+            'American'    => 'American',
+            'British'     => 'British',
+            'German'      => 'German',
+            'French'      => 'French',
+            'Turkish'     => 'Turkish',
+        ];
+    }
+    
     public function setup(): void
     {
 
@@ -31,7 +66,7 @@ class CustomerForm extends FormAbstract
             ->add('phone_code', 'customSelect', [
                 'label' => __('Country Code'),
                 'required' => true,
-                'choices' => get_country_codes(),
+                'choices' => $this->get_country_codes(),
                 'wrapper' => [
                     'class' => 'form-group col-md-3',
                 ],
@@ -59,7 +94,7 @@ class CustomerForm extends FormAbstract
             ])
             ->add('nationality', 'customSelect', [
                 'label' => __('Nationality'),
-                'choices' => get_nationalities(),
+                'choices' =>$this->get_nationalities(),
                 'attr' => [
                     'placeholder' => __('Select nationality'),
                 ],

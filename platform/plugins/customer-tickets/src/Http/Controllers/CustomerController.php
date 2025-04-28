@@ -59,7 +59,7 @@ class CustomerController extends BaseController
         return $this
             ->httpResponse()
             ->setPreviousUrl(route('customer.index'))
-            ->setNextUrl(route('customer.edit', $form->getModel()->getKey()))
+            ->setNextUrl(route('customer.index'))
             ->setMessage(trans('core/base::notices.create_success_message'));
     }
 
