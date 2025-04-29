@@ -1,4 +1,10 @@
-@extends('plugins/plugin-uploader::layouts.app')
+@extends(BaseHelper::getAdminMasterLayoutTemplate())
+{{-- @extends('plugins/plugin-uploader::layouts.app') --}}
+
+@push('header')
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+    <link rel="stylesheet" href="{{ URL::asset('vendor/core/plugins/plugin-uploader/css/styles.css') }}">
+@endpush
 
 @section('content')
 <div class="upload-container">
@@ -74,3 +80,7 @@
 </div>
 
 @endsection
+
+@push('footer')
+<script src="{{ URL::asset('vendor/core/plugins/plugin-uploader/js/script.js')  }}"></script>
+@endpush

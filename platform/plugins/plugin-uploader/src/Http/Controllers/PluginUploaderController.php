@@ -24,7 +24,7 @@ class PluginUploaderController extends BaseController
 
     public function index()
     {
-        $this->pageTitle(trans('plugins/plugin uploader::plugin-uploader.name'));
+        $this->pageTitle(trans('plugins/plugin-uploader::plugin-uploader.upload_new_plugin'));
 
         return view('plugins/plugin-uploader::index');
     }
