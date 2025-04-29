@@ -66,11 +66,11 @@
     </div> --}}
 
     <!-- File Preview -->
-    {{-- <div class="preview-container" id="preview-container" style="display: none;">
+    <div class="preview-container" id="preview-container" style="display: none;">
         <h5 class="mb-3">File Preview</h5>
         <img id="preview-image" class="preview-image" src="#" alt="Preview">
         <div class="mt-3" id="file-details"></div>
-    </div> --}}
+    </div>
 </div>
 
 @endsection
