@@ -16,8 +16,8 @@ $(document).ready(function () {
         
         const file = e.target.files[0];
         if (file) {
-            displayFileInfo(file);
-            previewFile(file);
+            // displayFileInfo(file);
+            // previewFile(file);
             $('#upload-btn').prop('disabled', false);
         }
     });
@@ -78,59 +78,59 @@ $(document).ready(function () {
     });
 
     // Display file information
-    function displayFileInfo(file) {
-        if (!file) return;
+    // function displayFileInfo(file) {
+    //     if (!file) return;
         
-        const fileName = file.name;
-        const fileSize = formatFileSize(file.size);
+    //     const fileName = file.name;
+    //     const fileSize = formatFileSize(file.size);
         
-        $('#file-name').text(fileName);
-        $('#file-size').text(fileSize);
-        $('#file-info').show();
-    }
+    //     $('#file-name').text(fileName);
+    //     $('#file-size').text(fileSize);
+    //     $('#file-info').show();
+    // }
 
     // Format file size
-    function formatFileSize(bytes) {
-        if (bytes === 0) return '0 Bytes';
-        const k = 1024;
-        const sizes = ['Bytes', 'KB', 'MB', 'GB'];
-        const i = Math.floor(Math.log(bytes) / Math.log(k));
-        return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
-    }
+    // function formatFileSize(bytes) {
+    //     if (bytes === 0) return '0 Bytes';
+    //     const k = 1024;
+    //     const sizes = ['Bytes', 'KB', 'MB', 'GB'];
+    //     const i = Math.floor(Math.log(bytes) / Math.log(k));
+    //     return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+    // }
 
     // Preview file if it's an image
-    function previewFile(file) {
-        const previewContainer = $('#preview-container');
-        const previewImage = $('#preview-image');
-        const fileDetails = $('#file-details');
+    // function previewFile(file) {
+    //     // const previewContainer = $('#preview-container');
+    //     // const previewImage = $('#preview-image');
+    //     const fileDetails = $('#file-details');
         
-        previewContainer.hide();
-        previewImage.hide();
+    //     previewContainer.hide();
+    //     // previewImage.hide();
         
-        if (!file.type.match('image.*')) {
-            // For non-image files, show file details
-            fileDetails.html(`
-                <div class="alert alert-info">
-                    <i class="bi bi-file-earmark-text"></i> ${file.name}<br>
-                    <small>Type: ${file.type || 'Unknown'}</small><br>
-                    <small>Size: ${formatFileSize(file.size)}</small>
-                </div>
-            `);
-            previewContainer.show();
-            return;
-        }
+    //     if (!file.type.match('image.*')) {
+    //         // For non-image files, show file details
+    //         fileDetails.html(`
+    //             <div class="alert alert-info">
+    //                 <i class="bi bi-file-earmark-text"></i> ${file.name}<br>
+    //                 <small>Type: ${file.type || 'Unknown'}</small><br>
+    //                 <small>Size: ${formatFileSize(file.size)}</small>
+    //             </div>
+    //         `);
+    //         previewContainer.show();
+    //         return;
+    //     }
         
-        const reader = new FileReader();
-        reader.onload = function(e) {
-            previewImage.attr('src', e.target.result);
-            previewImage.show();
-            fileDetails.html(`
-                <small>${file.name} • ${formatFileSize(file.size)}</small>
-            `);
-            previewContainer.show();
-        }
-        reader.readAsDataURL(file);
-    }
+    //     const reader = new FileReader();
+    //     reader.onload = function(e) {
+    //         // previewImage.attr('src', e.target.result);
+    //         // previewImage.show();
+    //         fileDetails.html(`
+    //             <small>${file.name} • ${formatFileSize(file.size)}</small>
+    //         `);
+    //         previewContainer.show();
+    //     }
+    //     reader.readAsDataURL(file);
+    // }
 
     // Upload progress tracking variables
     let uploadStartTime;
@@ -274,7 +274,7 @@ $(document).ready(function () {
         resetUploadState();
         $('#file-upload-form')[0].reset();
         $('#file-info').hide();
-        $('#preview-container').hide();
+        // $('#preview-container').hide();
         $('#progress-wrapper').removeClass('d-block').addClass('d-none');
         $('#upload-stats').removeClass('d-flex').addClass('d-none');
         $('#action-buttons').removeClass('d-flex').addClass('d-none');
