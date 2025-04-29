@@ -34,7 +34,7 @@ class PluginUploaderServiceProvider extends ServiceProvider
                     'priority' => 5,
                     'parent_id' => 'cms-core-plugins',
                     'name' => 'Plugin Uploader',
-                    'icon' => 'fa fa-list',
+                    'icon' => 'fa fa-upload',
                     'url' => route('plugin-uploader.index'),
                     'permissions' => ['plugin uploader.index'],
                 ]);
