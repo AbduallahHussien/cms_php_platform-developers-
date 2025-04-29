@@ -10,26 +10,28 @@
 <div class="upload-container">
     <div class="upload-header">
         <i class="bi bi-cloud-arrow-up-fill"></i>
-        <h3>New Plugin Upload</h3>
+        <h3>{{ trans('plugins/plugin-uploader::plugin-uploader.upload_new_plugin') }}</h3>
+        {{-- <h3>New Plugin Upload</h3> --}}
+
         {{-- <p class="text-muted">Upload your files safely with end-to-end encryption</p> --}}
     </div>
 
     <form id="file-upload-form" method="POST" data-upload-url="{{ route('plugin-uploader.upload-file') }}" enctype="multipart/form-data">
         @csrf
         <div class="mb-4">
-            <label for="file" class="file-input-label">Select your file</label>
+            <label for="file" class="file-input-label">{{ trans('plugins/plugin-uploader::plugin-uploader.select_your_file') }}</label>
             <div class="upload-area" id="drop-area">
                 <div class="uploading-overlay" id="uploading-overlay">
                     <div class="text-center">
                         <div class="spinner-border text-primary" role="status">
-                            <span class="visually-hidden">Uploading...</span>
+                            <span class="visually-hidden">{{ trans('plugins/plugin-uploader::plugin-uploader.uploading') }} ...</span>
                         </div>
-                        <p class="mt-2">Upload in progress</p>
+                        <p class="mt-2">{{ trans('plugins/plugin-uploader::plugin-uploader.upload_in_progress') }}</p>
                     </div>
                 </div>
                 <i class="bi bi-file-earmark-arrow-up" style="font-size: 2rem; color: #adb5bd;"></i>
-                <p class="my-2">Drag & drop files here or click to browse</p>
-                <small class="text-muted">Supports: ZIP only (Max 50MB)</small>
+                <p class="my-2">{{ trans('plugins/plugin-uploader::plugin-uploader.drag_drop_files') }}</p>
+                <small class="text-muted">{{ trans('plugins/plugin-uploader::plugin-uploader.supports_zip_only') }}</small>
                 <input type="file" name="file" class="d-none" id="file" required>
             </div>
             <div class="file-info" id="file-info">
@@ -39,7 +41,7 @@
 
         <div class="d-grid gap-2">
             <button type="submit" class="btn btn-primary btn-upload" id="upload-btn" disabled>
-                <i class="bi bi-upload me-2"></i> Upload File
+                <i class="bi bi-upload me-2"></i> {{ trans('plugins/plugin-uploader::plugin-uploader.upload_file') }}
             </button>
         </div>
 
@@ -55,10 +57,10 @@
         <!-- Action Buttons -->
         <div class="action-buttons d-none" id="action-buttons">
             <button type="button" class="btn btn-cancel" id="cancel-btn">
-                <i class="bi bi-x-circle me-2"></i> Cancel
+                <i class="bi bi-x-circle me-2"></i> {{ trans('plugins/plugin-uploader::plugin-uploader.cancel') }}
             </button>
             <button type="button" class="btn btn-reset" id="reset-btn">
-                <i class="bi bi-arrow-counterclockwise me-2"></i> Reset
+                <i class="bi bi-arrow-counterclockwise me-2"></i> {{ trans('plugins/plugin-uploader::plugin-uploader.reset') }}
             </button>
         </div>
 
@@ -73,7 +75,7 @@
 
     <!-- File Preview -->
     <div class="preview-container" id="preview-container" style="display: none;">
-        <h5 class="mb-3">File Preview</h5>
+        <h5 class="mb-3">{{ trans('plugins/plugin-uploader::plugin-uploader.file_preview') }}</h5>
         <img id="preview-image" class="preview-image" src="#" alt="Preview">
         <div class="mt-3" id="file-details"></div>
     </div>
