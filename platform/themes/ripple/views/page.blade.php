@@ -2,8 +2,7 @@
 @if (!BaseHelper::isHomepage($page->id))
     @php
         Theme::set('section-name', SeoHelper::getTitle());
-        Theme::set('documentaion', $page);
-        Theme::set('upload_plugin', $page);
+        Theme::set('documentaion', $page); 
         
         $page->loadMissing('metadata');
 

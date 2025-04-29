@@ -42,8 +42,7 @@ app()->booted(function () {
 
     register_page_template([
         'no-sidebar' => __('No sidebar'),
-        'documentation' => __('Documentation'),
-        'upload_plugin' => __('PluginUploader'),
+        'documentation' => __('Documentation'),  
         'wesam' => 'وسام',
     ]);
 
