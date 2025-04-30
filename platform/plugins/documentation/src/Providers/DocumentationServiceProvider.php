@@ -35,7 +35,7 @@ class DocumentationServiceProvider extends ServiceProvider
                     'priority' => 5,
                     'parent_id' => null,
                     'name' => 'plugins/documentation::documentation.name',
-                    'icon' => 'fa fa-list',
+                    'icon' => 'fa fa-file',
                     'url' => route('documentation.index'),
                     'permissions' => ['documentation.index'],
                 ]);
