@@ -75,6 +75,15 @@ class GiftServiceProvider extends ServiceProvider
         });
 
       
+        // $glyphsPath = app_path('Helpers/Arabic/Arabic/Glyphs.php');
+
+        // if (file_exists($glyphsPath)) {
+        //     require_once $glyphsPath;
+        // }
+
+        $this->publishes([
+            __DIR__ . '/../../resources/assets' => public_path('vendor/core/plugins/gift/assets/fonts'),
+        ]);
 
         $this->app->booted(function () {
             $this->app->register(HookServiceProvider::class);
