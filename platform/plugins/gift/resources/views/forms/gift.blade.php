@@ -5,19 +5,19 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="stylesheet" href="{{ URL::asset('vendor/gifts/styles/global.css?v=2')}}" />
-    <link rel="shortcut icon" type="image/x-icon" href="{{ URL::asset('vendor/gifts/assets/favicon.ico')}}" />
+    <link rel="stylesheet" href="{{ URL::asset('vendor/core/plugins/gift/styles/global.css?v=2')}}" />
+    <link rel="shortcut icon" type="image/x-icon" href="{{ URL::asset('vendor/core/plugins/gift/assets/favicon.ico')}}" />
     <meta name="description" content="سباق الخير - أهدِ من تحب" />
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>سباق الخير</title>
-    <link rel="preload" href="{{ URL::asset('vendor/gifts/assets/fonts/Cairo-Regular.woff2')}}" as="font" type="font/woff2" crossorigin />
-    <link rel="preload" href="{{ URL::asset('vendor/gifts/assets/fonts/Cairo-Bold.woff2')}}" as="font" type="font/woff2" crossorigin />
-    <link rel="modulepreload" href="{{ URL::asset('vendor/gifts/scripts/page_1.js')}}" />
-    <link rel="modulepreload" href="{{ URL::asset('vendor/gifts/scripts/page_2.js')}}" />
-    <link rel="modulepreload" href="{{ URL::asset('vendor/gifts/scripts/page_3.js')}}" />
-    <link rel="modulepreload" href="{{ URL::asset('vendor/gifts/scripts/page_4.js')}}" />
-    <link rel="modulepreload" href="{{ URL::asset('vendor/gifts/scripts/utils.js')}}" />
-    <link rel="modulepreload" href="{{ URL::asset('vendor/gifts/scripts/validation.js')}}" />
+    <link rel="preload" href="{{ URL::asset('vendor/core/plugins/gift/assets/fonts/Cairo-Regular.woff2')}}" as="font" type="font/woff2" crossorigin />
+    <link rel="preload" href="{{ URL::asset('vendor/core/plugins/gift/assets/fonts/Cairo-Bold.woff2')}}" as="font" type="font/woff2" crossorigin />
+    <link rel="modulepreload" href="{{ URL::asset('vendor/core/plugins/gift/scripts/page_1.js')}}" />
+    <link rel="modulepreload" href="{{ URL::asset('vendor/core/plugins/gift/scripts/page_2.js')}}" />
+    <link rel="modulepreload" href="{{ URL::asset('vendor/core/plugins/gift/scripts/page_3.js')}}" />
+    <link rel="modulepreload" href="{{ URL::asset('vendor/core/plugins/gift/scripts/page_4.js')}}" />
+    <link rel="modulepreload" href="{{ URL::asset('vendor/core/plugins/gift/scripts/utils.js')}}" />
+    <link rel="modulepreload" href="{{ URL::asset('vendor/core/plugins/gift/scripts/validation.js')}}" />
   </head>
   <body>
     <main>
@@ -28,13 +28,13 @@
           <div class="logo-container">
             <div class="logos slide-in-bck-center">
               <img
-                src="{{ URL::asset('vendor/gifts/assets/svg/logo_wide.svg')}}"
+                src="{{ URL::asset('vendor/core/plugins/gift/assets/svg/logo_wide.svg')}}"
                 width="140"
                 height="auto"
                 alt="جمعية احياء التراث الاسلامي"
                 aria-label="جمعية احياء التراث الاسلامي"
               />
-              <img src="{{ URL::asset('vendor/gifts/assets/svg/logo.svg')}}" width="110" height="auto" alt="سباق الخير" aria-label="سباق الخير" />
+              <img src="{{ URL::asset('vendor/core/plugins/gift/assets/svg/logo.svg')}}" width="110" height="auto" alt="سباق الخير" aria-label="سباق الخير" />
             </div>
             <p class="logo-text">أهدِ من تحب</p>
           </div>
@@ -51,7 +51,7 @@
           <div class="gift-container">
             <img
               class="gift-small-start"
-              src="{{ URL::asset('vendor/gifts/assets/svg/gift_small.svg')}}"
+              src="{{ URL::asset('vendor/core/plugins/gift/assets/svg/gift_small.svg')}}"
               width="96"
               height="100"
               alt="gift"
@@ -95,7 +95,7 @@
               </svg>
               <img
                 class="gift-ribbon"
-                src="{{ URL::asset('vendor/gifts/assets/svg/gift_ribbon.svg')}}"
+                src="{{ URL::asset('vendor/core/plugins/gift/assets/svg/gift_ribbon.svg')}}"
                 width="154"
                 height="102"
                 alt="gift"
@@ -103,7 +103,7 @@
               />
               <img
                 class="gift-large"
-                src="{{ URL::asset('vendor/gifts/assets/svg/gift_large.svg')}}"
+                src="{{ URL::asset('vendor/core/plugins/gift/assets/svg/gift_large.svg')}}"
                 width="154"
                 height="122"
                 alt="gift"
@@ -112,7 +112,7 @@
             </div>
             <img
               class="gift-small-end"
-              src="{{ URL::asset('vendor/gifts/assets/svg/gift_small.svg')}}"
+              src="{{ URL::asset('vendor/core/plugins/gift/assets/svg/gift_small.svg')}}"
               width="96"
               height="100"
               alt="gift"
@@ -140,7 +140,7 @@
           <div class="msg-bubble" style="display: none">
             <img
               class="msg-bubble-top"
-              src="{{ URL::asset('vendor/gifts/assets/svg/hand_msg_quote_top.webp')}}"
+              src="{{ URL::asset('vendor/core/plugins/gift/assets/svg/hand_msg_quote_top.webp')}}"
               width="450"
               height="140"
               alt="msg-bubble"
@@ -148,7 +148,7 @@
             />
             <img
               class="msg-bubble-bottom"
-              src="{{ URL::asset('vendor/gifts/assets/svg/hand_msg_quote_bottom.webp')}}"
+              src="{{ URL::asset('vendor/core/plugins/gift/assets/svg/hand_msg_quote_bottom.webp')}}"
               width="450"
               height="140"
               alt="msg-bubble"
@@ -295,7 +295,7 @@
           style="top: 75%; inset-inline-end: 0; rotate: 90deg; transform: translate(-100%, 50%)"
           width="740"
           height="147"
-          src="{{ URL::asset('vendor/gifts/assets/svg/carrying_hand.svg')}}"
+          src="{{ URL::asset('vendor/core/plugins/gift/assets/svg/carrying_hand.svg')}}"
           alt="carrying-hand"
           aria-hidden="true"
         />
@@ -305,7 +305,7 @@
           style="top: 50%; inset-inline-start: 0; transform: translate(100%, -50%)"
           width="525"
           height="151"
-          src="{{ URL::asset('vendor/gifts/assets/svg/hand_with_pen.svg')}}"
+          src="{{ URL::asset('vendor/core/plugins/gift/assets/svg/hand_with_pen.svg')}}"
           alt="hand-with-pen"
           aria-hidden="true"
         />
@@ -316,7 +316,7 @@
       var token = "{{ csrf_token() }}";
     </script>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script src="{{ URL::asset('vendor/gifts/scripts/main.js')}}" type="module"></script>
+    <script src="{{ URL::asset('vendor/core/plugins/gift/scripts/main.js')}}" type="module"></script>
     
   </body>
 </html>

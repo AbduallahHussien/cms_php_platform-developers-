@@ -24,7 +24,7 @@ class HookServiceProvider extends ServiceProvider
         add_filter(BASE_FILTER_APPEND_MENU_NAME, [$this, 'getUnreadCount'], 120, 2);
         add_filter(BASE_FILTER_MENU_ITEMS_COUNT, [$this, 'getMenuItemCount'], 120);
 
-        FormFrontManager::register(GiftForm::class, GiftRequest::class);
+        // FormFrontManager::register(GiftForm::class, GiftRequest::class);
 
         if (class_exists(ShortcodeFacade::class)) {
             ShortcodeFacade::register(
@@ -110,14 +110,14 @@ class HookServiceProvider extends ServiceProvider
             $view = $shortcode->view;
         }
 
-        $form = GiftForm::createFromArray(
-           $shortcode->toArray()
-        );
+        // $form = GiftForm::createFromArray(
+        //    $shortcode->toArray()
+        // );
 
         add_filter('gift_request_rules', function (array $rules, GiftRequest $request) use ($shortcode): array {
             return $request->applyRules($rules, $shortcode->display_fields, $shortcode->mandatory_fields);
         }, 120, 2);
 
-        return view($view, compact('shortcode', 'form','certs'))->render();
+        return view($view, compact('shortcode', 'certs'))->render();
     }
 }

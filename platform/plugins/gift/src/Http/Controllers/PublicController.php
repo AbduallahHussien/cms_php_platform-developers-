@@ -34,7 +34,6 @@ class PublicController extends BaseController
     public function postSendGift(Request $request)
     {
       
-        // $blacklistDomains = setting('blacklist_email_domains');
         $manager = new ImageManager(new \Intervention\Image\Drivers\Gd\Driver());
         $cert = Cert::find($request->messageTemplate);
         $image = Storage::path($cert->image);
@@ -134,10 +133,10 @@ class PublicController extends BaseController
       }
     }
     function arabic_text($text)
-  {
-      $Arabic = new \I18N_Arabic_Glyphs;
-      return $Arabic->utf8Glyphs($text);
-  }
+    {
+        $Arabic = new \I18N_Arabic_Glyphs;
+        return $Arabic->utf8Glyphs($text);
+    }
 
 
 
