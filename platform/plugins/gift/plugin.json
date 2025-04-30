@@ -1,0 +1,10 @@
+{
+    "id": "botble/gift",
+    "name": "Gift",
+    "namespace": "Botble\\Gift\\",
+    "provider": "Botble\\Gift\\Providers\\GiftServiceProvider",
+    "author": "KMKTEC",
+    "url": "https://KMKTEC.com",
+    "version": "1.0.0",
+    "description": "Gift"
+}
