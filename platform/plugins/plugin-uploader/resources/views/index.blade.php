@@ -7,7 +7,7 @@
 @endpush
 
 @section('content')
-<div class="upload-container">
+<div class="upload-container mt-0">
     <div class="upload-header">
         <i class="bi bi-cloud-arrow-up-fill"></i>
         <h3>{{ trans('plugins/plugin-uploader::plugin-uploader.upload_new_plugin') }}</h3>
