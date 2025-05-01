@@ -2,19 +2,12 @@
 
 namespace Botble\PluginUploader\Http\Controllers;
 
-use Botble\Base\Http\Actions\DeleteResourceAction;
-use Botble\PluginUploader\Http\Requests\PluginUploaderRequest;
-use Botble\PluginUploader\Models\PluginUploader;
-use Botble\Base\Facades\PageTitle;
-use Botble\Base\Http\Controllers\BaseController;
-use Botble\PluginUploader\Tables\PluginUploaderTable;
-use Botble\PluginUploader\Forms\PluginUploaderForm;
-
+use Botble\Base\Http\Controllers\BaseController; 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use ZipArchive;
 use Exception;
-use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\File; 
 use Illuminate\Support\Facades\Validator;
 
 
@@ -29,102 +22,35 @@ class PluginUploaderController extends BaseController
         return view('plugins/plugin-uploader::index');
     }
 
-    private function is_already_exists($zip,$extractBasePath)
+    private function getPluginJsonContents($zip)
     {
-        try 
+        for ($i = 0; $i < $zip->numFiles; $i++) 
         {
-            // Get the first folder name inside the zip
-          $firstFolderName = $zip->getNameIndex(0);
-        //   info($firstFolderName);
-          $firstFolderName = explode('/', $firstFolderName)[0]; // Get top-level folder name
-        //   info($firstFolderName);
-          $finalExtractPath = $extractBasePath . '/' . $firstFolderName;
-        //   info($finalExtractPath);
-          if (file_exists($finalExtractPath)) 
-          {
-              return ['code' => 1 , 'data' => true , 'msg' => "A folder called '$firstFolderName' already exists..." ];
-          }
-          return ['code' => 1 , 'data' => false];
-        }    
-        catch(Exception $ex)      
-        {
-            return ['code' => 0 , 'msg' => $ex->getMessage()];
-        }
-    }
-    // private function is_plugin($zip)
-    // {
-    //     try 
-    //     {
-    //         $containsPluginJson = false;
-
-    //         for ($i = 0; $i < $zip->numFiles; $i++) {
-    //         try 
-    //         {
-    //             $entryName = $zip->getNameIndex($i);
-
-    //             // Check if it's exactly "plugin.json" or like "folder/plugin.json"
-    //             if (basename($entryName) === 'plugin.json' && substr_count($entryName, '/') <= 1) {
-    //                 $containsPluginJson = true;
-    //                 break;
-    //             }
-    //         }
-    //         catch(Exception $e)
-    //         {
-    //             throw new Exception($e->getMessage());
-    //         }
-    //         }
-
-    //         if(!$containsPluginJson)
-    //         {
-    //             return ['code' => 1 , 'data' => $containsPluginJson,'msg' => "The uploaded file must be botble plugin"];
-    //         }
-    //         return ['code' => 1 , 'data' => $containsPluginJson];
-    //     }
-    //     catch(Exception $ex)
-    //     {
-    //         return ['code' => 0 , 'msg' => $ex->getMessage()];
-    //     }
-    // }
-
-
-    protected function is_valid_plugin_structure(ZipArchive $zip)
-    {
-        $rootFolders = [];
-
-        for ($i = 0; $i < $zip->numFiles; $i++) {
-            $entry = $zip->getNameIndex($i);
-            $parts = explode('/', $entry);
-
-            // Get the first-level folder only (excluding files directly at the root)
-            if (count($parts) > 1 && $parts[0] !== '') {
-                $rootFolders[$parts[0]] = true;
+            $entryName = $zip->getNameIndex($i);
+    
+            // Normalize slashes and trim leading/trailing slashes
+            $entryName = trim(str_replace('\\', '/', $entryName), '/');
+    
+            // Check if it's 'plugin.json' at the root
+            if (basename($entryName) === 'plugin.json' && substr_count($entryName, '/') === 0) {
+                $stream = $zip->getStream($entryName);
+                if ($stream) {
+                    $contents = stream_get_contents($stream);
+                    fclose($stream);
+    
+                    // Optionally decode if you want JSON as array/object
+                    $jsonData = json_decode($contents, true); // Use false for object instead of array
+                    return $jsonData;
+                }
             }
         }
-
-        if (count($rootFolders) !== 1) {
-            return [
-                'code' => 0,
-                'msg' => 'ZIP must contain exactly one root folder.'
-            ];
-        }
-
-        $pluginFolderName = array_keys($rootFolders)[0];
-
-        $pluginJsonIndex = $zip->locateName($pluginFolderName . '/plugin.json');
-        if ($pluginJsonIndex === false) {
-            return [
-                'code' => 0,
-                'msg' => "Not Valid Plugin Structure"
-            ];
-        }
-
-        return [
-            'code' => 1,
-            'data' => $pluginFolderName
-        ];
+    
+        return null; // Not found or failed to read
     }
+    
+ 
 
-    private function handleError($zip,$fullZipPath,$msg)
+    private function failAndCleanup($zip,$fullZipPath,$msg)
     {
          // Folder already exists!
          $zip->close(); // <<< FIRST close
@@ -132,7 +58,21 @@ class PluginUploaderController extends BaseController
          throw new Exception($msg);
     }
 
+    private function extractPluginName(string $id): ?string
+    {
+        if (str_contains($id, '/')) {
+            $parts = explode('/', $id);
+            return $parts[1] ?? null;
+        }
+
+        return null;
+    }
      
+    private function isValidPluginJson(?array $json): bool
+    {
+        return !is_null($json) && array_key_exists('id', $json);
+    }
+
     public function upload(Request $request)
     {
         try 
@@ -146,68 +86,63 @@ class PluginUploaderController extends BaseController
                 throw new Exception($validator->errors()->first());
             }
 
-            $file = $request->file('file');
-
             $tempPath = storage_path('app/temp');
-            $extractBasePath = base_path('platform/plugins');
-            // $extractBasePath = storage_path('platform/plugins');
+            // $extractBasePath = base_path('platform/plugins'); 
             
-            if (!file_exists($tempPath)) 
-            {
-                mkdir($tempPath, 0777, true);
-            }
-            if (!file_exists($extractBasePath)) 
-            {
-                mkdir($extractBasePath, 0777, true);
-            }
+            File::ensureDirectoryExists($tempPath);
 
             $filename = uniqid('upload_') . '.zip';
+
+            $file = $request->file('file');
+
             $file->move($tempPath, $filename);
 
             $fullZipPath = $tempPath . '/' . $filename;
-
-            // Log::info('ZIP Path: ' . $fullZipPath);
-            // Log::info('File exists: ' . (file_exists($fullZipPath) ? 'yes' : 'no'));
-
+ 
             $zip = new ZipArchive;
 
-            if ($zip->open($fullZipPath) === true) 
+            if ($zip->open($fullZipPath) !== true) 
             {
-                 
-                $res_is_valid_plugin_structure = $this->is_valid_plugin_structure($zip);
-
-                if($res_is_valid_plugin_structure['code'] == 0)
-                {
-                   $this->handleError($zip,$fullZipPath,$res_is_valid_plugin_structure['msg']);
-                }
-                
-                $pluginFolderName = $res_is_valid_plugin_structure['data'];
-
-                $pluginPath = $extractBasePath . '/' . $pluginFolderName;
-                info($extractBasePath);
-                info($pluginFolderName);
-                info($pluginPath);
-                if (file_exists($pluginPath)) 
-                {
-                    $this->handleError($zip, $fullZipPath, 'Plugin folder already exists: ' . $pluginFolderName);
-                }
-
-                // Everything is safe -> extract
-                $zip->extractTo($extractBasePath);
-                $zip->close();
-                unlink($fullZipPath); // delete zip after extraction
- 
-                return response()->json(['code' => true, 'msg' => 'File uploaded and extracted successfully.']);
-            } 
-            else 
-            {
-                throw new Exception('Failed to open the ZIP file.');
+                throw new Exception('Failed to open the ZIP file.'); 
             }
+
+            $json = $this->getPluginJsonContents($zip);
+
+            if (!$this->isValidPluginJson($json)) 
+            {
+                return $this->failAndCleanup($zip,$fullZipPath,'Please upload a valid plugin.');
+            }
+
+            $pluginName = $this->extractPluginName($json['id']);
+
+            if(!$pluginName)
+            {
+                $this->failAndCleanup($zip,$fullZipPath,"please upload a valid plugin");
+            }
+            
+            $basePluginPath = plugin_path();
+            
+            if (is_dir($basePluginPath . '/' . $pluginName)) 
+            {
+                $this->failAndCleanup($zip,$fullZipPath,"Plugin already exists");
+            } 
+          
+            $zip->extractTo(plugin_path($pluginName));
+
+            // $zip->extractTo(storage_path($pluginName));
+
+            $zip->close();
+
+            unlink($fullZipPath); // delete zip after extraction
+
+            return response()->json(['code' => true, 'msg' => 'File uploaded and extracted successfully.']);
+            
+            
+          
         } 
         catch (Exception $e) 
         {
             // Log::error('File upload failed: ' . $e->getMessage());
-
             return response()->json([
                 'code' => false,
                 'msg' => $e->getMessage(),

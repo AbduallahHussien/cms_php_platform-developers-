@@ -33,7 +33,7 @@ class PluginUploaderServiceProvider extends ServiceProvider
                     'id' => 'cms-plugins-plugin uploader',
                     'priority' => 5,
                     'parent_id' => 'cms-core-plugins',
-                    'name' => 'Plugin Uploader',
+                    'name' => 'Upload New Plugin',
                     'icon' => 'fa fa-upload',
                     'url' => route('plugin-uploader.index'),
                     'permissions' => ['plugin uploader.index'],
