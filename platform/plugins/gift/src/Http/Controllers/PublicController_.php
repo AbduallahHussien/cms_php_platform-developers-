@@ -23,9 +23,9 @@ use Intervention\Image\Drivers\Gd\Driver as GdDriver;
 use Intervention\Image\Interfaces\FontInterface;
 use Intervention\Image\Typography\FontFactory;
 
-if (!class_exists('Glyphs')) {
-  require_once app_path('Helpers/Arabic/Arabic/Glyphs.php');
-}
+// if (!class_exists('Glyphs')) {
+//   require_once app_path('Helpers/Arabic/Arabic/Glyphs.php');
+// }
 use I18N_Arabic_Glyphs;
 
 

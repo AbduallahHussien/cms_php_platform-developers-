@@ -78,11 +78,16 @@ class PublicController extends BaseController
       }
 
       // Prepare and send messages
-      $this->sendGiftMessages($request, $gift, $imageName);
+      $res_sendGiftMessages = $this->sendGiftMessages($request, $gift, $imageName);
+
+      if($res_sendGiftMessages['code'] == 0)
+      {
+        throw new Exception($res_sendGiftMessages['msg']);
+      }
 
       DB::commit(); // success
 
-      Log::info("Well Done !!");
+      Log::info("Whatsapp Messages been sent successfully !!");
     } 
     catch (Exception $ex) 
     {
@@ -130,16 +135,39 @@ class PublicController extends BaseController
 
   private function sendGiftMessages(Request $request, $gift, $imageName)
   {
-    $variables = [
-      '{donor_name}' => '*' . $request->donorName . '*',
-      '{recipient_name}' => '*' . $request->recipientName . '*',
-    ];
+    try 
+    {
+      $variables = [
+        '{donor_name}' => '*' . $request->donorName . '*',
+        '{recipient_name}' => '*' . $request->recipientName . '*',
+      ];
+  
+      $donorMessage = str_replace(array_keys($variables), array_values($variables), setting('donor_message'));
+      $recipientMessage = str_replace(array_keys($variables), array_values($variables), setting('recipient_message'));
+  
+      $res_sendImageWhatsapp = $this->sendImageWhatsapp($request->donorPhone, asset('c/' . $imageName), $gift->id, $donorMessage);
 
-    $donorMessage = str_replace(array_keys($variables), array_values($variables), setting('donor_message'));
-    $recipientMessage = str_replace(array_keys($variables), array_values($variables), setting('recipient_message'));
+      if($res_sendImageWhatsapp['code'] == 0)
+      {
+        throw new Exception($res_sendImageWhatsapp['msg']);
+      }
+     
 
-    $this->sendImageWhatsapp($request->donorPhone, asset('c/' . $imageName), $gift->id, $donorMessage);
-    $this->sendImageWhatsapp($request->recipientPhone, asset('c/' . $imageName), $gift->id, $recipientMessage);
+      $res_sendImageWhatsapp2 = $this->sendImageWhatsapp($request->recipientPhone, asset('c/' . $imageName), $gift->id, $recipientMessage);
+      
+      if($res_sendImageWhatsapp2['code'] == 0)
+      {
+        throw new Exception($res_sendImageWhatsapp2['msg']);
+      }
+
+      return ['code' => 1, 'data' => true];
+      
+      
+    }
+    catch(Exception $ex)
+    {
+      return ['code' => 0 , 'msg' => $ex->getMessage()];
+    }
   }
 
 
@@ -156,40 +184,55 @@ class PublicController extends BaseController
               'body'  => "{$message}\n{$link}",
           ];
   
-          $curl = curl_init($url);
-  
-          curl_setopt_array($curl, [
-              CURLOPT_RETURNTRANSFER => true,
-              CURLOPT_TIMEOUT => 30,
-              CURLOPT_SSL_VERIFYHOST => 0,
-              CURLOPT_SSL_VERIFYPEER => 0,
-              CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
-              CURLOPT_CUSTOMREQUEST => "POST",
-              CURLOPT_POSTFIELDS => http_build_query($params),
-              CURLOPT_HTTPHEADER => [
-                  "Content-Type: application/x-www-form-urlencoded",
-              ],
-          ]);
-  
+
+          $curl = curl_init();
+          curl_setopt_array($curl, array(
+            CURLOPT_URL => $url,
+            CURLOPT_RETURNTRANSFER => true,
+            CURLOPT_ENCODING => "",
+            CURLOPT_MAXREDIRS => 10,
+            CURLOPT_TIMEOUT => 30,
+            CURLOPT_SSL_VERIFYHOST => 0,
+            CURLOPT_SSL_VERIFYPEER => 0,
+            CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+            CURLOPT_CUSTOMREQUEST => "POST",
+            CURLOPT_POSTFIELDS => http_build_query($params),
+            CURLOPT_HTTPHEADER => array(
+              "content-type: application/x-www-form-urlencoded"
+            ),
+          )); 
+
           $response = curl_exec($curl);
-  
-          if (curl_errno($curl)) {
-              throw new Exception("cURL Error #: " . curl_error($curl));
-          }
-  
+          
+          $err = curl_error($curl);
+
           curl_close($curl);
-  
-          $responseData = json_decode($response, true);
-  
-          if (isset($responseData['sent']) && $responseData['sent'] === true) {
-              Gift::where('id', $id)->update(['delivered' => true]);
-          } else {
-              throw new Exception("Message not sent: " . ($responseData['error'] ?? 'Unknown error'));
-          }
+
+          if ($err) 
+          {
+            throw new Exception("cURL Error #:" . $err);
+          } 
+          else 
+          {
+            Gift::where('id', $id)->update(['delivered' => true]);
+            
+            // // Decode the JSON response
+            $responseData = json_decode($response, true);
+            // // Check if the send was successful
+            if ($responseData && isset($responseData['sent']) && $responseData['sent'] === "true") 
+            {
+                return ['code' => 1 , 'data' => true];
+            }
+            else 
+            {
+              throw new Exception("UnKnow Error !!!");
+            }
+            
+          } 
   
       } catch (Exception $ex) {
           // You can log the error or handle it as needed
-          throw new Exception($ex->getMessage());
+          return ['code' => 0 , 'msg' => $ex->getMessage()];
       }
   }
   
