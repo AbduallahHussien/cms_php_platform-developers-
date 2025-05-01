@@ -2,7 +2,7 @@
 
 namespace Botble\CustomerTickets\Forms;
 
-use Botble\Base\Enums\CustomerStatusEnum;
+use Botble\CustomerTickets\Base\Enums\CustomerStatusEnum;
 use Botble\Base\Forms\FormAbstract;
 use Botble\CustomerTickets\Http\Requests\CustomerRequest;
 use Botble\CustomerTickets\Models\Customer;

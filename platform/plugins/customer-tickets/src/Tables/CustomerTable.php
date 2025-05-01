@@ -5,7 +5,7 @@ namespace Botble\CustomerTickets\Tables;
 use Botble\CustomerTickets\Models\Customer;
 use Botble\Table\Abstracts\TableAbstract;
 use Botble\Table\Actions\DeleteAction;
-use Botble\Table\Actions\ShowAction;
+use Botble\CustomerTickets\Table\Actions\ShowAction;
 use Botble\Table\Actions\EditAction;
 use Botble\Table\BulkActions\DeleteBulkAction;
 use Botble\Table\Columns\CreatedAtColumn;
@@ -24,7 +24,7 @@ use Illuminate\Support\Facades\DB;
 use Botble\Base\Enums\BaseStatusEnum;
 use Botble\Base\Enums\CustomerStatusEnum;
 use Botble\Base\Facades\Html;
-use Botble\Table\Actions\StatusAction;
+use Botble\CustomerTickets\Table\Actions\StatusAction;
 use Botble\Table\Columns\PhoneWithCodeColumn;
 use Botble\Tables\BulkActions\ChangeStatusBulkAction;
 

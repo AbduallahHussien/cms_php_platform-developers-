@@ -2,7 +2,7 @@
 
 namespace Botble\CustomerTickets\Http\Requests;
 
-use Botble\Base\Enums\CustomerStatusEnum;
+use Botble\CustomerTickets\Base\Enums\CustomerStatusEnum;
 use Botble\Support\Http\Requests\Request;
 use Illuminate\Validation\Rule;
 
