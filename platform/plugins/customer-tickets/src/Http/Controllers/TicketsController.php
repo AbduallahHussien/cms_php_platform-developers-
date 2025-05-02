@@ -10,7 +10,6 @@ use Botble\CustomerTickets\Tables\TicketsTable;
 use Botble\CustomerTickets\Forms\TicketsForm;
 use Botble\CustomerTickets\Models\Customer;
 
-require_once base_path('platform/plugins/customer-tickets/helpers/stats.php');
 
 class TicketsController extends BaseController
 {
@@ -86,4 +85,5 @@ class TicketsController extends BaseController
     {
         return DeleteResourceAction::make($tickets);
     }
+    
 }
