@@ -10,23 +10,15 @@ use Botble\Table\Actions\EditAction;
 use Botble\Table\BulkActions\DeleteBulkAction;
 use Botble\Table\Columns\CreatedAtColumn;
 use Botble\Table\Columns\IdColumn;
-use Botble\Table\Columns\StatusColumn;
 use Botble\Table\Columns\NameColumn;
-use Botble\Table\Columns\CountryPhone;
 use Illuminate\Database\Eloquent\Builder;
 use Botble\Table\HeaderActions\CreateHeaderAction;
 use Botble\Table\BulkChanges\CreatedAtBulkChange;
 use Botble\Table\BulkChanges\NameBulkChange;
 use Botble\Table\BulkChanges\StatusBulkChange;
 use Botble\Table\Columns\Column;
-use Illuminate\Support\Facades\DB;
-
-use Botble\Base\Enums\BaseStatusEnum;
-use Botble\Base\Enums\CustomerStatusEnum;
-use Botble\Base\Facades\Html;
 use Botble\CustomerTickets\Table\Actions\StatusAction;
-use Botble\Table\Columns\PhoneWithCodeColumn;
-use Botble\Tables\BulkActions\ChangeStatusBulkAction;
+
 
 class CustomerTable extends TableAbstract
 {
@@ -86,8 +78,6 @@ class CustomerTable extends TableAbstract
 
             ->addBulkActions([
                 DeleteBulkAction::make()->permission('customer.destroy'),
-
-                // ChangeStatusBulkAction::make()->permission('customer.edit'),
             ])
             ->addBulkChanges([
                 NameBulkChange::make(),

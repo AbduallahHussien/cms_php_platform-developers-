@@ -3,11 +3,10 @@
 namespace Botble\CustomerTickets\Forms;
 
 use Botble\Base\Forms\FormAbstract;
-use Botble\CustomerTickets\Http\Requests\TicketsRequest;
 use Botble\CustomerTickets\Models\Tickets;
-use Botble\Base\Enums\TicketStatusEnum;
-use Botble\Base\Enums\TicketTypeEnum;
-use Botble\Base\Enums\TicketLevelEnum;
+use Botble\CustomerTickets\Http\Requests\TicketsRequest;
+use Botble\CustomerTickets\Base\Enums\TicketTypeEnum;
+use Botble\CustomerTickets\Base\Enums\TicketLevelEnum;
 
 class TicketsForm extends FormAbstract
 {
