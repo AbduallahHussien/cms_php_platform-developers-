@@ -35,7 +35,8 @@ class HookServiceProvider extends ServiceProvider
             );
 
             ShortcodeFacade::setAdminConfig('gift-form', function (array $attributes) {
-                return ShortcodeGiftAdminConfigForm::createFromArray($attributes);
+                // return ShortcodeGiftAdminConfigForm::createFromArray($attributes);
+                return ShortcodeGiftAdminConfigForm::createFromArray([]);
             });
         }
     }
