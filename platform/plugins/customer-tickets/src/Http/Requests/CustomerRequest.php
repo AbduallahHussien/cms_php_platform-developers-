@@ -10,14 +10,15 @@ class CustomerRequest extends Request
 {
     public function rules(): array
     {
+        $customerId = $this->route('customer') ?? $this->route('id'); // Support both 'customer' and 'id'
         return [
             'name'        => ['required', 'string', 'max:220'],
             'phone_code'  => ['required', 'string', 'max:10'],
             'phone'       => ['required', 'string', 'max:20'],
-            'email'       => ['nullable', 'email', 'max:255', Rule::unique('customers', 'email')->ignore($this->route('id'))],
+            'email'       => ['nullable', 'email', 'max:255',   Rule::unique('customers', 'email')->ignore($customerId)],
             'nationality' => ['nullable', 'string', 'max:100'],
             'gender'      => ['required', Rule::in(['male', 'female'])],
-            'status'      => ['required',Rule::in(CustomerStatusEnum::values())],
+            'status'      => ['nullable',Rule::in(CustomerStatusEnum::values())],
             'notes'       => ['nullable', 'string'],
         ];
     }

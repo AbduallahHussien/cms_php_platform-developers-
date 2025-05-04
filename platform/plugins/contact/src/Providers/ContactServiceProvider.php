@@ -70,6 +70,7 @@ class ContactServiceProvider extends ServiceProvider
                     'route' => 'contacts.custom-fields.index',
                     'permissions' => 'contacts.edit',
                 ]);
+               
         });
 
         PanelSectionManager::default()->beforeRendering(function () {

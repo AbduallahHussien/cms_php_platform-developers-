@@ -17,7 +17,7 @@ class CustomerTicketsServiceProvider extends ServiceProvider
 
         $this
             ->setNamespace('plugins/customer-tickets')
-            ->loadHelpers()
+            // ->loadHelpers()
             ->loadAndPublishConfigurations(["permissions"])
             ->loadAndPublishTranslations()
             ->loadRoutes()

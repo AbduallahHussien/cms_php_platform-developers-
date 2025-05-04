@@ -13,12 +13,12 @@ class TicketsRequest extends Request
     public function rules(): array
     {
         return [
-            'user_id'     => ['required', 'exists:users,id'],
+            // 'user_id'     => ['required', 'exists:users,id'],
             'customer_id' => ['required', 'exists:customers,id'],
             'type'        => ['required', Rule::in(TicketTypeEnum::values())],
             'level'       => ['nullable', Rule::in(TicketLevelEnum::values())],
             'description' => ['nullable', 'string'],
-            'status'      => ['required', Rule::in(TicketStatusEnum::values())],
+            'status'      => ['nullable', Rule::in(TicketStatusEnum::values())],
         ];
     }
 
