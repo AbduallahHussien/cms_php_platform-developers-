@@ -2,9 +2,9 @@
 
 namespace Botble\CustomerTickets\Http\Requests;
 
-use Botble\Base\Enums\TicketLevelEnum;
-use Botble\Base\Enums\TicketStatusEnum;
-use Botble\Base\Enums\TicketTypeEnum;
+use Botble\CustomerTickets\Base\Enums\TicketLevelEnum;
+use Botble\CustomerTickets\Base\Enums\TicketStatusEnum;
+use Botble\CustomerTickets\Base\Enums\TicketTypeEnum;
 use Botble\Support\Http\Requests\Request;
 use Illuminate\Validation\Rule;
 

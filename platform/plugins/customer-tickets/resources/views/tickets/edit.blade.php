@@ -23,7 +23,7 @@
                             <label for="type" class="col-sm-2 col-form-label">{{ __('Type') }} <span
                                     class="text-danger">*</span></label>
                             <div class="col-sm-10">
-                                {!! Form::select('type', \Botble\Base\Enums\TicketTypeEnum::labels(), null, [
+                                {!! Form::select('type', \Botble\CustomerTicketsBase\Enums\TicketTypeEnum::labels(), null, [
                                     'class' => 'form-control',
                                     'required',
                                 ]) !!}
@@ -34,7 +34,7 @@
                             <label for="level" class="col-sm-2 col-form-label">{{ __('Priority') }} <span
                                     class="text-danger">*</span></label>
                             <div class="col-sm-10">
-                                {!! Form::select('level', \Botble\Base\Enums\TicketLevelEnum::labels(), null, [
+                                {!! Form::select('level', \Botble\CustomerTickets\Base\Enums\TicketLevelEnum::labels(), null, [
                                     'class' => 'form-control',
                                     'required',
                                 ]) !!}
@@ -45,7 +45,7 @@
                             <label for="status" class="col-sm-2 col-form-label">{{ __('Status') }} <span
                                     class="text-danger">*</span></label>
                             <div class="col-sm-10">
-                                {!! Form::select('status', \Botble\Base\Enums\TicketStatusEnum::labels(), null, [
+                                {!! Form::select('status', \Botble\CustomerTickets\Base\Enums\TicketStatusEnum::labels(), null, [
                                     'class' => 'form-control',
                                     'required',
                                 ]) !!}
