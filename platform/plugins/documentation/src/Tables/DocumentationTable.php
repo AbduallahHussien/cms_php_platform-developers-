@@ -44,6 +44,7 @@ class DocumentationTable extends TableAbstract
                 IdColumn::make(),
                 Column::make('name')->title(trans('plugins/documentation::documentation.title_name')),
                 Column::make('link')->title(trans('plugins/documentation::documentation.title_link')),
+                Column::make('direction')->title(trans('plugins/documentation::documentation.direction')),
                 // This is important to allow HTML output
                 // CreatedAtColumn::make(),
                 StatusColumn::make(),
@@ -61,6 +62,7 @@ class DocumentationTable extends TableAbstract
                     'id',
                     'name',
                     'link',
+                    'direction',
                     // 'created_at',
                     'status',
                 ]);

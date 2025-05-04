@@ -1,12 +1,13 @@
 <div id="sidebar">
     <div class="sidebar-header">
-        <h5>{{ $documentation->name }}</h5>
+        <h4 class="mb-0">{{ $documentation->name }}</h4 class="mb-0">
     </div>
     <div class="sidebar-menu">
         <ul class="nav nav-bills flex-column">
             @foreach ($documentation->topics as $topic)
 
-            <div class="menu-title">{{ $topic->name }}</div>
+            <h4 class="menu-title">{{ $topic->name }}</h4>
+            {{-- <h4>{{ $topic->name }}</h4> --}}
 
 
             @foreach ($topic->articles as $article)

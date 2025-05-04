@@ -1,5 +1,10 @@
 <!DOCTYPE html>
-<html lang="en">
+ 
+@if($documentation->direction == LTR)
+    <html lang="en">
+@else
+    <html lang="ar" dir="rtl">
+@endif 
 <head>
     @include('plugins/documentation::partials._head')
 </head>

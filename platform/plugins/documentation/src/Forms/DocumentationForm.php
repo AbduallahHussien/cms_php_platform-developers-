@@ -6,6 +6,8 @@ use Botble\Base\Enums\BaseStatusEnum;
 use Botble\Base\Forms\FormAbstract;
 use Botble\Documentation\Http\Requests\DocumentationRequest;
 use Botble\Documentation\Models\Documentation;
+use Botble\Base\Forms\Fields\SelectField;
+use Botble\Base\Forms\FieldOptions\SelectFieldOption;
 
 class DocumentationForm extends FormAbstract
 {
@@ -31,6 +33,18 @@ class DocumentationForm extends FormAbstract
                     'data-counter' => 120,
                 ],
             ])
+            ->add(
+                'direction', 
+                SelectField::class, 
+                SelectFieldOption::make()
+                    ->label(trans('plugins/documentation::documentation.direction'))
+                    ->choices([
+                        'LTR' => trans('plugins/documentation::documentation.ltr'),
+                        'RTL' => trans('plugins/documentation::documentation.rtl'),
+                    ]) 
+                    ->selected($this->model ? $this->model->direction : 1) // Default selected value
+                    ->required() // Add class "required" if that is mandatory field 
+            )
             ->add('status', 'customSelect', [
                 'label' => trans('core/base::tables.status'),
                 'required' => true,

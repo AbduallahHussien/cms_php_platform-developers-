@@ -46,7 +46,8 @@ class ArticleController extends BaseController
         
         $table->queryUsing(function (Builder $query) use ($documentation_id){
             $query->select(['id','order', 'title', 'content', 'topic_id','created_at','user_id', 'status'])
-                  ->where('documentation_id', $documentation_id);
+                  ->where('documentation_id', $documentation_id)
+                  ->orderBy('topic_id');
 
         });
 
