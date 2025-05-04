@@ -4,7 +4,7 @@
             <i class="bi bi-list"></i>
         </button>
         <a class="navbar-brand" href="#">
-            <span>DevDocs</span>
+            <span>{{ $documentation->name ?? 'DevDocs' }}</span>
         </a>
         
         {{-- <div class="d-flex align-items-center ms-auto">

@@ -7,9 +7,13 @@
     color: var(--light-text) !important;
 }
 .sidebar-menu .nav-link.active {
-    background-color: transparent !important;
-    color: var(--primary-dark) !important;
+    background-color: transparent !important; 
     box-shadow: none !important;
+}
+
+.sidebar-menu .nav-link:hover,.sidebar-menu .nav-link.active 
+{ 
+    color: var(--primary-dark) !important;
 }
 .doc-content {
     padding-top: 0 !important;

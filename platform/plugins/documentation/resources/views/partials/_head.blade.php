@@ -22,5 +22,4 @@
     <link rel="stylesheet" href="{{ URL::asset('vendor/core/plugins/documentation/css/docs_style_rtl.css') }}">
 @endif
 <link rel="stylesheet" href="{{ URL::asset('vendor/core/plugins/documentation/css/global.css') }}">
-
  

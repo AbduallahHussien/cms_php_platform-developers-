@@ -1,7 +1,7 @@
 <div id="sidebar">
-    <div class="sidebar-header">
-        <h4 class="mb-0">{{ $documentation->name }}</h4 class="mb-0">
-    </div>
+    {{-- <div class="sidebar-header">
+        <h5 class="mb-0" style="font-weight: 600">{{ $documentation->name }}</h4>
+    </div> --}}
     <div class="sidebar-menu">
         <ul class="nav nav-bills flex-column">
             @foreach ($documentation->topics as $topic)
