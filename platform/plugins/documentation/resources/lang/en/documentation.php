@@ -8,5 +8,9 @@ return [
     'title_link' => 'Link',
     'title_name' => 'Name',
     'topics'=>'Topics',
-    'articles'=>'Articles'
+    'articles'=>'Articles',
+    'direction' => 'Direction',
+    'please_select_direction' => "Please select layout direction",
+    'rtl' => 'RTL',
+    'ltr' => 'LTR',
 ];
