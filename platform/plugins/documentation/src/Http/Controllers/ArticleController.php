@@ -61,7 +61,7 @@ class ArticleController extends BaseController
         $article = new Article();
         $article->documentation_id = $documentation_id;
         $article->user_id = Auth::id();
-        $maxOrder = Article::max('order') ?? 0;
+        $maxOrder = Article::whereDocumentationId($documentation_id)->max('order') ?? 0;
         $article->order = $maxOrder + 1;
         return ArticleForm::createFromModel($article)->renderForm();
     }
