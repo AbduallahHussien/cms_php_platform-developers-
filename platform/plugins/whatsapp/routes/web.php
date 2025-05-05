@@ -130,6 +130,7 @@ Route::group(['namespace' => 'Botble\Whatsapp\Http\Controllers', 'middleware' =>
             Route::get('/contacts', [
                 'as'         => 'contacts.index',
                 'uses'       => 'WhatsappController@contacts',
+                'permission' => 'contacts.index',
             ]);
 
             Route::get('whatsapp/broadcast', [
@@ -140,6 +141,7 @@ Route::group(['namespace' => 'Botble\Whatsapp\Http\Controllers', 'middleware' =>
             Route::get('whatsapp/get-contacts', [
                 'as'         => 'get.contacts',
                 'uses'       => 'WhatsappController@get_contacts',
+                'permission' => 'contacts.index',
             ]);
 
             Route::get('whatsapp/get-contact', [
@@ -160,6 +162,7 @@ Route::group(['namespace' => 'Botble\Whatsapp\Http\Controllers', 'middleware' =>
             Route::post('whatsapp/save-settings', [
                 'as'         => 'save.settings',
                 'uses'       => 'WhatsappController@save_settings',
+                'permission' => 'whatsapp.settings',
             ]);
 
             Route::post('whatsapp/listener', [

@@ -5,6 +5,13 @@
 
          <!-- container --> 
             <div class="container-fluid app">
+                
+                <div class="pb-2">
+                    <a href="{{ route('dashboard.index') }}" class="btn btn-sm btn-secondary" title="Back To Dashboard">
+                        <i class="bx bx-arrow-back text-white" style="font-size: 23px;"></i>
+                    </a>
+                </div>
+                                
                 <!-- APP ROW -->
                     <div class="row app-one">
 
@@ -19,6 +26,7 @@
                                                 <img src="{{(isset($user['profile_picture']))?$user['profile_picture']:''}}">
                                             </div>
                                         </div>
+                                        @if (Auth::user()->hasPermission('contacts.index'))
                                         <div class="col-1  heading-contacts  pull-right">
                                             <a href="{{route('whatsapp.contacts.index')}}">
                                                 <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="#54656f"class="bi bi-person-lines-fill" viewBox="0 0 16 16">
@@ -26,19 +34,36 @@
                                                 </svg>
                                             </a>
                                         </div>
+                                        @endif
+                                        @if (Auth::user()->hasPermission('whatsapp.settings'))
                                         <div class="col-1  heading-broadcast  pull-right">
                                             <a href="javascript:void(0);" id="configurations">
                                                 <i style="color:#54656f;" class='menu-icon tf-icons bx bx-cog'></i>
                                             </a>
                                         </div>
+                                        @endif
                                         
+                                        @if (Auth::user()->hasPermission('whatsapp.send_to_group'))
                                         <div class="col-1  heading-Sendbroadcast  pull-right">
                                             <a type="button"  id="sendMessage" data-bs-toggle="modal" data-bs-target="#Send"><i class='bx bxs-send'></i></a>
                                         </div>
+                                        @endif
+
+                                        @if (Auth::user()->hasPermission('whatsapp.new_chat'))
                                         <div class="col-1  heading-NewChat  pull-right"><i class='bx bxs-message-rounded-add'></i></div>
+                                        @endif
+                                        
+                                        @if (Auth::user()->hasPermission('whatsapp.templates'))
                                         <div class="col-1  heading-templates  pull-right"><i class='bx bxs-layout'></i></div>
+                                        @endif
+
+                                        @if (Auth::user()->hasPermission('whatsapp.groups'))
                                         <div class="col-1  heading-groups  pull-right"><i class='bx bx-group'></i></div>
+                                        @endif   
+
+                                        @if (Auth::user()->hasPermission('whatsapp.reports'))
                                         <div class="col-1  heading-reports  pull-right"><i class='bx bxs-report' ></i></div>
+                                        @endif
 
                                         
                                     </div>
