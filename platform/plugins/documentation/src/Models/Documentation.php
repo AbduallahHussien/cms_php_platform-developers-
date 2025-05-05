@@ -17,6 +17,7 @@ class Documentation extends BaseModel
     protected $fillable = [
         'name',
         'link',
+        'direction',
         'status',
     ];
 
@@ -27,7 +28,7 @@ class Documentation extends BaseModel
 
     public function topics(): HasMany
     {
-        return $this->hasMany(Topic::class);
+        return $this->hasMany(Topic::class)->orderBy('order');
     }
      
 }

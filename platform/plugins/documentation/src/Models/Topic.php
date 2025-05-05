@@ -34,7 +34,7 @@ class Topic extends BaseModel
 
     public function articles(): HasMany
     {
-        return $this->hasMany(Article::class);
+        return $this->hasMany(Article::class)->orderBy('order');
     }
      
 }

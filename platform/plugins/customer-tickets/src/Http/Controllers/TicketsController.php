@@ -98,4 +98,5 @@ class TicketsController extends BaseController
     {
         return DeleteResourceAction::make($tickets);
     }
+    
 }

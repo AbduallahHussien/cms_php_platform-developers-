@@ -1,0 +1,20 @@
+.sidebar-menu .menu-title {
+    /* font-weight: normal !important; */
+    font-size: 1rem; 
+    color: var(--text-color);
+}
+.sidebar-menu .nav-link{
+    color: var(--light-text) !important;
+}
+.sidebar-menu .nav-link.active {
+    background-color: transparent !important; 
+    box-shadow: none !important;
+}
+
+.sidebar-menu .nav-link:hover,.sidebar-menu .nav-link.active 
+{ 
+    color: var(--primary-dark) !important;
+}
+.doc-content {
+    padding-top: 0 !important;
+}

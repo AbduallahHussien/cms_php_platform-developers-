@@ -46,7 +46,8 @@ class ArticleController extends BaseController
         
         $table->queryUsing(function (Builder $query) use ($documentation_id){
             $query->select(['id','order', 'title', 'content', 'topic_id','created_at','user_id', 'status'])
-                  ->where('documentation_id', $documentation_id);
+                  ->where('documentation_id', $documentation_id)
+                  ->orderBy('topic_id');
 
         });
 
@@ -60,7 +61,7 @@ class ArticleController extends BaseController
         $article = new Article();
         $article->documentation_id = $documentation_id;
         $article->user_id = Auth::id();
-        $maxOrder = Article::max('order') ?? 0;
+        $maxOrder = Article::whereDocumentationId($documentation_id)->max('order') ?? 0;
         $article->order = $maxOrder + 1;
         return ArticleForm::createFromModel($article)->renderForm();
     }

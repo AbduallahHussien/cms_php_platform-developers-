@@ -63,7 +63,7 @@ class TopicController extends BaseController
         $this->pageTitle(trans('plugins/documentation::topic.create')); 
         $topic = new Topic();
         $topic->documentation_id = $documentation_id;
-        $maxOrder = Topic::max('order') ?? 0;
+        $maxOrder = Topic::whereDocumentationId($documentation_id)->max('order') ?? 0;
         $topic->order = $maxOrder + 1;
         return TopicForm::createFromModel($topic)->renderForm();
     }
