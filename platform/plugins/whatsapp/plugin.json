@@ -2,8 +2,11 @@
     "name": "Whatsapp",
     "namespace": "Botble\\Whatsapp\\",
     "provider": "Botble\\Whatsapp\\Providers\\WhatsappServiceProvider",
-    "author": "N/A",
-    "url": "N/A",
+    "author": "kmktec",
+    "url": "",
     "version": "1.0",
-    "description": "The description for module whatsapp"
+    "description": "The description for module whatsapp",
+    "require":[],
+    "minimum_core_version": "7.3.0"
 }
+ 
