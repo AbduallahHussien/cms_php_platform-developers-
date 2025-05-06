@@ -42,12 +42,17 @@
 
         <div class="content">
           <div class="page-1-bg"></div>
+          @if(!setting('is_gift_disabled',false))
           <div class="page-1-txt">
             <p class="top">سباق الخير - أهدِ من تحب</p>
             <p class="middle">إهداء خاص لمن تحب في شهر الخير والعطاء شارك الأجر، وأهدِ هدية معنوية تحمل الأثر!</p>
             <p class="bottom">املأ البيانات التالية لإرسال إهدائك</p>
           </div>
-
+          @else    
+          <div class="page-1-txt"> 
+              <p class="top">{{ setting('disable_gift_msg','الإهداءات متوقفة حالياً') }}</p> 
+          </div>
+          @endif
           <div class="gift-container">
             <img
               class="gift-small-start"
@@ -119,7 +124,7 @@
               aria-label="gift"
             />
           </div>
-
+          @if(!setting('is_gift_disabled',false))
           <!----------- MESSAGE TEMPLATES ----------->
           <div class="slider" style="display: none">
             @php $i = 1; @endphp
@@ -155,8 +160,9 @@
               aria-hidden="true"
             />
           </div>
+          @endif
         </div>
-
+        @if(!setting('is_gift_disabled',false))
         <div class="inputs slide-in-blurred-bottom">
           <div class="page-1-inputs inputs-wrapper">
             <div class="input-container">
@@ -309,6 +315,7 @@
           alt="hand-with-pen"
           aria-hidden="true"
         />
+        @endif
       </section>
     </main>
     <script>
