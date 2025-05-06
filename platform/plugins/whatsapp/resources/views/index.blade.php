@@ -6,9 +6,9 @@
          <!-- container --> 
             <div class="container-fluid app">
                 
-                <div class="pb-2">
-                    <a href="{{ route('dashboard.index') }}" class="btn btn-sm btn-secondary" title="Back To Dashboard">
-                        <i class="bx bx-arrow-back text-white" style="font-size: 23px;"></i>
+                <div class="pb-2 ms-2">
+                    <a href="{{ route('dashboard.index') }}" class="btn btn-sm btn-outline-warning" title="Back To Dashboard">
+                        <i class="bx bx-arrow-back" style="font-size: 23px;"></i>
                     </a>
                 </div>
                                 
