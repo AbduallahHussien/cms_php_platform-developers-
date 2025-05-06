@@ -190,8 +190,8 @@
                 class="input-elements"
                 id="donor-name"
                 type="text"
-                placeholder="اسم مُرسل الإهداء ( باللغة العربية )"
-                aria-label="اسم مُرسل الإهداء ( باللغة العربية )"
+                placeholder="اسم مُرسل الإهداء "
+                aria-label="اسم مُرسل الإهداء "
                 autocomplete="off"
                 maxlength="20"
               />
@@ -214,8 +214,8 @@
                 class="input-elements"
                 id="recipient-name"
                 type="text"
-                placeholder="اسم مُتلقي الإهداء ( باللغة العربية )"
-                aria-label="اسم مُتلقي الإهداء ( باللغة العربية )"
+                placeholder="اسم مُتلقي الإهداء "
+                aria-label="اسم مُتلقي الإهداء "
                 autocomplete="off"
                 maxlength="20"
               />

@@ -93,6 +93,15 @@ class PublicController extends BaseController
     {
       DB::rollBack(); // undo any DB writes
       Log::error('Gift sending failed: ' . $ex->getMessage());
+      if (isset($imageName) && !empty($imageName)) 
+      {
+        // $imageName is defined and not empty
+        $imagePath = public_path('c/' . $imageName);
+        if (file_exists($imagePath)) 
+        {
+            unlink($imagePath);
+        }
+      }
       return response()->json(['error' => $ex->getMessage()]);
     }
   }
@@ -112,7 +121,8 @@ class PublicController extends BaseController
 
   private function setFontProperties(FontFactory $font, $cert)
   {
-    $fontPath = base_path('platform/plugins/gift/resources/assets/fonts/Droid_Arabic_Naskh_Bold.ttf');
+    $fontPath = base_path('platform/plugins/gift/resources/assets/fonts/Amiri-Regular.ttf');
+    // $fontPath = base_path('platform/plugins/gift/resources/assets/fonts/Droid_Arabic_Naskh_Bold.ttf');
     $font->filename($fontPath);    
     $font->size($cert->font_size);
     $font->color($cert->font_color);

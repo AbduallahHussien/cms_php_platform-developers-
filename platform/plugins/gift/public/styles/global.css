@@ -128,7 +128,7 @@ input::-webkit-inner-spin-button {
   .template-btn img {
     border-radius: var(--rounded-xl);
     box-sizing: border-box;
-    filter: grayscale(1);
+    /* filter: grayscale(1); */
     border: solid 2px #0000;
     transition:
       filter 500ms ease,
@@ -136,8 +136,8 @@ input::-webkit-inner-spin-button {
   }
 
   .template-btn.selected img {
-    border: solid 2px var(--clr-primary);
-    filter: grayscale(0);
+    border: solid 4px var(--clr-primary);
+    /* filter: grayscale(0); */
   }
 }
 
