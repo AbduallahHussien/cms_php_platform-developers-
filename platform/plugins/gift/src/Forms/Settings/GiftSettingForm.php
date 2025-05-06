@@ -49,7 +49,7 @@ class GiftSettingForm extends SettingForm
                 'value' => setting('ultra_message_app_url'),
                
             ])
-            ->add('is_enabled', 'html', [
+            ->add('is_gift_disabled', 'html', [
                 'html' => view('plugins/gift::partials.enable-disable-gift'),
                 'wrapper' => [
                     'class' => 'mb-0',

@@ -25,8 +25,8 @@ class GiftSettingController extends SettingController
                             'ultra_message_token' => $request->ultra_message_token,
                             'ultra_message_instance' => $request->ultra_message_instance,
                             'ultra_message_app_url' => $request->ultra_message_app_url,
-                            'is_enabled' => $request->is_enabled,
-                            'disable_msg' => $request->disable_msg,
+                            'is_gift_disabled' => $request->is_gift_disabled,
+                            'disable_gift_msg' => $request->disable_gift_msg ?? 'الإهداءات متوقفة حالياً',
                         ]);
         return $this->httpResponse()->withUpdatedSuccessMessage();
     }
