@@ -93,4 +93,6 @@ return [
     'display_fields' => 'Display fields',
     'mandatory_fields' => 'Mandatory fields',
     'mandatory_fields_helper_text' => 'If it is blank, it will be validated by default configuration. Name and Message are always required.',
+    'disable' => 'Disable Gifts',
+    'disable_msg' => 'Disable message',
 ];

@@ -45,6 +45,20 @@ return new class () extends Migration {
                     'created_at' => Carbon::now(),
                     'updated_at' => Carbon::now(),
                 ]);
+                DB::table('settings')->insertOrIgnore([
+                    'id' => BaseModel::getTypeOfId() === 'BIGINT' ? null : (new BaseModel())->newUniqueId(),
+                    'key' => 'is_enabled',
+                    'value' => true,
+                    'created_at' => Carbon::now(),
+                    'updated_at' => Carbon::now(),
+                ]);
+                DB::table('settings')->insertOrIgnore([
+                    'id' => BaseModel::getTypeOfId() === 'BIGINT' ? null : (new BaseModel())->newUniqueId(),
+                    'key' => 'disable_msg',
+                    'value' => 'الإهداءات متوقفة حالياً',
+                    'created_at' => Carbon::now(),
+                    'updated_at' => Carbon::now(),
+                ]);
             
         });
     }

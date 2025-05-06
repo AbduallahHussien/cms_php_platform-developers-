@@ -13,6 +13,8 @@ class GiftSettingRequest extends Request
             'ultra_message_token' =>  ['nullable','string'],
             'donor_message'=> ['nullable','string'],
             'recipient_message'=> ['nullable','string'],
+            'is_enabled'=> ['nullable', 'boolean'],
+            'disable_msg' => ['nullable','string'],
         ];
 
     }
