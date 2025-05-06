@@ -5,7 +5,7 @@ namespace Botble\Whatsapp\Http\Controllers;
 use Assets;
 use URL;
 use File;
-use Auth;
+// use Auth;
 use Botble\Base\Events\BeforeEditContentEvent;
 use Botble\Whatsapp\Http\Requests\WhatsappRequest;
 use Botble\Whatsapp\Repositories\Interfaces\WhatsappInterface;
@@ -19,6 +19,7 @@ use Botble\Base\Events\UpdatedContentEvent;
 use Botble\Base\Http\Responses\BaseHttpResponse;
 use Botble\Whatsapp\Forms\WhatsappForm;
 use Botble\Base\Forms\FormBuilder;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Pusher\Pusher;
 class WhatsappController extends BaseController
@@ -281,7 +282,10 @@ class WhatsappController extends BaseController
         return DB::select("select * from conversations_type where type='".$type."' ");
     }
 
-    public function contacts(){
+    public function contacts(){ 
+        if (!Auth::user()->hasPermission('contacts.index')) {
+            abort(403, 'Unauthorized action.');
+        }
         return view('plugins/whatsapp::contacts');
     }
     public function broadcast(){
@@ -389,7 +393,11 @@ class WhatsappController extends BaseController
     // GET REPORT
 
     //GET CONTACTS
-    public function get_contacts(){
+    public function get_contacts()
+    {
+        if (!Auth::user()->hasPermission('contacts.index')) {
+            abort(403, 'Unauthorized action.');
+        }
         return DB::select(" SELECT * from whatsapp_contacts");
     }
     //END GET CONTACTS
@@ -463,6 +471,10 @@ class WhatsappController extends BaseController
     }
     public function save_settings(Request $request){
        
+        if (!Auth::user()->hasPermission('whatsapp.settings')) 
+        {
+            abort(403, 'Unauthorized action.');
+        }
         $tkn_id = $request->tkn_id;
         $instance_id = $request->instance_id;
         $pusher_key = '';
