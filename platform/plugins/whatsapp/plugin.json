@@ -6,7 +6,6 @@
     "url": "",
     "version": "1.0",
     "description": "The description for module whatsapp",
-    "require":[],
-    "minimum_core_version": "7.3.0"
+    "require":[]
 }
  
