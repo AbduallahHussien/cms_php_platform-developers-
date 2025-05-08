@@ -9,6 +9,9 @@ use Botble\CustomerTickets\Http\Controllers\TicketsController;
 // Add below this line:
 AdminHelper::registerRoutes(function () {
 
+    // Route::get('ttt',function(){
+    //     return plugin_path('public/country_codes.json');
+    // });
     // Customers Routes
     Route::prefix('customers')->as('customer.')->group(function () {
         Route::resource('', CustomerController::class)->parameters(['' => 'customer']);
