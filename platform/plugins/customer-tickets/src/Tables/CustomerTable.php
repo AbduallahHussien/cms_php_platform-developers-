@@ -40,7 +40,7 @@ class CustomerTable extends TableAbstract
 
                     IdColumn::make(),
 
-                    NameColumn::make(),
+                    NameColumn::make()->route('customer.show'),
 
                     Column::make('phone_code')
                     ->title(__('Phone Code')),
