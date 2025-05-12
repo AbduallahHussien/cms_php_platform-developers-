@@ -52,6 +52,7 @@ class CustomerController extends BaseController
 
     public function store(CustomerRequest $request)
     {
+        // dd($request->all());
         $form = CustomerForm::create()->setRequest($request);
 
         $form->save();
