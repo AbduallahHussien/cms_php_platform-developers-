@@ -11,9 +11,11 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('documentations', function (Blueprint $table) {
-            $table->enum('direction', ['LTR', 'RTL'])->default('LTR')->after('link');
-        });
+        if (!Schema::hasColumn('documentations', 'direction')) {
+            Schema::table('documentations', function (Blueprint $table) {
+                $table->enum('direction', ['LTR', 'RTL'])->default('LTR')->after('link');
+            });
+        }
     }
 
     /**
