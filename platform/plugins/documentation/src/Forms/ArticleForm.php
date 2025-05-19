@@ -24,7 +24,7 @@ class ArticleForm extends FormAbstract
                         ->pluck('name', 'id') // key = id, value = name
                         ->toArray();
         
-
+         
         $this
             ->setupModel(new Article())
             ->setValidatorClass(ArticleRequest::class)
@@ -33,13 +33,19 @@ class ArticleForm extends FormAbstract
                 'label' => trans('plugins/documentation::article.title'),
                 'required' => true,
             ])
-            ->add(
-                'topic_id',  
-                SelectField::class, 
-                SelectFieldOption::make()
-                ->label(trans('plugins/documentation::article.topic'))
-                ->choices($topics)
-                ->required())
+            // ->add(
+            //     'topic_id',  
+            //     SelectField::class, 
+            //     SelectFieldOption::make()
+            //     ->label(trans('plugins/documentation::article.topic'))
+            //     ->choices($topics)
+            //     ->required())
+            ->add('topic_id', 
+                'customSelect', [
+                'label' => trans('plugins/documentation::article.topic'),
+                'required' => true,
+                'choices' => $topics,
+            ])
             ->add('content', EditorField::class, ContentFieldOption::make()->required()->allowedShortcodes()->toArray())
             ->add('documentation_id', 'hidden', [ 
                 'required' => true
