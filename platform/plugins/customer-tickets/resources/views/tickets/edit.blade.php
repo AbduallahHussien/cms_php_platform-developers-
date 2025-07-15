@@ -1,5 +1,9 @@
 @extends($layout ?? BaseHelper::getAdminMasterLayoutTemplate())
 @section('content')
+@php
+    use Botble\Base\Enums\TicketTypeEnum;
+@endphp
+
     <div class="px-4">
         <h4 class="mb-4">{{ __('Edit Ticket') }}</h4>
 
@@ -23,10 +27,11 @@
                             <label for="type" class="col-sm-2 col-form-label">{{ __('Type') }} <span
                                     class="text-danger">*</span></label>
                             <div class="col-sm-10">
-                                {!! Form::select('type', \Botble\CustomerTicketsBase\Enums\TicketTypeEnum::labels(), null, [
+                                {!! Form::select('type', TicketTypeEnum::labels(), null, [
                                     'class' => 'form-control',
                                     'required',
                                 ]) !!}
+                                
                             </div>
                         </div>
 

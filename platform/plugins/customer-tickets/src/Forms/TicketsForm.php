@@ -2,11 +2,13 @@
 
 namespace Botble\CustomerTickets\Forms;
 
+use Botble\Base\Enums\CustomerStatusEnum;
 use Botble\Base\Forms\FormAbstract;
 use Botble\CustomerTickets\Models\Tickets;
 use Botble\CustomerTickets\Http\Requests\TicketsRequest;
 use Botble\CustomerTickets\Base\Enums\TicketTypeEnum;
 use Botble\CustomerTickets\Base\Enums\TicketLevelEnum;
+use Botble\CustomerTickets\Models\Customer;
 
 class TicketsForm extends FormAbstract
 {
@@ -44,7 +46,7 @@ class TicketsForm extends FormAbstract
 
     protected function getCustomerChoices()
     {
-        return \Botble\CustomerTickets\Models\Customer::pluck('name', 'id')->toArray();
+        return Customer::where('status',CustomerStatusEnum::ACTIVE)->pluck('name', 'id')->toArray();
         // return \Botble\CustomerTickets\Models\Customer::whereDoesntHave('tickets')
         // ->pluck('name', 'id')
         // ->toArray();
