@@ -16,7 +16,7 @@ class ArticleForm extends FormAbstract
 {
     public function setup(): void
     {
-        info($this->getModel());
+        // info($this->getModel());
         $documentation_id = (int)$this->getModel()->documentation_id;
 
         $topics = Topic::where('documentation_id', $documentation_id)
@@ -33,13 +33,6 @@ class ArticleForm extends FormAbstract
                 'label' => trans('plugins/documentation::article.title'),
                 'required' => true,
             ])
-            // ->add(
-            //     'topic_id',  
-            //     SelectField::class, 
-            //     SelectFieldOption::make()
-            //     ->label(trans('plugins/documentation::article.topic'))
-            //     ->choices($topics)
-            //     ->required())
             ->add('topic_id', 
                 'customSelect', [
                 'label' => trans('plugins/documentation::article.topic'),
