@@ -32,19 +32,16 @@ class DocumentationForm extends FormAbstract
                     'placeholder' => trans('plugins/documentation::documentation.link_placeholder'),
                     'data-counter' => 120,
                 ],
+            ]) 
+            ->add('direction', 
+                'customSelect', [
+                'label' => trans('plugins/documentation::documentation.direction'),
+                'required' => true,
+                'choices' => [
+                    'LTR' => trans('plugins/documentation::documentation.ltr'),
+                    'RTL' => trans('plugins/documentation::documentation.rtl'),
+                ],
             ])
-            ->add(
-                'direction', 
-                SelectField::class, 
-                SelectFieldOption::make()
-                    ->label(trans('plugins/documentation::documentation.direction'))
-                    ->choices([
-                        'LTR' => trans('plugins/documentation::documentation.ltr'),
-                        'RTL' => trans('plugins/documentation::documentation.rtl'),
-                    ]) 
-                    ->selected($this->model ? $this->model->direction : 1) // Default selected value
-                    ->required() // Add class "required" if that is mandatory field 
-            )
             ->add('status', 'customSelect', [
                 'label' => trans('core/base::tables.status'),
                 'required' => true,
