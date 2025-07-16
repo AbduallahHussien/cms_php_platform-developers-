@@ -67,7 +67,7 @@ class CustomerForm extends FormAbstract
                 'html' => '<div class="row">',
             ])
             ->add('country_code', 'html', [
-                'html' => view('plugins/customer-tickets::components.country-codes-selectbox')->render(),
+                'html' => view('plugins/customer-tickets::components.country-codes-selectbox',['customer' => $this->model])->render(),
                 'wrapper' => [
                     'class' => '',
                 ],
