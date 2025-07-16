@@ -1,5 +1,5 @@
 {
-    "id": "wesam/customer-Tickets",
+    "id": "wesam/customer-tickets",
     "name": "Customer Tickets",
     "namespace": "Botble\\CustomerTickets\\",
     "provider": "Botble\\CustomerTickets\\Providers\\CustomerTicketsServiceProvider",
@@ -7,8 +7,6 @@
     "url": "",
     "version": "1.0.0",
     "description": ""
-
-
 }
 
 
