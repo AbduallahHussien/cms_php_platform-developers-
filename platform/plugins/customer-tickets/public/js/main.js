@@ -26,6 +26,11 @@ class CustomerTicketsPluginManagement {
                 $('#dial_code').val(dialCode);
             });
 
+            // Simulate when editing a user with stored phone number
+            const fullPhoneNumber = $('#fullPhoneNumber').val();  
+            if (fullPhoneNumber !== '+') {
+                iti.setNumber(fullPhoneNumber);
+            }
         });
     }
 }

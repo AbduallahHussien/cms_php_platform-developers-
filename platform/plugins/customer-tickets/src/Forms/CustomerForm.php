@@ -26,24 +26,24 @@ class CustomerForm extends FormAbstract
     //         '90'  => '+90 (Turkey)',
     //     ];
     // }
-    public function get_nationalities()
-    {
-        return [
-            'Saudi'       => 'Saudi',
-            'Egyptian'    => 'Egyptian',
-            'Emirati'     => 'Emirati',
-            'Kuwaiti'     => 'Kuwaiti',
-            'Jordanian'   => 'Jordanian',
-            'Palestinian' => 'Palestinian',
-            'Syrian'      => 'Syrian',
-            'Lebanese'    => 'Lebanese',
-            'American'    => 'American',
-            'British'     => 'British',
-            'German'      => 'German',
-            'French'      => 'French',
-            'Turkish'     => 'Turkish',
-        ];
-    }
+    // public function get_nationalities()
+    // {
+    //     return [
+    //         'Saudi'       => 'Saudi',
+    //         'Egyptian'    => 'Egyptian',
+    //         'Emirati'     => 'Emirati',
+    //         'Kuwaiti'     => 'Kuwaiti',
+    //         'Jordanian'   => 'Jordanian',
+    //         'Palestinian' => 'Palestinian',
+    //         'Syrian'      => 'Syrian',
+    //         'Lebanese'    => 'Lebanese',
+    //         'American'    => 'American',
+    //         'British'     => 'British',
+    //         'German'      => 'German',
+    //         'French'      => 'French',
+    //         'Turkish'     => 'Turkish',
+    //     ];
+    // }
     
     public function setup(): void
     {
@@ -103,7 +103,7 @@ class CustomerForm extends FormAbstract
             ])
             ->add('nationality', 'customSelect', [
                 'label' => __('Nationality'),
-                'choices' =>$this->get_nationalities(),
+                'choices' =>config('core.base.general.countries'),
                 'attr' => [
                     'placeholder' => __('Select nationality'),
                 ],
