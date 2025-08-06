@@ -12,6 +12,7 @@ return new class extends Migration {
      */
     public function up()
     {
+        // info("i am running");
         if (!Schema::hasTable('whatsapp_broadcast')) {
             Schema::create('whatsapp_broadcast', function (Blueprint $table) {
                 $table->id();
@@ -103,15 +104,16 @@ return new class extends Migration {
             });
         }
     
-        if (!Schema::hasTable('whatsapp_setting')) {
-            Schema::create('whatsapp_setting', function (Blueprint $table) {
+        if (Schema::hasTable('whatsapp_setting')) {
+            Schema::drop('whatsapp_setting');
+        }
+        
+        if (!Schema::hasTable('whatsapp_settings')) {
+            Schema::create('whatsapp_settings', function (Blueprint $table) {
                 $table->id();
                 $table->string('ultramsg_whatsapp_token', 50);
                 $table->string('ultramsg_whatsapp_instance_id', 50);
-                $table->string('pusher_key', 45);
-                $table->string('pusher_secret', 45);
-                $table->string('pusher_app_id', 45);
-                $table->string('pusher_cluster', 45);
+                // $table->timestamps();
             });
         }
     

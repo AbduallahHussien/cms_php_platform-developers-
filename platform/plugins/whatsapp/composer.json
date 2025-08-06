@@ -1,0 +1,8 @@
+{
+    "name": "botble/whatsapp",
+    "description": "Whatsapp plugin",
+    "type": "package",
+    "require": {
+        "kreait/firebase-php": "^7.16"
+    }
+}

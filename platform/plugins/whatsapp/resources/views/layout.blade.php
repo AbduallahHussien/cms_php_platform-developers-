@@ -83,12 +83,17 @@
   var save_settings_route  =    "{{route('whatsapp.save.settings')}}";
   var save_chat_route  =    "{{route('whatsapp.save.chat')}}";
 
-  var token="{{($sett && $sett !='')? $sett[0]->ultramsg_whatsapp_token : ''}}";
-  var instance = "{{($sett && $sett !='')? $sett[0]->ultramsg_whatsapp_instance_id : '' }}";
-  var pusher_key="{{env('PUSHER_APP_KEY') }}";
-  var pusher_secret = "{{env('PUSHER_APP_SECRET')}}";
-  var pusher_app_id="{{env('PUSHER_APP_ID')  }}";
-  var pusher_cluster = "{{ env('PUSHER_APP_CLUSTER', 'mt1') }}";
+//   var token="{{($sett && $sett !='')? $sett[0]->ultramsg_whatsapp_token : ''}}";
+//   var instance = "{{($sett && $sett !='')? $sett[0]->ultramsg_whatsapp_instance_id : '' }}";
+//   var pusher_key="{{env('PUSHER_APP_KEY') }}";
+//   var pusher_secret = "{{env('PUSHER_APP_SECRET')}}";
+//   var pusher_app_id="{{env('PUSHER_APP_ID')  }}";
+//   var pusher_cluster = "{{ env('PUSHER_APP_CLUSTER', 'mt1') }}";
+
+
+// Use Laravel's @json directive to safely pass PHP variables to JS
+const token = @json(optional($sett[0])->ultramsg_whatsapp_token ?? '');
+const instance = @json(optional($sett[0])->ultramsg_whatsapp_instance_id ?? '');
 
  
   

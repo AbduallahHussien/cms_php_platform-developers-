@@ -4,13 +4,9 @@
 @section('page')
 
          <!-- container --> 
-            <div class="container-fluid app">
+            <div class="container-fluid app ">
+
                 
-                <div class="pb-2 ms-2">
-                    <a href="{{ route('dashboard.index') }}" class="btn btn-sm btn-outline-warning" title="Back To Dashboard">
-                        <i class="bx bx-arrow-back" style="font-size: 23px;"></i>
-                    </a>
-                </div>
                                 
                 <!-- APP ROW -->
                     <div class="row app-one">
@@ -21,10 +17,17 @@
                             <!-- SIDE ONE => CONTACTS -->
                                 <div class="side-one">
                                     <div class="row heading">
-                                        <div class="col-5  heading-avatar">
+                                        <div class="col-4  heading-avatar">
                                             <div class="heading-avatar-icon" id="profile_image" data-current_id="{{(isset($user['id']))?$user['id']:''}}">
                                                 <img src="{{(isset($user['profile_picture']))?$user['profile_picture']:''}}">
                                             </div>
+                                        </div>
+                                        <div class="col-1 pull-right">
+                                            <a href="{{route('dashboard.index')}}">
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="#54656f" viewBox="0 0 16 16">
+                                                    <path fill-rule="evenodd" d="M15 8a.5.5 0 0 0-.5-.5H2.707l3.147-3.146a.5.5 0 1 0-.708-.708l-4 4a.5.5 0 0 0 0 .708l4 4a.5.5 0 0 0 .708-.708L2.707 8.5H14.5A.5.5 0 0 0 15 8z"/>
+                                                </svg>
+                                            </a>
                                         </div>
                                         @if (Auth::user()->hasPermission('contacts.index'))
                                         <div class="col-1  heading-contacts  pull-right">
@@ -253,8 +256,8 @@
                                 <!-- END CONVERSATION NAME -->
 
                                 <!-- CONVERSATION TYPE -->
-                                <div class="col-4 conversation-type ">
-                                        <button type="button" class="btn btn-success d-none" id="conversation-type" data-action="" data-chat_id="" data-chat_img="" data-chat_title="">Open Conversation</button>
+                                <div class="col-4 conversation-type">
+                                    <button type="button" class="btn btn-success d-none" id="conversation-type" data-action="" data-chat_id="" data-chat_img="" data-chat_title="">Open Conversation</button>
                                 </div>
                                 <!-- END CONVERSATION TYPE -->
                             </div>
@@ -627,45 +630,7 @@
                 </div>
             <!-- End modal--new group -->
             <!-- modal settings -->
-                <div class="modal fade" id="modalSettings" aria-labelledby="modalToggleLabel" tabindex="-1" style="display: none;" aria-hidden="true">
-                    <div class="modal-dialog modal-dialog-centered">
-                    <div class="modal-content p-3">
-                        <div class="modal-header">
-                        <h5 class="modal-title" id="modalToggleLabel">Check settings please!</h5>
-                        </div>
-                        <div class="mb-3">
-                          <label class="form-label" for="basic-default-fullname">Token</label>
-                          <input type="text" class="form-control" id="token" placeholder="Token" >
-                        </div>
-                        <div class="mb-3">
-                          <label class="form-label" for="basic-default-fullname">Instance</label>
-                          <input type="text" class="form-control" id="instance" placeholder="Instance"
-                        </div>
-                        <div class="mb-3">
-                          <label class="form-label" for="basic-default-fullname">Pusher key</label>
-                          <input type="text" class="form-control" id="pusher_key" value="{{env('PUSHER_APP_KEY')}}" disabled  >
-                        </div>
-                        <div class="mb-3">
-                          <label class="form-label" for="basic-default-fullname">Pusher secret</label>
-                          <input type="text" class="form-control" id="pusher_secret" value="{{env('PUSHER_APP_SECRET')}}" disabled >
-                        </div>
-                        <div class="mb-3">
-                          <label class="form-label" for="basic-default-fullname">Pusher app id</label>
-                          <input type="text" class="form-control" id="pusher_app_id" value="{{env('PUSHER_APP_ID')}}" disabled >
-                        </div>
-                        <div class="mb-3">
-                          <label class="form-label" for="basic-default-fullname">Pusher cluster</label>
-                          <input type="text" class="form-control" id="pusher_cluster" value="{{env('PUSHER_APP_CLUSTER', 'mt1')}}" disabled >
-                        </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">
-                                Close
-                            </button>
-                            <button type="button" id="settings_save" class="btn btn-primary">Save</button>
-                        </div>
-                    </div>
-                    </div>
-                </div>
+            @include('plugins/whatsapp::partials._modal_settings')
             <!-- end modal settings -->
         <!-- End  Modals -->
 

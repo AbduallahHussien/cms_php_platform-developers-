@@ -1,10 +1,8 @@
 const mix = require('laravel-mix');
 const path = require('path');
 
-//Bundeling Whatsapp Plugin using laravel mix
-
 // 🔧 Get plugin directory name dynamically
-const directory = 'whatsapp';
+const directory = path.basename(path.resolve(__dirname));
 
 // 🔧 Define source and dist paths
 const source = `platform/plugins/${directory}`;
@@ -21,6 +19,6 @@ if (mix.inProduction()) {
 }
 
 // ✅ Optional: Add versioning for cache-busting
-// if (mix.inProduction()) {
-//     mix.version();
-// }
+if (mix.inProduction()) {
+    mix.version();
+}

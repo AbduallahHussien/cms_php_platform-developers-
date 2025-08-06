@@ -6,49 +6,51 @@
 
 class WhatsappJs {
   init() {
-    debugger;
-       if(token !='' && instance!=''){
+    
+      //  if(token !='' && instance!=''){
      
-       }else{
-        $('#modalSettings').modal('show');
-       }
-       $("#configurations").click(function() {
-        $('#token').val(token);
-        $('#instance').val(instance);
-        $('#settings_save').addClass('update').html('Update');
-        $('#modalSettings').modal('show');
-       });
-       // Save settings
-       $("#settings_save").click(function() {
-        var settings_token =  $('#token').val();
-        var settings_instance = $('#instance').val();
-        if(settings_token == '' ){
-          notification.show('Token is required ','error');
-          return false;
-        }
-        if(settings_instance == '' ){
-          notification.show('Instance is required ','error');
-          return false;
-        }
-        $.ajax({
-          headers: {
-            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-         },
-          url: save_settings_route,
-          type: 'post',
-          data: { "tkn_id":settings_token, "instance_id":settings_instance },
-          success: function(response) {
+      //  }else{
+      //   $('#modalSettings').modal('show');
+      //  }
+      //  $("#configurations").click(function() {
+      //   $('#token').val(token);
+      //   $('#instance').val(instance);
+      //   $('#settings_save').addClass('update').html('Update');
+      //   $('#modalSettings').modal('show');
+      //  });
 
-            $('#modalSettings').modal('hide');
-            location.reload();
-            notification.next_page_notifiction('Settings updated successfully');
+
+       // Save settings
+      //  $("#settings_save").click(function() {
+      //   var settings_token =  $('#token').val();
+      //   var settings_instance = $('#instance').val();
+      //   if(settings_token == '' ){
+      //     notification.show('Token is required ','error');
+      //     return false;
+      //   }
+      //   if(settings_instance == '' ){
+      //     notification.show('Instance is required ','error');
+      //     return false;
+      //   }
+      //   $.ajax({
+      //     headers: {
+      //       'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+      //    },
+      //     url: save_settings_route,
+      //     type: 'post',
+      //     data: { "tkn_id":settings_token, "instance_id":settings_instance },
+      //     success: function(response) {
+
+      //       $('#modalSettings').modal('hide');
+      //       location.reload();
+      //       notification.next_page_notifiction('Settings updated successfully');
             
-          }
-        });
+      //     }
+      //   });
         
            
   
-      });
+      // });
     // END VIEW MORE
         var currentdate = new Date(); 
         var datetime = currentdate.getHours() + ":"  + currentdate.getMinutes() ;
@@ -814,231 +816,231 @@ class WhatsappJs {
             }
       
         //Get Messages Form Chat
-            $(document).on("click",".sideBar-body",function() {
-              $('.sideBar-body').removeClass('hover');
-              $(this).addClass('hover');
-              $('.conversation').removeClass('d-none');
-              $('.start-bg').addClass('d-none');
-              $(this).find('.unread').remove();
+            // $(document).on("click",".sideBar-body",function() {
+            //   $('.sideBar-body').removeClass('hover');
+            //   $(this).addClass('hover');
+            //   $('.conversation').removeClass('d-none');
+            //   $('.start-bg').addClass('d-none');
+            //   $(this).find('.unread').remove();
 
-                if (window.innerWidth < 700){
-                  $(".side").css({"display": "none"});
-                }
-                var instance_id  = instance.split(/(\d+)/);
-                var chatName = ($(this).find('.name-meta').text());
-                var chat_id = $(this).data('chat_id');
-                var chat_img = $(this).find('img').attr('src');
-                var chat_title = $(this).find('.name-meta').text();
-                $('#conversation-type').data('chat_title',chat_title);
-                $('#conversation-type').data('chat_img',chat_img);
-                //Get Conversation
-                $.ajax({
-                  url: get_con_route,
-                  type: 'GET',
-                  data: { "chat_id":chat_id },
-                  success: function(response) {
-                    var data  = response ;
-                    if( data !=''){
-                      if(data[0].type == 'close'){
+            //     if (window.innerWidth < 700){
+            //       $(".side").css({"display": "none"});
+            //     }
+            //     var instance_id  = instance.split(/(\d+)/);
+            //     var chatName = ($(this).find('.name-meta').text());
+            //     var chat_id = $(this).data('chat_id');
+            //     var chat_img = $(this).find('img').attr('src');
+            //     var chat_title = $(this).find('.name-meta').text();
+            //     $('#conversation-type').data('chat_title',chat_title);
+            //     $('#conversation-type').data('chat_img',chat_img);
+            //     //Get Conversation
+            //     $.ajax({
+            //       url: get_con_route,
+            //       type: 'GET',
+            //       data: { "chat_id":chat_id },
+            //       success: function(response) {
+            //         var data  = response ;
+            //         if( data !=''){
+            //           if(data[0].type == 'close'){
       
                         
-                        $('#conversation-type').data('action','open');
-                        $('#conversation-type').data('chat_id',chat_id).removeClass('btn-success').addClass('btn-secondary').text('Open Conversation');
+            //             $('#conversation-type').data('action','open');
+            //             $('#conversation-type').data('chat_id',chat_id).removeClass('btn-success').addClass('btn-secondary').text('Open Conversation');
             
-                      }else {
-                        $('#conversation-type').data('action','close');
-                        $('#conversation-type').data('chat_id',chat_id).removeClass('btn-secondary').addClass('btn-success').text('Close Conversation');
-                      }
-                    }else {
-                      $('#conversation-type').data('action','close');
-                      $('#conversation-type').data('chat_id',chat_id).removeClass('btn-secondary').addClass('btn-success').text('Close Conversation');
-                    }
+            //           }else {
+            //             $('#conversation-type').data('action','close');
+            //             $('#conversation-type').data('chat_id',chat_id).removeClass('btn-secondary').addClass('btn-success').text('Close Conversation');
+            //           }
+            //         }else {
+            //           $('#conversation-type').data('action','close');
+            //           $('#conversation-type').data('chat_id',chat_id).removeClass('btn-secondary').addClass('btn-success').text('Close Conversation');
+            //         }
                   
-                  $('#conversation-type').removeClass('d-none');
-                  }
-                });
+            //       $('#conversation-type').removeClass('d-none');
+            //       }
+            //     });
       
-                //End Get Conversation
-                // send read chat
-                $.ajax({
-                    url: get_chat_route,
-                    type: 'GET',
-                    data: { "chat_id":chat_id ,"instance":instance_id[1]},
-                    success: function(response) {
-                      $('a.heading-name-meta').empty().text(chatName);
-                      $('#conversation').empty();
-                      $('#conversation').data("receiver_id",chat_id);
-                      heading_image(chat_id);
-                      var data  = response;
-                      $.each(data, function(index) {
+            //     //End Get Conversation
+            //     // send read chat
+            //     $.ajax({
+            //         url: get_chat_route,
+            //         type: 'GET',
+            //         data: { "chat_id":chat_id ,"instance":instance_id[1]},
+            //         success: function(response) {
+            //           $('a.heading-name-meta').empty().text(chatName);
+            //           $('#conversation').empty();
+            //           $('#conversation').data("receiver_id",chat_id);
+            //           heading_image(chat_id);
+            //           var data  = response;
+            //           $.each(data, function(index) {
                               
-                              var mainClass = "";
-                              var subClass = "";
+            //                   var mainClass = "";
+            //                   var subClass = "";
                               
-                              if(data[index].event_type == "message_received"){
-                                  mainClass = "message-main-receiver";
-                                  subClass = "receiver";
-                              }else{
-                                  mainClass = "message-main-sender";
-                                  subClass = "sender" ;
-                              }
+            //                   if(data[index].event_type == "message_received"){
+            //                       mainClass = "message-main-receiver";
+            //                       subClass = "receiver";
+            //                   }else{
+            //                       mainClass = "message-main-sender";
+            //                       subClass = "sender" ;
+            //                   }
                               
-                              // check type message
-                            if(data[index].type == "image" ){
+            //                   // check type message
+            //                 if(data[index].type == "image" ){
                                 
-                                $('#conversation').append(
-                                ` 
-                                  <div class="row message-body">
-                                      <div class="col-12 `+mainClass+`">
-                                      <div class="`+subClass+`">
-                                          <div class="message-text">
-                                          <img id="uploadedImage" src="`+data[index].media+`" alt="Uploaded Image" accept="image/png, image/jpeg">
+            //                     $('#conversation').append(
+            //                     ` 
+            //                       <div class="row message-body">
+            //                           <div class="col-12 `+mainClass+`">
+            //                           <div class="`+subClass+`">
+            //                               <div class="message-text">
+            //                               <img id="uploadedImage" src="`+data[index].media+`" alt="Uploaded Image" accept="image/png, image/jpeg">
                                             
-                                          </div>
-                                          <span class="message-time pull-right">
-                                          `+ convert_time(data[index].time)+`
-                                          </span>
-                                          <span>
-                                            <a href="`+data[index].media+`" download  target="_blank">
-                                              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-download" viewBox="0 0 16 16">
-                                                <path d="M.5 9.9a.5.5 0 0 1 .5.5v2.5a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-2.5a.5.5 0 0 1 1 0v2.5a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2v-2.5a.5.5 0 0 1 .5-.5z"/>
-                                                <path d="M7.646 11.854a.5.5 0 0 0 .708 0l3-3a.5.5 0 0 0-.708-.708L8.5 10.293V1.5a.5.5 0 0 0-1 0v8.793L5.354 8.146a.5.5 0 1 0-.708.708l3 3z"/>
-                                              </svg>
-                                            </a>
-                                          </span>
+            //                               </div>
+            //                               <span class="message-time pull-right">
+            //                               `+ convert_time(data[index].time)+`
+            //                               </span>
+            //                               <span>
+            //                                 <a href="`+data[index].media+`" download  target="_blank">
+            //                                   <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-download" viewBox="0 0 16 16">
+            //                                     <path d="M.5 9.9a.5.5 0 0 1 .5.5v2.5a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-2.5a.5.5 0 0 1 1 0v2.5a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2v-2.5a.5.5 0 0 1 .5-.5z"/>
+            //                                     <path d="M7.646 11.854a.5.5 0 0 0 .708 0l3-3a.5.5 0 0 0-.708-.708L8.5 10.293V1.5a.5.5 0 0 0-1 0v8.793L5.354 8.146a.5.5 0 1 0-.708.708l3 3z"/>
+            //                                   </svg>
+            //                                 </a>
+            //                               </span>
                                           
-                                          <span class="message-time pull-right">`+data[index].pushname+`</span>
-                                      </div>
-                                      </div>
-                                  </div>    
-                                `);
+            //                               <span class="message-time pull-right">`+data[index].pushname+`</span>
+            //                           </div>
+            //                           </div>
+            //                       </div>    
+            //                     `);
                                 
-                            }else if(data[index].type == "ptt" || data[index].type == "audio"){
+            //                 }else if(data[index].type == "ptt" || data[index].type == "audio"){
                 
                           
-                              $('#conversation').append(
-                                ` 
-                                  <div class="row message-body">
-                                      <div class="col-12 `+mainClass+`">
-                                      <div class="`+subClass+`">
-                                          <div class="message-text">
-                                          <audio controls>
-                                              <source src="`+data[index].media+`" type="audio/mpeg">
-                                          </audio>
+            //                   $('#conversation').append(
+            //                     ` 
+            //                       <div class="row message-body">
+            //                           <div class="col-12 `+mainClass+`">
+            //                           <div class="`+subClass+`">
+            //                               <div class="message-text">
+            //                               <audio controls>
+            //                                   <source src="`+data[index].media+`" type="audio/mpeg">
+            //                               </audio>
                                             
-                                          </div>
-                                          <span class="message-time pull-right">
-                                          `+ convert_time(data[index].time)+`
-                                          </span>
-                                          <span>
-                                            <a href="`+data[index].media+`" download  target="_blank">
-                                              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-download" viewBox="0 0 16 16">
-                                                <path d="M.5 9.9a.5.5 0 0 1 .5.5v2.5a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-2.5a.5.5 0 0 1 1 0v2.5a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2v-2.5a.5.5 0 0 1 .5-.5z"/>
-                                                <path d="M7.646 11.854a.5.5 0 0 0 .708 0l3-3a.5.5 0 0 0-.708-.708L8.5 10.293V1.5a.5.5 0 0 0-1 0v8.793L5.354 8.146a.5.5 0 1 0-.708.708l3 3z"/>
-                                              </svg>
-                                            </a>
-                                          </span>
+            //                               </div>
+            //                               <span class="message-time pull-right">
+            //                               `+ convert_time(data[index].time)+`
+            //                               </span>
+            //                               <span>
+            //                                 <a href="`+data[index].media+`" download  target="_blank">
+            //                                   <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-download" viewBox="0 0 16 16">
+            //                                     <path d="M.5 9.9a.5.5 0 0 1 .5.5v2.5a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-2.5a.5.5 0 0 1 1 0v2.5a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2v-2.5a.5.5 0 0 1 .5-.5z"/>
+            //                                     <path d="M7.646 11.854a.5.5 0 0 0 .708 0l3-3a.5.5 0 0 0-.708-.708L8.5 10.293V1.5a.5.5 0 0 0-1 0v8.793L5.354 8.146a.5.5 0 1 0-.708.708l3 3z"/>
+            //                                   </svg>
+            //                                 </a>
+            //                               </span>
                                           
-                                          <span class="message-time pull-right">`+data[index].pushname+`</span>
-                                      </div>
-                                      </div>
-                                  </div>    
-                                `);
-                            }else if(data[index].type == "document"){
+            //                               <span class="message-time pull-right">`+data[index].pushname+`</span>
+            //                           </div>
+            //                           </div>
+            //                       </div>    
+            //                     `);
+            //                 }else if(data[index].type == "document"){
                 
                           
-                              $('#conversation').append(
-                                ` 
-                                  <div class="row message-body">
-                                      <div class="col-12 `+mainClass+`">
-                                      <div class="`+subClass+`">
-                                            <div class="message-text">`+data[index].body+`</div>
-                                          <span class="message-time pull-right">
-                                          `+ convert_time(data[index].time)+`
-                                          </span>
-                                          <span>
-                                            <a href="`+data[index].media+`" download  target="_blank">
-                                              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-download" viewBox="0 0 16 16">
-                                                <path d="M.5 9.9a.5.5 0 0 1 .5.5v2.5a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-2.5a.5.5 0 0 1 1 0v2.5a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2v-2.5a.5.5 0 0 1 .5-.5z"/>
-                                                <path d="M7.646 11.854a.5.5 0 0 0 .708 0l3-3a.5.5 0 0 0-.708-.708L8.5 10.293V1.5a.5.5 0 0 0-1 0v8.793L5.354 8.146a.5.5 0 1 0-.708.708l3 3z"/>
-                                              </svg>
-                                            </a>
-                                          </span>
+            //                   $('#conversation').append(
+            //                     ` 
+            //                       <div class="row message-body">
+            //                           <div class="col-12 `+mainClass+`">
+            //                           <div class="`+subClass+`">
+            //                                 <div class="message-text">`+data[index].body+`</div>
+            //                               <span class="message-time pull-right">
+            //                               `+ convert_time(data[index].time)+`
+            //                               </span>
+            //                               <span>
+            //                                 <a href="`+data[index].media+`" download  target="_blank">
+            //                                   <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-download" viewBox="0 0 16 16">
+            //                                     <path d="M.5 9.9a.5.5 0 0 1 .5.5v2.5a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-2.5a.5.5 0 0 1 1 0v2.5a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2v-2.5a.5.5 0 0 1 .5-.5z"/>
+            //                                     <path d="M7.646 11.854a.5.5 0 0 0 .708 0l3-3a.5.5 0 0 0-.708-.708L8.5 10.293V1.5a.5.5 0 0 0-1 0v8.793L5.354 8.146a.5.5 0 1 0-.708.708l3 3z"/>
+            //                                   </svg>
+            //                                 </a>
+            //                               </span>
                                           
-                                          <span class="message-time pull-right">`+data[index].pushname+`</span>
-                                      </div>
-                                      </div>
-                                  </div>    
-                                `);
-                            }else if(data[index].type == "video" ){
+            //                               <span class="message-time pull-right">`+data[index].pushname+`</span>
+            //                           </div>
+            //                           </div>
+            //                       </div>    
+            //                     `);
+            //                 }else if(data[index].type == "video" ){
                 
                           
-                              $('#conversation').append(
-                                ` 
-                                  <div class="row message-body">
-                                      <div class="col-12 `+mainClass+`">
-                                      <div class="`+subClass+`">
-                                          <div class="message-text">
-                                            <video width="210" height="150" controls>
-                                              <source src="`+data[index].media+`" type="video/mp4">
-                                              <source src="`+data[index].media+`" type="video/ogg">
-                                        </video>
+            //                   $('#conversation').append(
+            //                     ` 
+            //                       <div class="row message-body">
+            //                           <div class="col-12 `+mainClass+`">
+            //                           <div class="`+subClass+`">
+            //                               <div class="message-text">
+            //                                 <video width="210" height="150" controls>
+            //                                   <source src="`+data[index].media+`" type="video/mp4">
+            //                                   <source src="`+data[index].media+`" type="video/ogg">
+            //                             </video>
                                             
-                                          </div>
-                                          <span class="message-time pull-right">
-                                          `+ convert_time(data[index].time)+`
-                                          </span>
-                                          <span>
-                                            <a href="`+data[index].media+`" download  target="_blank">
-                                              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-download" viewBox="0 0 16 16">
-                                                <path d="M.5 9.9a.5.5 0 0 1 .5.5v2.5a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-2.5a.5.5 0 0 1 1 0v2.5a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2v-2.5a.5.5 0 0 1 .5-.5z"/>
-                                                <path d="M7.646 11.854a.5.5 0 0 0 .708 0l3-3a.5.5 0 0 0-.708-.708L8.5 10.293V1.5a.5.5 0 0 0-1 0v8.793L5.354 8.146a.5.5 0 1 0-.708.708l3 3z"/>
-                                              </svg>
-                                            </a>
-                                          </span>
+            //                               </div>
+            //                               <span class="message-time pull-right">
+            //                               `+ convert_time(data[index].time)+`
+            //                               </span>
+            //                               <span>
+            //                                 <a href="`+data[index].media+`" download  target="_blank">
+            //                                   <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-download" viewBox="0 0 16 16">
+            //                                     <path d="M.5 9.9a.5.5 0 0 1 .5.5v2.5a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-2.5a.5.5 0 0 1 1 0v2.5a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2v-2.5a.5.5 0 0 1 .5-.5z"/>
+            //                                     <path d="M7.646 11.854a.5.5 0 0 0 .708 0l3-3a.5.5 0 0 0-.708-.708L8.5 10.293V1.5a.5.5 0 0 0-1 0v8.793L5.354 8.146a.5.5 0 1 0-.708.708l3 3z"/>
+            //                                   </svg>
+            //                                 </a>
+            //                               </span>
                                           
-                                          <span class="message-time pull-right">`+data[index].pushname+`</span>
-                                      </div>
-                                      </div>
-                                  </div>    
-                                `);
-                            }else{          
+            //                               <span class="message-time pull-right">`+data[index].pushname+`</span>
+            //                           </div>
+            //                           </div>
+            //                       </div>    
+            //                     `);
+            //                 }else{          
                             
-                              $('#conversation').append(
-                              ` 
-                                      <div class="row message-body">
-                                          <div class="col-12 `+mainClass+` ">
-                                            <div class="`+subClass+`">
-                                                <div class="message-text">`+data[index].body+`</div>
-                                                <span class="message-time pull-right">`+ convert_time(data[index].time)+`</span>
-                                                <span class="message-time pull-right">`+data[index].pushname+`</span>
-                                            </div>
-                                          </div>
-                                      </div>    
-                              `);
+            //                   $('#conversation').append(
+            //                   ` 
+            //                           <div class="row message-body">
+            //                               <div class="col-12 `+mainClass+` ">
+            //                                 <div class="`+subClass+`">
+            //                                     <div class="message-text">`+data[index].body+`</div>
+            //                                     <span class="message-time pull-right">`+ convert_time(data[index].time)+`</span>
+            //                                     <span class="message-time pull-right">`+data[index].pushname+`</span>
+            //                                 </div>
+            //                               </div>
+            //                           </div>    
+            //                   `);
                               
-                            }
-                            });   
-                        $("#conversation").scrollTop($("#conversation").prop("scrollHeight"));
-                    }
-                });
-                var settings = {
-                  "async": true,
-                  "crossDomain": true,
-                  "url": "https://api.ultramsg.com/"+instance+"/chats/read",
-                  "method": "POST",
-                  "headers": {},
-                  "data": {
-                    "token": token,
-                    "chatId": chat_id
-                }
-                }
+            //                 }
+            //                 });   
+            //             $("#conversation").scrollTop($("#conversation").prop("scrollHeight"));
+            //         }
+            //     });
+            //     var settings = {
+            //       "async": true,
+            //       "crossDomain": true,
+            //       "url": "https://api.ultramsg.com/"+instance+"/chats/read",
+            //       "method": "POST",
+            //       "headers": {},
+            //       "data": {
+            //         "token": token,
+            //         "chatId": chat_id
+            //     }
+            //     }
                 
-                $.ajax(settings).done(function (response) {
-                });
-                // End  send read chat
+            //     $.ajax(settings).done(function (response) {
+            //     });
+            //     // End  send read chat
                     
-            });
+            // });
         //END Get Messages Form Chat
       
         //Conversation Action
@@ -1101,6 +1103,7 @@ class WhatsappJs {
             //Event Name
              channel.bind('App\\Events\\NotificationEvent', function(data) {
               
+              
                  $.ajax({
                       headers: {
                         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
@@ -1110,6 +1113,7 @@ class WhatsappJs {
                         data: { "data": data},
                         success: function(response) {
                           if(response.action == 'done'){
+                          
                                 // RE ORDER CHAT 
                                   if(data.event_type == "message_received"){    
                                     $('[data-chat_id="'+data.from+'"]').insertBefore('.sideBar-body:first-child');

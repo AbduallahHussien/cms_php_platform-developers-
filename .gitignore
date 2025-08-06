@@ -55,3 +55,5 @@ storage/framework/laravel-excel/
 .phpactor.json
 
 storage/framework/maintenance.php
+
+/platform/plugins/whatsapp/*.json

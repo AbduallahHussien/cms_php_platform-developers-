@@ -21,6 +21,9 @@ use Botble\Whatsapp\Forms\WhatsappForm;
 use Botble\Base\Forms\FormBuilder;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Botble\Base\Facades\ACL;
+use Botble\Whatsapp\Models\WhatsappSetting;
+use Botble\Whatsapp\Services\WhatsappService;
 use Pusher\Pusher;
 class WhatsappController extends BaseController
 {
@@ -28,13 +31,15 @@ class WhatsappController extends BaseController
      * @var WhatsappInterface
      */
     protected $whatsappRepository;
+    protected $whatsappService;
 
     /**
      * @param WhatsappInterface $whatsappRepository
      */
-    public function __construct(WhatsappInterface $whatsappRepository)
+    public function __construct(WhatsappInterface $whatsappRepository,WhatsappService $whatsappService)
     {
         $this->whatsappRepository = $whatsappRepository;
+        $this->whatsappService = $whatsappService;
     }
 
     /**
@@ -42,7 +47,13 @@ class WhatsappController extends BaseController
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
     public function index()
-    {
+    { 
+        // $database = app('whatsapp.firebase.database');
+
+        // // Write to Firebase
+        // $database->getReference('notifications/test')
+        //     ->set(['message' => 'Hello from Botble WhatsApp plugin']);
+
         page_title()->setTitle(trans('plugins/whatsapp::whatsapp.name'));
         
         Assets::addScriptsDirectly([
@@ -55,6 +66,7 @@ class WhatsappController extends BaseController
             'vendor/core/plugins/whatsapp/plugins/vendor/js/notifications.js',
             'https://js.pusher.com/7.2/pusher.min.js',
             'vendor/core/plugins/whatsapp/plugins/custom/whatsapp/record.js',
+            'vendor/core/plugins/whatsapp/js/app.js',
             'vendor/core/plugins/whatsapp/plugins/custom/whatsapp/scripts.js?v=100',
         ])
         ->addStylesDirectly([
@@ -220,10 +232,56 @@ class WhatsappController extends BaseController
     // End Send Audio
 
     // Get Chat 
-    public function get_chat(Request $request){
+    public function get_chat(Request $request)
+    {
         $chat_id = $request->chat_id;
         $instance_id = $request->instance;
-        return DB::select("select msg.* from ( SELECT * from whatsapp_chat where msg_id like '%".$chat_id."%' and chat_id =".$instance_id." order by time DESC LIMIT 100 ) msg order by msg.time ASC ");  
+        // $res = DB::select("select msg.* from ( SELECT * from whatsapp_chat where msg_id like '%".$chat_id."%' and chat_id =".$instance_id." order by time DESC LIMIT 100 ) msg order by msg.time ASC ");  
+        // info($res);
+        // return $res;
+       
+        //////////////////////////////////////////////////////////////////////////////////////////
+        $messages = DB::table('whatsapp_chat')
+        ->where('chat_id', $instance_id)
+        ->where('msg_id', 'like', '%' . $chat_id . '%')
+        ->orderByDesc('time')
+        ->limit(100)
+        ->get()
+        ->sortBy('time')
+        ->values()
+        ->all();  // convert Collection to plain array of stdClass objects
+        return $messages;
+    // info($messages);
+    
+
+        /////////////////////////////////////////////////////////////////////////////////////////
+        // $database = app('whatsapp.firebase.database'); 
+        // $instanceId = $request->instance;
+        // $chatId = $request->chat_id;
+        // // info($chatId);
+        // $reference = $database->getReference('whatsapp_chat');
+        
+        // // This pulls ALL matching chat_id, since Firebase doesn't allow complex filters (e.g. LIKE + AND)
+        // $snapshot = $reference
+        //     ->orderByChild('chat_id')
+        //     ->equalTo((int)$instanceId)
+        //     ->limitToLast(200) // We fetch more to allow for LIKE filtering
+        //     ->getSnapshot();
+
+        //     // info($snapshot);
+        // $results = [];
+        // foreach ($snapshot->getValue() as $record) {
+        //     if (strpos($record['msg_id'], $chatId) !== false) {
+        //         $results[] = $record;
+        //     }
+        // }
+
+        // // Sort ascending by time
+        // usort($results, fn($a, $b) => $a['time'] <=> $b['time']);
+
+        // // Return latest 100
+        // $results = array_slice($results, -100);
+        // info(response()->json($results));
     }
     public function reports(){
         return view('plugins/whatsapp::reports');
@@ -469,42 +527,28 @@ class WhatsappController extends BaseController
             'message' => $message
         ]);
     }
-    public function save_settings(Request $request){
-       
-        if (!Auth::user()->hasPermission('whatsapp.settings')) 
-        {
-            abort(403, 'Unauthorized action.');
-        }
-        $tkn_id = $request->tkn_id;
-        $instance_id = $request->instance_id;
-        $pusher_key = '';
-        $pusher_secret = '';
-        $pusher_app_id = '';
-        $pusher_cluster = '';
 
-        $query = DB::select("select * from whatsapp_setting");
-        if($query && $query!='') {
-            return DB::table('whatsapp_setting')
-            ->where('id',$query[0]->id)
-            ->update([
-                'ultramsg_whatsapp_token' => $tkn_id,
-                'ultramsg_whatsapp_instance_id'=>$instance_id,
-                'pusher_key'=>$pusher_key,
-                'pusher_secret'=>$pusher_secret,
-                'pusher_app_id'=>$pusher_app_id,
-                'pusher_cluster'=>$pusher_cluster
-            ]);
-        }else{
-            return DB::table('whatsapp_setting')->insert([
-                'ultramsg_whatsapp_token' => $tkn_id,
-                'ultramsg_whatsapp_instance_id'=>$instance_id,
-                'pusher_key'=>$pusher_key,
-                'pusher_secret'=>$pusher_secret,
-                'pusher_app_id'=>$pusher_app_id,
-                'pusher_cluster'=>$pusher_cluster
-            ]);
+
+
+    public function save_settings(Request $request)
+    {
+        abort_unless(Auth::user()->hasPermission('whatsapp.settings'), 403, 'Unauthorized action.');
+
+        $token = $request->input('tkn_id');
+        $instanceId = $request->input('instance_id'); 
+
+        $res_save_settings = $this->whatsappService->save_settings($token,$instanceId);
+
+        if ($res_save_settings['code'] == 0) {
+            return response()->json([
+                'message' => $res_save_settings['msg'] ?? 'Something went wrong.',
+            ], 500);
         }
-       
+        
+        return response()->json([
+            'message' => 'Settings saved successfully.',
+        ]);
+         
     }
 
     // SEND GROUP MESSAGE
