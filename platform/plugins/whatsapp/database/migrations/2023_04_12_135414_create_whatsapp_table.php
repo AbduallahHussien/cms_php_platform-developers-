@@ -12,7 +12,6 @@ return new class extends Migration {
      */
     public function up()
     {
-        // info("i am running");
         if (!Schema::hasTable('whatsapp_broadcast')) {
             Schema::create('whatsapp_broadcast', function (Blueprint $table) {
                 $table->id();

@@ -34,6 +34,11 @@ class Settings {
                 url: save_settings_route,
                 type: "POST",
                 data: { tkn_id: settingsToken, instance_id: settingsInstance },
+                beforeSend: () => {
+                    // Disable button and show spinner inside it
+                    // $("#settings_save").attr("disabled", true);
+                    $("#settings_save").html('<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Saving...');
+                },
                 success: (response) => {
                     $("#modalSettings").modal("hide");
             
@@ -45,6 +50,11 @@ class Settings {
                 error: (xhr) => {
                     const errorMessage = xhr.responseJSON?.message || "Unexpected error occurred.";
                     notification.show("Failed to update settings: " + errorMessage, "error");
+                },
+                complete: () => {
+                    // Re-enable button and restore original text
+                    $("#settings_save").attr("disabled", false);
+                    $("#settings_save").html("Save Settings");
                 },
             });
         });

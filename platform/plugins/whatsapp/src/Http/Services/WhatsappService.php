@@ -1,6 +1,6 @@
 <?php
 
-namespace Botble\Whatsapp\Services;
+namespace Botble\Whatsapp\Http\Services;
 
 use Botble\Whatsapp\Models\WhatsappSetting;
 use Throwable;

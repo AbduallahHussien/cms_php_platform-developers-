@@ -12,7 +12,7 @@ use Illuminate\Support\Facades\Http;
 if (! function_exists('whatsapp_settings')) {
     function whatsapp_settings()
     {
-        return DB::select("SELECT * from whatsapp_setting");
+        return DB::select("SELECT * from whatsapp_settings");
     }
 }
 // if (! function_exists('whatsapp_insert_chat')) {

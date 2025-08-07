@@ -23,7 +23,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Botble\Base\Facades\ACL;
 use Botble\Whatsapp\Models\WhatsappSetting;
-use Botble\Whatsapp\Services\WhatsappService;
+use Botble\Whatsapp\Http\Services\WhatsappService;
 use Pusher\Pusher;
 class WhatsappController extends BaseController
 {

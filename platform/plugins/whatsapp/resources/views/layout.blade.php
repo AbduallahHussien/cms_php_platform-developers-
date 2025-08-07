@@ -48,7 +48,12 @@
     
     <?php $sett = whatsapp_settings();?>
     @yield('javascript')
-  
+
+
+@php
+    $whatsappToken = isset($sett[0]) ? $sett[0]->ultramsg_whatsapp_token : '';
+    $instanceId = isset($sett[0]) ? $sett[0]->ultramsg_whatsapp_instance_id : '';
+@endphp
 <script>
   var get_temp_route =    "{{route('whatsapp.get.templates')}}";
   var get_Grou_route =    "{{route('whatsapp.get.groups')}}";
@@ -85,31 +90,10 @@
 
 //   var token="{{($sett && $sett !='')? $sett[0]->ultramsg_whatsapp_token : ''}}";
 //   var instance = "{{($sett && $sett !='')? $sett[0]->ultramsg_whatsapp_instance_id : '' }}";
-//   var pusher_key="{{env('PUSHER_APP_KEY') }}";
-//   var pusher_secret = "{{env('PUSHER_APP_SECRET')}}";
-//   var pusher_app_id="{{env('PUSHER_APP_ID')  }}";
-//   var pusher_cluster = "{{ env('PUSHER_APP_CLUSTER', 'mt1') }}";
 
+const token = @json($whatsappToken);
+const instance = @json($instanceId);
 
-// Use Laravel's @json directive to safely pass PHP variables to JS
-const token = @json(optional($sett[0])->ultramsg_whatsapp_token ?? '');
-const instance = @json(optional($sett[0])->ultramsg_whatsapp_instance_id ?? '');
-
- 
-  
-  
-
-
- 
-
-
-
-  
-
-
-  
-  
- 
 </script>
     <div id="stack-footer">
         @stack('footer')

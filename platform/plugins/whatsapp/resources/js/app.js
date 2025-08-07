@@ -1,3 +1,3 @@
 import './modules/firebase';
-import './modules/chat';
 import './modules/settings';
+import './modules/chat';
