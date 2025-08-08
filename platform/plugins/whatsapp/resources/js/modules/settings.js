@@ -1,5 +1,11 @@
 class Settings {
     init() {
+        $.ajaxSetup({
+            headers: {
+              'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            }
+        });
+          
         // Check if token and instance exist, otherwise show modal
         if (!token || !instance) {
             $("#modalSettings").modal("show");
@@ -26,11 +32,11 @@ class Settings {
             }
 
             $.ajax({
-                headers: {
-                    "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr(
-                        "content",
-                    ),
-                },
+                // headers: {
+                //     "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr(
+                //         "content",
+                //     ),
+                // },
                 url: save_settings_route,
                 type: "POST",
                 data: { tkn_id: settingsToken, instance_id: settingsInstance },

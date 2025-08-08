@@ -3,6 +3,7 @@
     "description": "Whatsapp plugin",
     "type": "package",
     "require": {
-        "kreait/firebase-php": "^7.16"
+        "kreait/firebase-php": "^7.16",
+        "ultramsg/whatsapp-php-sdk": "*"
     }
 }

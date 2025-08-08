@@ -9,8 +9,7 @@ import { db, ref, onChildAdded,query, orderByChild, limitToLast, get,child } fro
 ///////////////////////////////////////////////////////////////////////////////
 $(document).ready(function() {
   $(document).on("click",".sideBar-body",function() 
-  {
-    console.log("clicked i am working")
+  { 
     $('.sideBar-body').removeClass('hover');
     $(this).addClass('hover');
     $('.conversation').removeClass('d-none');
@@ -33,24 +32,17 @@ $(document).ready(function() {
     $('#conversation').empty();
     $('#conversation').data("receiver_id",chat_id);
     heading_image(chat_id);
-    console.log(111);
+    
     async function loadChatMessages(chat_id, instance_id) {
-      debugger;
-      console.log("Before snapshot")
       const snapshot = await get(child(ref(db), 'whatsapp_chat'));
-      
-      if (snapshot.exists()) {
-        console.log('Snapshot Data:', snapshot.val());
-      } else {
-        console.warn('No data available at whatsapp_chat');
-      }
+   
       if (snapshot.exists()) {
          
         let messages = [];
     
         snapshot.forEach(childSnapshot => {
           const msg = childSnapshot.val();
-            // console.log('msg',msg)
+
           if (
             msg.chat_id === instance_id 
             &&
@@ -61,31 +53,23 @@ $(document).ready(function() {
         });
     
         // Sort by time ascending
-        messages.sort((a, b) => a.time - b.time);
-    
-        // console.log("data", messages);
+        messages.sort((a, b) => a.time - b.time); 
     
         // Now use `messages` array to update DOM
         return messages;
-      } else {
-        console.log("No data found");
+      } else { 
         return [];
       }
     }
     
     // // Example usage:
     // chat_id = "963995275137@c.us";
-    // instance_id = "117593";
-   console.log('chat_id',chat_id)
-   console.log('instance_id',instance_id)
-    if (chat_id && instance_id) {
-      // console.log('chat_id: ' , chat_id);
-      // console.log('instance_id: ' , instance_id);
-      console.log('loadChatMessages');
+    // instance_id = "117593"; 
+    if (chat_id && instance_id) { 
       loadChatMessages(chat_id, instance_id[1]).then(data => {
-        console.log('test',data)
+     
         $.each(data, function(index) {
-              // console.log(index)       
+                    
               var mainClass = "";
               var subClass = "";
               
@@ -98,20 +82,17 @@ $(document).ready(function() {
               }
               
               // check type message
-            if(data[index].type == "image" ){
+            if(data[index].type == "image" )
+            {
                 
                 $('#conversation').append(
-                ` 
-                  <div class="row message-body">
+                `<div class="row message-body">
                       <div class="col-12 `+mainClass+`">
                       <div class="`+subClass+`">
                           <div class="message-text">
-                          <img id="uploadedImage" src="`+data[index].media+`" alt="Uploaded Image" accept="image/png, image/jpeg">
-                            
+                          <img id="uploadedImage" src="${data[index].media}" alt="Uploaded Image" accept="image/png, image/jpeg">
                           </div>
-                          <span class="message-time pull-right">
-                          `+ convert_time(data[index].time)+`
-                          </span>
+                          <span class="message-time pull-right">`+ convert_time(data[index].time)+`</span>
                           <span>
                             <a href="`+data[index].media+`" download  target="_blank">
                               <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-download" viewBox="0 0 16 16">
@@ -124,8 +105,7 @@ $(document).ready(function() {
                           <span class="message-time pull-right">`+data[index].pushname+`</span>
                       </div>
                       </div>
-                  </div>    
-                `);
+                  </div>`);
                 
             }else if(data[index].type == "ptt" || data[index].type == "audio"){
 
@@ -269,15 +249,12 @@ $(document).ready(function() {
 
 ///////////////////////////////////////////////////////////////////////////////
 // Listen for new messages
-console.log('before chatRef');
 const chatRef = ref(db, 'whatsapp_chat');
-console.log('chatRef:',chatRef);
 
-console.log("Before onChildAdded");
 onChildAdded(chatRef, (snapshot) => {
-  console.log("after onChildAdded")
+
     const data = snapshot.val();
-  console.log('data',data);
+
     // // 1. Basic validation
     // if (!data || !data.event_type) {
     //     console.error("🔥 Received invalid data from Firebase:", message);

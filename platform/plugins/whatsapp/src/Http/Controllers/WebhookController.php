@@ -12,7 +12,7 @@ class WebhookController extends Controller
     public function handleWebhook(Request $request)
     {
         try {
-            // info($request->all());
+            info($request->all());
             event(new WhatsappNotificationEvent($request->all()));
 
             return response()->json(['status' => 'Webhook received and event fired']);

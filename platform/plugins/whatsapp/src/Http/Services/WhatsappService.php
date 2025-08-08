@@ -4,8 +4,14 @@ namespace Botble\Whatsapp\Http\Services;
 
 use Botble\Whatsapp\Models\WhatsappSetting;
 use Throwable;
+use UltraMsg\WhatsAppApi;
+
 class WhatsappService
 {
+    public function __construct(protected WhatsAppApi $whatsAppApi)
+    {
+        
+    }
     public function save_settings(string $token, string $instanceId ): array
     {
         try 

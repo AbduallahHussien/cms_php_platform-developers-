@@ -63,53 +63,51 @@ class WhatsappJs {
             }
           });
       
-          document.getElementById('imgupload').addEventListener('change', function(){
-            var chat_id  = $('#conversation').data('receiver_id');
-            if (this.files[0] ) {
-              
-              var picture = new FileReader();
-              picture.readAsDataURL(this.files[0]);
-      
-                  const file = this.files[0];
-                  const  fileType = file['type'].split('/')[0];  
-                  // Check Type OF uploaded
-                  
-                    if(fileType=="image"){
-                      picture.addEventListener('load', function(event) {
-                        send_image(event.target.result , chat_id,fileType);
-                      });
-                    }else if(fileType=="audio"){
-                      
-                      picture.addEventListener('load', function(event) {
-                          var file = event.target.result;
-                          $.ajax({
-                            headers: {
-                              'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                           },
-                            url: send_audio_route,
-                            type: 'post',
-                            data: { "path":file ,"to":chat_id},
-                            success: function(response) {
-                                
-                            }
-                          });
-                      });
-                      
-                    }else if(fileType=="text"||fileType=="application"){
-                      picture.addEventListener('load', function(event) {
-                        send_document(event.target.result , chat_id);
-                      });
-                    }else if(fileType=="video"){
-                      picture.addEventListener('load', function(event) {
-                        send_video(event.target.result , chat_id);
-                      });
-                    }else{
-                      return false;
-                    }
-                  
-              
-            }
+
+          $('#imgupload').on('change', function () {
+         
+            const chat_id = $('#conversation').data('receiver_id');
+            const file = this.files[0];
+            if (!file) return;
+          
+            const fileType = file.type.split('/')[0];
+            const reader = new FileReader();
+          
+            reader.onload = function (event) {
+              const fileData = event.target.result;
+          
+              if (fileType === "image") {
+                // send_image(fileData, chat_id);
+                $('#imagePreview').attr('src', fileData);
+                $('#imagePreviewModal').data('fileData', fileData).data('chatId', chat_id).modal('show');
+          
+              } else if (fileType === "audio") {
+                $.ajax({
+                  url: send_audio_route,
+                  type: 'POST',
+                  data: { path: fileData, to: chat_id },
+                  success: function (response) {
+                    // Handle success if needed
+                  },
+                  error: function (error) {
+                    // Handle error if needed
+                  }
+                });
+          
+              } else if (fileType === "text" || fileType === "application") {
+                send_document(fileData, chat_id);
+          
+              } else if (fileType === "video") {
+                send_video(fileData, chat_id);
+          
+              } else {
+                return false;
+              }
+            };
+          
+            reader.readAsDataURL(file);
           });
+          
       
         // VIEW MORE
           $("#view-more").click(function() {
@@ -433,16 +431,24 @@ class WhatsappJs {
         // End  send document
       
         // send image
-            function send_image(file,chat_id,fileType){
-                  $.ajax({
-                    headers: {
-                      'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                   },
-                    url:send_img_route,
-                    type: 'post',
-                    data: { "SendImage": "1","path":file,"to":chat_id,"token":token,"instance":instance},
-                    success: function(response) {}
-                  });
+            // function send_image(file,chat_id){
+            //       $.ajax({ 
+            //         url:send_img_route,
+            //         type: 'post',
+            //         data: { "SendImage": "1","path":file,"to":chat_id},
+            //         success: function(response) {
+
+            //         }
+            //       });
+            function send_image(file, chatId) {
+              $.post(send_img_route, { path: file,to: chatId})
+               .done(function (response) { 
+                console.log('Image sent successfully');
+              }).fail(function (jqXHR, textStatus, errorThrown) { 
+                console.error('Failed to send image:', textStatus, errorThrown);
+              });
+            
+            
                 //   $('#conversation').append(
                 //     `  
                 //       <div class="row message-body">
@@ -570,9 +576,6 @@ class WhatsappJs {
         // send Message
             $(document).on('keypress',function(e) {
             if(e.which == 13) {
-            
-      
-            
               var chat_id  = $('#conversation').data('receiver_id');
               var message = $('#comment').val();
               

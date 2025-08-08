@@ -11,8 +11,11 @@ use Illuminate\Support\Facades\Event;
 use Botble\Base\Traits\LoadAndPublishDataTrait;
 use Botble\Language\Facades\Language;
 use Botble\LanguageAdvanced\Supports\LanguageAdvancedManager;
+use Botble\Whatsapp\Models\WhatsappSetting;
 use Illuminate\Routing\Events\RouteMatched;
 use Botble\Whatsapp\Providers\EventServiceProvider;
+use UltraMsg\WhatsAppApi;
+use Illuminate\Support\Facades\Schema;
 class WhatsappServiceProvider extends ServiceProvider
 {
     use LoadAndPublishDataTrait;
@@ -38,6 +41,28 @@ class WhatsappServiceProvider extends ServiceProvider
                 ->withDatabaseUri(config('whatsapp-firebase.database.url'));
 
             return $factory->createDatabase();
+        });
+
+
+        // We use a singleton because we only need one instance of the WhatsAppApi class.
+        $this->app->singleton(WhatsAppApi::class, function () {
+            $instanceId = null;
+            $token = null;
+            // It's good practice to check if the table exists before querying it.
+            // This prevents errors during migrations or initial setup.
+            if (Schema::hasTable('whatsapp_settings')) {
+                // Fetch the first row of settings.
+                // You might need to adjust this if you store settings differently.
+                $settings = WhatsappSetting::first();
+                $instanceId = $settings?->instance_id;
+                $token = $settings?->token;
+                
+            }
+            // Return a new instance of the WhatsAppApi.
+            // If settings are not found, it will be instantiated with null values,
+            // which will likely cause an error when you try to use it,
+            // reminding you to configure the settings.
+            return new WhatsAppApi($token, $instanceId);
         });
     }
 

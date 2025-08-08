@@ -19,7 +19,10 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
+use Symfony\Component\Process\Process;
+use Symfony\Component\Process\Exception\ProcessFailedException;
 use Throwable;
+
 
 class PluginService
 {
@@ -28,6 +31,31 @@ class PluginService
         protected Filesystem $files,
         protected PluginManifest $pluginManifest
     ) {
+    }
+
+
+
+    protected function findExecutable(string $name): ?string
+    {
+        $cmd = strtoupper(substr(PHP_OS, 0, 3)) === 'WIN' ? 'where' : 'which';
+
+        exec("{$cmd} {$name}", $output, $exitCode);
+
+        if ($exitCode === 0 && !empty($output)) {
+            return $output[0];
+        }
+
+        return null;
+    }
+
+    protected function getPhpCommand(): string
+    {
+        return $this->findExecutable('php') ?? 'php'; // fallback to 'php' if not found
+    }
+
+    protected function getComposerCommand(): string
+    {
+        return $this->findExecutable('composer') ?? 'composer'; // fallback to 'composer'
     }
 
     public function activate(string $plugin): array
@@ -88,6 +116,54 @@ class PluginService
                     ),
                 ];
             }
+            
+            // info(getenv('APPDATA'));
+            // --- NEW CODE STARTS HERE ---
+            // First, run composer update to install the plugin's dependencies.
+        //    try {
+                // Build the command to run composer either directly or via php + composer.phar
+                // $composer = $this->getComposerCommand(); 
+                // info($composer); 
+                // $php = $this->getPhpCommand();
+                // info($php);
+
+                // // Check if composer executable is a .phar file (needs to be run with php)
+                // if (str_ends_with(strtolower($composer), '.phar')) {
+                //     $cmd = [$php, $composer, 'update', '--no-dev'];
+                // } else {
+
+                //     $cmd = [$composer, 'update'];
+                // }
+
+                
+                // $php = 'C:\\xampp\\php\\php.exe';
+                // $composerPhar = 'C:\\composer\\composer.phar';
+                
+                // $cmd = [$php, $composerPhar, 'update', '--no-dev'];
+                
+                // $process = new Process($cmd, base_path(), [
+                //     'APPDATA' => getenv('APPDATA') ?: 'C:\\Users\\Ibrahim\\AppData\\Roaming',
+                //     // or
+                //     'COMPOSER_HOME' => 'C:\\Users\\YourUser\\AppData\\Roaming\\Composer',
+                // ]);
+                
+                // $process = new Process($cmd, base_path());
+                 
+
+            //     $process->setTimeout(300);
+            //     $process->run();
+
+            //     if (!$process->isSuccessful()) {
+            //         throw new ProcessFailedException($process);
+            //     }
+            // } catch (ProcessFailedException $exception) {
+            //     info($exception->getMessage());
+            //     return [
+            //         'error' => true,
+            //         'message' => 'Failed to install plugin dependencies. Check your plugin\'s composer.json or Composer log for details: ' . $exception->getMessage(),
+            //     ];
+            // }
+            // --- NEW CODE ENDS HERE ---
 
             if (! class_exists($content['provider'])) {
                 $loader = new ClassLoader();
@@ -136,6 +212,7 @@ class PluginService
             'message' => trans('packages/plugin-management::plugin.activated_already'),
         ];
     }
+
 
     protected function validate(string $plugin): array
     {

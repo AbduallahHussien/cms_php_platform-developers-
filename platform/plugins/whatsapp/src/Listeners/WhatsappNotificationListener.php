@@ -21,6 +21,7 @@ class WhatsappNotificationListener
         $whatsappData = $payload['data'] ?? [];
     
         if (function_exists('whatsapp_insert_chat')) {
+            
             whatsapp_insert_chat(
                 $payload['instanceId'] ?? null,
                 $payload['event_type'] ?? null,

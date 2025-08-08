@@ -117,14 +117,14 @@ class WhatsappController extends BaseController
         
     }
     //Send Image 
-    public function send_image(Request $request) {
+    public function send_image(Request $request) 
+    {
+        info('img request');
+        info($request->all());
         $path = $request->path;
-        $to = $request->to;
-        $token = $request->token;
-        $instance = $request->instance;
+        $to = $request->to; 
         $referenceId = $request->referenceId;
         $img_base64 = urlencode($path);
-
         $curl = curl_init();
         curl_setopt_array($curl, array(
             CURLOPT_URL => "https://api.ultramsg.com/$instance/messages/image",
@@ -141,10 +141,8 @@ class WhatsappController extends BaseController
                 "content-type: application/x-www-form-urlencoded"
             ),
         ));
-
         $response = curl_exec($curl);
         $err = curl_error($curl);
-
         curl_close($curl);
     }
     //End Send Image 

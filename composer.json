@@ -35,6 +35,7 @@
         "laravel/tinker": "^2.9",
         "predis/predis": "^2.2",
         "pusher/pusher-php-server": "^7.2",
+        "ultramsg/whatsapp-php-sdk": "^2.0",
         "wikimedia/composer-merge-plugin": "^2.1"
     },
     "require-dev": {
@@ -122,6 +123,10 @@
         {
             "type": "path",
             "url": "./platform/packages/*"
+        },
+        {
+            "type": "path",
+            "url": "./platform/plugins/*"
         }
     ]
 }
