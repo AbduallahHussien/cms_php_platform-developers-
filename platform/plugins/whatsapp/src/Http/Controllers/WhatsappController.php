@@ -22,6 +22,7 @@ use Botble\Base\Forms\FormBuilder;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Botble\Base\Facades\ACL;
+use Botble\Whatsapp\Http\Requests\SendWhatsappImageRequest;
 use Botble\Whatsapp\Models\WhatsappSetting;
 use Botble\Whatsapp\Http\Services\WhatsappService;
 use Pusher\Pusher;
@@ -78,6 +79,7 @@ class WhatsappController extends BaseController
             'vendor/core/plugins/whatsapp/plugins/noty/lib/themes/mint.css',
             'vendor/core/plugins/whatsapp/plugins/waitme/waitMe.min.css',
             'https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css',
+            'vendor/core/plugins/whatsapp/css/toastr.min.css',
 
 
         ]);
@@ -117,33 +119,32 @@ class WhatsappController extends BaseController
         
     }
     //Send Image 
-    public function send_image(Request $request) 
+    public function send_image(SendWhatsappImageRequest $request) 
     {
-        info('img request');
-        info($request->all());
-        $path = $request->path;
-        $to = $request->to; 
-        $referenceId = $request->referenceId;
-        $img_base64 = urlencode($path);
-        $curl = curl_init();
-        curl_setopt_array($curl, array(
-            CURLOPT_URL => "https://api.ultramsg.com/$instance/messages/image",
-            CURLOPT_RETURNTRANSFER => true,
-            CURLOPT_SSL_VERIFYHOST => 0,
-            CURLOPT_SSL_VERIFYPEER => 0,
-            CURLOPT_ENCODING => "",
-            CURLOPT_MAXREDIRS => 10,
-            CURLOPT_TIMEOUT => 30,
-            CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
-            CURLOPT_CUSTOMREQUEST => "POST",
-            CURLOPT_POSTFIELDS => "token=$token&to=$to&image=$img_base64&caption=image&referenceId=$referenceId&nocache=",
-            CURLOPT_HTTPHEADER => array(
-                "content-type: application/x-www-form-urlencoded"
-            ),
-        ));
-        $response = curl_exec($curl);
-        $err = curl_error($curl);
-        curl_close($curl);
+        // info('img request');
+        // info($request->all());
+        
+        $validated = $request->validated();
+
+        $to = $validated['to'];
+        $base64Image = $validated['image'];
+         
+        $res_send_img = $this->whatsappService->send_img($to,$base64Image);
+        info('res_send_img');
+        info($res_send_img);
+
+        if($res_send_img['code'] ==0)
+        {
+            return response()->json([
+                'success' => false,
+                'message' => $res_send_img['msg']
+            ]);
+        }
+        return response()->json([
+            'success' => true,
+            'message' => $res_send_img['msg']
+        ]);
+ 
     }
     //End Send Image 
     

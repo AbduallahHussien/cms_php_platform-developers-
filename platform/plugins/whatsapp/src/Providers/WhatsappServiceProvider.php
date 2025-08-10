@@ -11,6 +11,7 @@ use Illuminate\Support\Facades\Event;
 use Botble\Base\Traits\LoadAndPublishDataTrait;
 use Botble\Language\Facades\Language;
 use Botble\LanguageAdvanced\Supports\LanguageAdvancedManager;
+use Botble\Whatsapp\Http\Services\UltramsgService;
 use Botble\Whatsapp\Models\WhatsappSetting;
 use Illuminate\Routing\Events\RouteMatched;
 use Botble\Whatsapp\Providers\EventServiceProvider;
@@ -45,7 +46,7 @@ class WhatsappServiceProvider extends ServiceProvider
 
 
         // We use a singleton because we only need one instance of the WhatsAppApi class.
-        $this->app->singleton(WhatsAppApi::class, function () {
+        $this->app->singleton(UltramsgService::class, function () {
             $instanceId = null;
             $token = null;
             // It's good practice to check if the table exists before querying it.
@@ -54,15 +55,17 @@ class WhatsappServiceProvider extends ServiceProvider
                 // Fetch the first row of settings.
                 // You might need to adjust this if you store settings differently.
                 $settings = WhatsappSetting::first();
-                $instanceId = $settings?->instance_id;
-                $token = $settings?->token;
+                $instanceId = $settings?->ultramsg_whatsapp_instance_id;
+                $token = $settings?->ultramsg_whatsapp_token; 
                 
             }
             // Return a new instance of the WhatsAppApi.
             // If settings are not found, it will be instantiated with null values,
             // which will likely cause an error when you try to use it,
             // reminding you to configure the settings.
-            return new WhatsAppApi($token, $instanceId);
+
+
+            return new UltramsgService($token, $instanceId);
         });
     }
 

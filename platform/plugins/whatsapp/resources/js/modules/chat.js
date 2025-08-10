@@ -7,7 +7,7 @@ import { db, ref, onChildAdded,query, orderByChild, limitToLast, get,child } fro
 
 
 ///////////////////////////////////////////////////////////////////////////////
-$(document).ready(function() {
+$(function() {
   $(document).on("click",".sideBar-body",function() 
   { 
     $('.sideBar-body').removeClass('hover');
@@ -30,7 +30,9 @@ $(document).ready(function() {
     $('#conversation-type').data('chat_img',chat_img);
     $('a.heading-name-meta').empty().text(chatName);
     $('#conversation').empty();
+    
     $('#conversation').data("receiver_id",chat_id);
+    
     heading_image(chat_id);
     
     async function loadChatMessages(chat_id, instance_id) {
@@ -216,7 +218,7 @@ $(document).ready(function() {
         $("#conversation").scrollTop($("#conversation").prop("scrollHeight"));
 
       });
-      console.log('after loadChatMessages')
+      // console.log('after loadChatMessages')
     } else {
       console.warn("Missing chat_id or instance_id");
   }  

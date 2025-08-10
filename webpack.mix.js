@@ -11,16 +11,10 @@ const source = `platform/plugins/${directory}`;
 const dist = `public/vendor/core/plugins/${directory}`;
 
 // ✅ Compile MAIN entry JS (app.js) — it will import firebase.js + chat.js
-mix.js(`${source}/resources/js/app.js`, `${dist}/js`);
+mix.js(`${source}/resources/js/app.js`, `${dist}/js`)
 //    .postCss(`${source}/resources/css/style.css`, `${dist}/css`);
+    .postCss('node_modules/toastr/build/toastr.min.css', `${dist}/css`);
 
-// ✅ Copy built files back to plugin’s public folder in production
-if (mix.inProduction()) {
-    mix.copy(`${dist}/js/app.js`, `${source}/public/js`);
-    // mix.copy(`${dist}/css/style.css`, `${source}/public/css`);
-}
 
-// ✅ Optional: Add versioning for cache-busting
-// if (mix.inProduction()) {
-//     mix.version();
-// }
+mix.disableNotifications();
+

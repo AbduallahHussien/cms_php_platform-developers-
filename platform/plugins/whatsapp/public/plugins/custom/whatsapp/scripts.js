@@ -55,58 +55,59 @@ class WhatsappJs {
         var currentdate = new Date(); 
         var datetime = currentdate.getHours() + ":"  + currentdate.getMinutes() ;
                   
-          $('#OpenImgUpload').click(function(){ 
-            if($('#conversation').data('receiver_id') && $('#conversation').data('receiver_id')!=""){
-              $('#imgupload').trigger('click'); 
-            }else{
-              return false;
-            }
-          });
+        
+          // $('#OpenImgUpload').click(function(){ 
+          //   if($('#conversation').data('receiver_id') && $('#conversation').data('receiver_id')!=""){
+          //     $('#imgupload').trigger('click'); 
+          //   }else{
+          //     return false;
+          //   }
+          // });
       
 
-          $('#imgupload').on('change', function () {
+          // $('#imgupload').on('change', function () {
          
-            const chat_id = $('#conversation').data('receiver_id');
-            const file = this.files[0];
-            if (!file) return;
+          //   const chat_id = $('#conversation').data('receiver_id');
+          //   const file = this.files[0];
+          //   if (!file) return;
           
-            const fileType = file.type.split('/')[0];
-            const reader = new FileReader();
+          //   const fileType = file.type.split('/')[0];
+          //   const reader = new FileReader();
           
-            reader.onload = function (event) {
-              const fileData = event.target.result;
+          //   reader.onload = function (event) {
+          //     const fileData = event.target.result;
           
-              if (fileType === "image") {
-                // send_image(fileData, chat_id);
-                $('#imagePreview').attr('src', fileData);
-                $('#imagePreviewModal').data('fileData', fileData).data('chatId', chat_id).modal('show');
+          //     if (fileType === "image") {
+          //       // send_image(fileData, chat_id);
+          //       $('#imagePreview').attr('src', fileData);
+          //       $('#_modal_image_preview').data('fileData', fileData).data('chatId', chat_id).modal('show');
           
-              } else if (fileType === "audio") {
-                $.ajax({
-                  url: send_audio_route,
-                  type: 'POST',
-                  data: { path: fileData, to: chat_id },
-                  success: function (response) {
-                    // Handle success if needed
-                  },
-                  error: function (error) {
-                    // Handle error if needed
-                  }
-                });
+          //     } else if (fileType === "audio") {
+          //       $.ajax({
+          //         url: send_audio_route,
+          //         type: 'POST',
+          //         data: { path: fileData, to: chat_id },
+          //         success: function (response) {
+          //           // Handle success if needed
+          //         },
+          //         error: function (error) {
+          //           // Handle error if needed
+          //         }
+          //       });
           
-              } else if (fileType === "text" || fileType === "application") {
-                send_document(fileData, chat_id);
+          //     } else if (fileType === "text" || fileType === "application") {
+          //       send_document(fileData, chat_id);
           
-              } else if (fileType === "video") {
-                send_video(fileData, chat_id);
+          //     } else if (fileType === "video") {
+          //       send_video(fileData, chat_id);
           
-              } else {
-                return false;
-              }
-            };
+          //     } else {
+          //       return false;
+          //     }
+          //   };
           
-            reader.readAsDataURL(file);
-          });
+          //   reader.readAsDataURL(file);
+          // });
           
       
         // VIEW MORE
@@ -381,55 +382,60 @@ class WhatsappJs {
             }
         // End  send audio
       
+
+
+
         // send document
-            function send_document(file,chat_id){
-              var settings = {
-                "async": true,
-                "crossDomain": true,
-                "url": "https://api.ultramsg.com/"+instance+"/messages/document",
-                "method": "POST",
-                "headers": {},
-                "data": {
-                  "token": token,
-                  "to": chat_id,
-                  "filename": "File",
-                  "document": file,
-                  "referenceId": referenceId,
-                  "nocache": ""
-                }
-              }
+            // function send_document(file,chat_id){
+            //   var settings = {
+            //     "async": true,
+            //     "crossDomain": true,
+            //     "url": "https://api.ultramsg.com/"+instance+"/messages/document",
+            //     "method": "POST",
+            //     "headers": {},
+            //     "data": {
+            //       "token": token,
+            //       "to": chat_id,
+            //       "filename": "File",
+            //       "document": file,
+            //       "referenceId": referenceId,
+            //       "nocache": ""
+            //     }
+            //   }
               
-              $.ajax(settings).done(function (response) {
-                // $('#conversation').append(
-                //   `  
-                //     <div class="row message-body">
-                //         <div class="col-12 message-main-sender">
-                //         <div class="sender">
-                //             <div class="message-text">
-                //               document
-                //             </div>
-                //             <span class="message-time pull-right">
-                //             `+ datetime +` 
-                //             </span>
-                //             <span>
-                //                 <a href="`+file+`" download>
-                //                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-download" viewBox="0 0 16 16">
-                //                       <path d="M.5 9.9a.5.5 0 0 1 .5.5v2.5a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-2.5a.5.5 0 0 1 1 0v2.5a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2v-2.5a.5.5 0 0 1 .5-.5z"/>
-                //                       <path d="M7.646 11.854a.5.5 0 0 0 .708 0l3-3a.5.5 0 0 0-.708-.708L8.5 10.293V1.5a.5.5 0 0 0-1 0v8.793L5.354 8.146a.5.5 0 1 0-.708.708l3 3z"/>
-                //                     </svg>
-                //                 </a>
-                //             </span>
-                //             <span class="message-time pull-right"></span>
-                //         </div>
-                //         </div>
-                //     </div>
-                //   `);
-                  $("#conversation").scrollTop($("#conversation").prop("scrollHeight"));
-              });
+            //   $.ajax(settings).done(function (response) {
+            //     // $('#conversation').append(
+            //     //   `  
+            //     //     <div class="row message-body">
+            //     //         <div class="col-12 message-main-sender">
+            //     //         <div class="sender">
+            //     //             <div class="message-text">
+            //     //               document
+            //     //             </div>
+            //     //             <span class="message-time pull-right">
+            //     //             `+ datetime +` 
+            //     //             </span>
+            //     //             <span>
+            //     //                 <a href="`+file+`" download>
+            //     //                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-download" viewBox="0 0 16 16">
+            //     //                       <path d="M.5 9.9a.5.5 0 0 1 .5.5v2.5a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-2.5a.5.5 0 0 1 1 0v2.5a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2v-2.5a.5.5 0 0 1 .5-.5z"/>
+            //     //                       <path d="M7.646 11.854a.5.5 0 0 0 .708 0l3-3a.5.5 0 0 0-.708-.708L8.5 10.293V1.5a.5.5 0 0 0-1 0v8.793L5.354 8.146a.5.5 0 1 0-.708.708l3 3z"/>
+            //     //                     </svg>
+            //     //                 </a>
+            //     //             </span>
+            //     //             <span class="message-time pull-right"></span>
+            //     //         </div>
+            //     //         </div>
+            //     //     </div>
+            //     //   `);
+            //       $("#conversation").scrollTop($("#conversation").prop("scrollHeight"));
+            //   });
       
-            }
+            // }
         // End  send document
       
+
+
         // send image
             // function send_image(file,chat_id){
             //       $.ajax({ 
@@ -440,13 +446,13 @@ class WhatsappJs {
 
             //         }
             //       });
-            function send_image(file, chatId) {
-              $.post(send_img_route, { path: file,to: chatId})
-               .done(function (response) { 
-                console.log('Image sent successfully');
-              }).fail(function (jqXHR, textStatus, errorThrown) { 
-                console.error('Failed to send image:', textStatus, errorThrown);
-              });
+            // function send_image(file, chatId) {
+            //   $.post(send_img_route, { path: file,to: chatId})
+            //    .done(function (response) { 
+            //     console.log('Image sent successfully');
+            //   }).fail(function (jqXHR, textStatus, errorThrown) { 
+            //     console.error('Failed to send image:', textStatus, errorThrown);
+            //   });
             
             
                 //   $('#conversation').append(
@@ -473,56 +479,56 @@ class WhatsappJs {
                 //           </div>
                 //       </div>
                 //     `);
-                    $("#conversation").scrollTop($("#conversation").prop("scrollHeight"));
-            }
+                    // $("#conversation").scrollTop($("#conversation").prop("scrollHeight"));
+            // }
         // End  send image
       
         //send video
-            function send_video(file,chat_id){
-                  var settings = {
-                    "async": true,
-                    "crossDomain": true,
-                    "url": "https://api.ultramsg.com/"+instance+"/messages/video",
-                    "method": "POST",
-                    "headers": {},
-                    "data": {
-                      "token": token,
-                      "to": chat_id,
-                      "video": file,
-                      "caption":"",
-                      "referenceId": referenceId,
-                      "nocache": ""
-                    }
-                  }
+            // function send_video(file,chat_id){
+            //       var settings = {
+            //         "async": true,
+            //         "crossDomain": true,
+            //         "url": "https://api.ultramsg.com/"+instance+"/messages/video",
+            //         "method": "POST",
+            //         "headers": {},
+            //         "data": {
+            //           "token": token,
+            //           "to": chat_id,
+            //           "video": file,
+            //           "caption":"",
+            //           "referenceId": referenceId,
+            //           "nocache": ""
+            //         }
+            //       }
                   
-                  $.ajax(settings).done(function (response) {
-                    // $('#conversation').append(
-                    //   `  
-                    //     <div class="row message-body">
-                    //         <div class="col-12 message-main-sender">
-                    //         <div class="sender">
-                    //             <div class="message-text">
-                    //               Video
-                    //             </div>
-                    //             <span class="message-time pull-right">
-                    //             `+ datetime +` 
-                    //             </span>
-                    //             <span>
-                    //                 <a href="`+file+`" download>
-                    //                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-download" viewBox="0 0 16 16">
-                    //                       <path d="M.5 9.9a.5.5 0 0 1 .5.5v2.5a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-2.5a.5.5 0 0 1 1 0v2.5a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2v-2.5a.5.5 0 0 1 .5-.5z"/>
-                    //                       <path d="M7.646 11.854a.5.5 0 0 0 .708 0l3-3a.5.5 0 0 0-.708-.708L8.5 10.293V1.5a.5.5 0 0 0-1 0v8.793L5.354 8.146a.5.5 0 1 0-.708.708l3 3z"/>
-                    //                     </svg>
-                    //                 </a>
-                    //             </span>
-                    //             <span class="message-time pull-right"></span>
-                    //         </div>
-                    //         </div>
-                    //     </div>
-                    //   `);
-                      $("#conversation").scrollTop($("#conversation").prop("scrollHeight"));
-                  });
-            }
+            //       $.ajax(settings).done(function (response) {
+            //         // $('#conversation').append(
+            //         //   `  
+            //         //     <div class="row message-body">
+            //         //         <div class="col-12 message-main-sender">
+            //         //         <div class="sender">
+            //         //             <div class="message-text">
+            //         //               Video
+            //         //             </div>
+            //         //             <span class="message-time pull-right">
+            //         //             `+ datetime +` 
+            //         //             </span>
+            //         //             <span>
+            //         //                 <a href="`+file+`" download>
+            //         //                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-download" viewBox="0 0 16 16">
+            //         //                       <path d="M.5 9.9a.5.5 0 0 1 .5.5v2.5a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-2.5a.5.5 0 0 1 1 0v2.5a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2v-2.5a.5.5 0 0 1 .5-.5z"/>
+            //         //                       <path d="M7.646 11.854a.5.5 0 0 0 .708 0l3-3a.5.5 0 0 0-.708-.708L8.5 10.293V1.5a.5.5 0 0 0-1 0v8.793L5.354 8.146a.5.5 0 1 0-.708.708l3 3z"/>
+            //         //                     </svg>
+            //         //                 </a>
+            //         //             </span>
+            //         //             <span class="message-time pull-right"></span>
+            //         //         </div>
+            //         //         </div>
+            //         //     </div>
+            //         //   `);
+            //           $("#conversation").scrollTop($("#conversation").prop("scrollHeight"));
+            //       });
+            // }
         //End send video
       
         

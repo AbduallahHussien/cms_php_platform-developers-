@@ -45,6 +45,7 @@
         "pusher-js": "^8.4.0",
         "sanitize-html": "^2.13.0",
         "tiny-emitter": "^2.1.0",
+        "toastr": "^2.1.4",
         "vue": "^3.3.4"
     }
 }
