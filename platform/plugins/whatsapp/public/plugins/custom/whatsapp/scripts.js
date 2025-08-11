@@ -651,9 +651,10 @@ class WhatsappJs {
               }                
 
               $.ajax(settings).done(function (response) {
-      
+              
                   $.each(response, function(index) {
                   var chat_id = response[index].id;
+                  
                   $('.compose-sideBar').append(
                       `   <div class="row sideBar-body" data-chat_id="`+chat_id+`" data-selector="`+response[index].id.replace('@','').replace('.','')+`" >
                           
@@ -716,6 +717,7 @@ class WhatsappJs {
       
                   $.each(response, function(index) {
                   var chat_id = response[index].id;
+                  if(chat_id == '963983882481@c.us') return true;
                   $('.sideBar').append(
                       `   <div class="row sideBar-body" data-chat_id="`+chat_id+`" data-selector="`+response[index].id.replace('@','').replace('.','')+`" >
                           

@@ -57,12 +57,10 @@ class WhatsappService
                 $imageData = substr($base64Image, strpos($base64Image, ',') + 1);
                 $imageData = base64_decode($imageData);
                 $extension = strtolower($type[1]);
-            
                 $filename = uniqid() . '.' . $extension;
-            
-                Storage::disk('public')->put('images/' . $filename, $imageData);
-            
-                $imgUrl = Storage::url('images/' . $filename);
+                $filePath = "whatsapp/{$filename}";
+                Storage::disk('public')->put($filePath, $imageData);
+                $imgUrl = Storage::url($filePath);
             
                 // $url can now be saved to DB or returned
             } else {
@@ -75,16 +73,13 @@ class WhatsappService
                 throw new Exception('imgUrl is required');
             }
 
-            $newDomain = 'https://4dce2413ea6b.ngrok-free.app';
-            $newUrl = $this->replaceDomainAuto($imgUrl, $newDomain);
+            // $newDomain = 'https://d1d59fb97fb9.ngrok-free.app';
+            // $newUrl = $this->replaceDomainAuto($imgUrl, $newDomain);
             
-            info('newUrl');
-            info($newUrl);
+            // info('newUrl');
+            // info($newUrl);
 
-            $response = $this->ultramsgService->sendImageMessage($to, $newUrl);
-            info('response');
-            info($response);
-            // If response is JSON string, decode it:
+            $response = $this->ultramsgService->sendImageMessage($to, $imgUrl,'',0,$imgUrl); 
  
             if (is_string($response)) { 
                 $response = json_decode($response, true); 
@@ -100,9 +95,15 @@ class WhatsappService
                 ]; 
             }
             
-            if (isset($response['error'])) {
+            if (isset($response['error'])) {  
+
+                if (is_string($response['error'])) {
+                    return [
+                        'code' => 0,
+                        'msg' => $response['error']
+                    ];
+                }
                 
-                // Flatten error messages
                 $errors = [];
                 foreach ($response['error'] as $errorItem) {
                     // $errorItem is like ['image' => 'file extension not supported']
