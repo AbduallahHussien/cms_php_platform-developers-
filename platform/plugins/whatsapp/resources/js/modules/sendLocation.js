@@ -2,8 +2,10 @@ class SendLocation {
     init() {
         if (!$("#map-canvas").length) return;
 
-        this.latitude = 52.525595; // Default Berlin coords
-        this.longitude = 13.393085;
+        // this.latitude = 52.525595; // Default Berlin coords
+        this.latitude = null; 
+        // this.longitude = 13.393085;
+        this.longitude = null;
         this.map = null;
         this.marker = null;
         this.modalEl = document.getElementById("location");
@@ -35,16 +37,16 @@ class SendLocation {
                 (error) => {
                     switch (error.code) {
                         case 1:
-                            alert("Location permission denied. Please allow location access.");
+                            toastr.error("Location permission denied. Please allow location access.");
                             break;
                         case 2:
-                            alert("Location unavailable. Please turn on GPS or check your network.");
+                            toastr.error("Location unavailable. Please turn on GPS or check your network.");
                             break;
                         case 3:
-                            alert("Location request timed out. Try again.");
+                            toastr.error("Location request timed out. Try again.");
                             break;
                         default:
-                            alert("Could not get location.");
+                            toastr.error("Could not get location.");
                     }
                     // fallback to default location if needed
                     callback(this.latitude, this.longitude);
@@ -60,9 +62,9 @@ class SendLocation {
 
     // Send location via AJAX
     sendLocationAjax(lat, lng) {
-        console.log("Sending:", lat, lng);
+        // console.log("Sending:", lat, lng);
         if (lat == null || lng == null) {
-            alert("Cannot send location: coordinates are missing.");
+            toastr.error("Cannot send location: coordinates are missing.");
             return;
         }
         $.ajax({
@@ -75,12 +77,23 @@ class SendLocation {
                 lat: parseFloat(lat),
                 lng: parseFloat(lng)
             },
-            success: (response) => {
-                console.log("Location sent successfully:", response);
-                alert("Your location has been sent via WhatsApp!");
+            beforeSend:function(){
+                $("#sendCurrentLocation").css('pointer-events','none'); 
+                $("#sendCurrentLocation").text('sending ...')
             },
+            success: function (resp) {
+                if (resp.sent === true || resp.sent === 'true') {
+                  toastr.success("Your location has been sent via WhatsApp!");
+                } else {
+                  toastr.error(resp.error || "Failed to send location");
+                }
+              },
             error: (xhr) => {
-                console.error("Error sending location:", xhr.responseText);
+                toastr.error(xhr.responseText || "Error sending location");
+            },
+            complete:function(){
+                $("#sendCurrentLocation").css('pointer-events','auto'); 
+                $("#sendCurrentLocation").text('Send Current Location')
             }
         });
     }

@@ -1099,10 +1099,10 @@ class WhatsappJs {
       
       
             // Pest Here java script code
-             Pusher.logToConsole = true;
-             var pusher = new Pusher(pusher_key, {
-                    encrypted: true
-            });
+            //  Pusher.logToConsole = true;
+            //  var pusher = new Pusher(pusher_key, {
+            //         encrypted: true
+            // });
             // End Pest Here java script code
            
 

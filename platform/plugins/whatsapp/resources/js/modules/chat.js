@@ -82,7 +82,7 @@ $(function() {
                   mainClass = "message-main-sender";
                   subClass = "sender" ;
               }
-              
+             
               // check type message
             if(data[index].type == "image" )
             {
@@ -140,6 +140,33 @@ $(function() {
                       </div>
                   </div>    
                 `);
+            }
+            else if(data[index].type === "location" ){
+              console.log('data.lo_latitude',data.lo_latitude)
+              console.log('data.lo_longitude',data.lo_longitude)
+              $('#conversation').append(`
+                <div class="row message-body">
+                  <div class="col-12 ${mainClass}">
+                    <div class="${subClass}">
+                      <div class="message-text">
+                        <iframe 
+                          width="270" 
+                          height="200" 
+                          style="border:0;width:100%" 
+                          loading="lazy" 
+                          allowfullscreen 
+                          referrerpolicy="no-referrer-when-downgrade"
+                          src="https://www.google.com/maps?q=${data.lo_latitude},${data.lo_longitude}&z=17&output=embed">
+                        </iframe>
+                      </div>
+                      <span class="message-time pull-right">
+                        ${convert_time(data.time)}
+                      </span>
+                      <span class="message-time pull-right">${pushname}</span>
+                    </div>
+                  </div>
+                </div>
+              `);
             }else if(data[index].type == "document"){
 
           
@@ -360,7 +387,57 @@ onChildAdded(chatRef, (snapshot) => {
                                     </div>
                                 </div>    
                               `);
-                      }else if(data.type == "video" ){
+                      }
+                      else if(data.type == "location" ){
+                        console.log('data.lo_latitude',data.lo_latitude)
+                        console.log('data.lo_longitude',data.lo_longitude)
+                        $('#conversation').append(`
+                          <div class="row message-body">
+                            <div class="col-12 ${mainClass}">
+                              <div class="${subClass}">
+                                <div class="message-text">
+                                  <iframe 
+                                    width="270" 
+                                    height="200" 
+                                    style="border:0;width:100%" 
+                                    loading="lazy" 
+                                    allowfullscreen 
+                                    referrerpolicy="no-referrer-when-downgrade"
+                                    src="https://www.google.com/maps?q=${data.lo_latitude},${data.lo_longitude}&z=17&output=embed">
+                                  </iframe>
+                                </div>
+                                <span class="message-time pull-right">
+                                  ${convert_time(data.time)}
+                                </span>
+                                <span class="message-time pull-right">${pushname}</span>
+                              </div>
+                            </div>
+                          </div>
+                        `);
+                        
+                        // $('#conversation').append(
+                        //   `
+                        //     <div class="row message-body">
+                        //       <div class="col-12 ${mainClass}">
+                        //         <div class="${subClass}">
+                        //           <div class="message-text">
+                        //             <a href="https://maps.google.com/maps?q=${data.lo_latitude},${data.lo_longitude}&z=17&hl=en"
+                        //                target="_blank" aria-label="Open map location">
+                        //               <img style="width:100%" crossorigin="anonymous"
+                        //                    src="https://maps.googleapis.com/maps/api/staticmap?zoom=15&size=270x200&scale=1&language=en&client=gme-whatsappinc&markers=color%3Ared%7C${data.lo_latitude},${data.lo_longitude}&signature=KN6_HP6wExvhlWIXmMBppuhuxIo">
+                        //             </a>
+                        //           </div>
+                        //           <span class="message-time pull-right">
+                        //             ${convert_time(data.time)}
+                        //           </span>
+                        //           <span class="message-time pull-right">${pushname}</span>
+                        //         </div>
+                        //       </div>
+                        //     </div>
+                        //   `
+                        // );                        
+                      }
+                      else if(data.type == "video" ){
                             $('#conversation').append(
                               ` 
                                 <div class="row message-body">
@@ -391,28 +468,8 @@ onChildAdded(chatRef, (snapshot) => {
                                     </div>
                                 </div>    
                               `);
-                      }else if(data.type == "location" ){
-                          $('#conversation').append(
-                            ` 
-                              <div class="row message-body">
-                                  <div class="col-12 `+mainClass+`">
-                                    <div class="`+subClass+`">
-                                      <div class="message-text">
-                                        <a   href="https://maps.google.com/maps?q=`+data.latitude+`%2C`+data.longitude+`&amp;z=17&amp;hl=en" target="_blank" aria-label="Open map location">
-                                            <img style="width:100%" crossorigin="anonymous" src=https://maps.googleapis.com/maps/api/staticmap?zoom=15&size=270x200&scale=1&language=en&client=gme-whatsappinc&markers=color%3Ared%7C`+data.latitude+`%2C+`+data.longitude+`&signature=KN6_HP6wExvhlWIXmMBppuhuxIo">
-                                        </a>
-                                      </div>
-                                      <span class="message-time pull-right">
-                                      `+ convert_time(data.time)+`
-                                      </span>
-                                    
-                                      
-                                      <span class="message-time pull-right">`+pushname+`</span>
-                                  </div>
-                                  </div>
-                              </div>    
-                            `);
-                      }else if(data.type == "document"){
+                      }
+                      else if(data.type == "document"){
                               $('#conversation').append(
                                 ` 
                                   <div class="row message-body">
