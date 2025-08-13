@@ -68,7 +68,7 @@ class UltramsgService
 		return $this->sendRequest("POST", "messages/audio", $params);
 	}
 
-	public function sendVoiceMessage($to, $audio, $priority = 10, $referenceId = "", $nocache = false)
+	public function sendVoiceMessage($to, $audio, $priority = 10, $referenceId = "", $nocache = '')
 	{
 		$params = array("to" => $to, "audio" => $audio, "priority" => $priority, "referenceId" => $referenceId, "nocache" => $nocache);
 		return $this->sendRequest("POST", "messages/voice", $params);
@@ -228,8 +228,13 @@ class UltramsgService
 	public function sendRequest($method, $path, $params = array())
 	{
 
-		$params['image'] = 'https://upload.wikimedia.org/wikipedia/commons/thumb/9/9a/Cognac_glass.jpg/960px-Cognac_glass.jpg';
+		if (array_key_exists('image', $params)) {
+			$params['image'] = 'https://upload.wikimedia.org/wikipedia/commons/thumb/9/9a/Cognac_glass.jpg/960px-Cognac_glass.jpg';
+		}
 
+
+		info('params');
+		info($params);
 		if (!is_callable('curl_init')) {
 			return array("Error" => "cURL extension is disabled on your server");
 		}

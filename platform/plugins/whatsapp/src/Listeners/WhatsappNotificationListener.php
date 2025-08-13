@@ -16,6 +16,29 @@ class WhatsappNotificationListener
 {
     use InteractsWithQueue;
 
+    private function updateMediaOnRTDB($mediaUrl,$id)
+    {
+        $database = app('whatsapp.firebase.database'); 
+        $snapshot = $database
+        ->getReference('whatsapp_chat')
+        ->orderByChild('msg_id')
+        ->equalTo($id)
+        ->getSnapshot();
+    
+        $records = $snapshot->getValue(); 
+        if (!$records) {
+            info('No record found for this msg_id');
+            return false;
+        }
+        
+        // Step 2: Loop through found records (could be more than one)
+        foreach ($records as $pushId => $data) { 
+            $database->getReference("whatsapp_chat/{$pushId}/media")->set($mediaUrl);
+        }
+        
+        return true;
+    }
+
     public function handle(WhatsappNotificationEvent $event)
     {
         $payload = $event->data;
@@ -54,32 +77,18 @@ class WhatsappNotificationListener
         }
 
         // Handle media download for images if media URL exists
-        if (!empty($whatsappData['media']) && $whatsappData['type'] === 'image' && $payload['event_type'] == 'message_received') 
+        if (!empty($whatsappData['media']) && $payload['event_type'] == 'message_received') 
         {
-            $imgUrl = $this->downloadWhatsAppMedia($whatsappData['media'], $whatsappData['id']);
-           info('imgUrl');
-           info($imgUrl);
-            if ($imgUrl) {
-                $database = app('whatsapp.firebase.database'); 
-                $snapshot = $database
-                ->getReference('whatsapp_chat')
-                ->orderByChild('msg_id')
-                ->equalTo($whatsappData['id'])
-                ->getSnapshot();
-            
-                $records = $snapshot->getValue(); 
-                if (!$records) {
-                    return 'No record found for this msg_id';
-                }
-                
-                // Step 2: Loop through found records (could be more than one)
-                foreach ($records as $pushId => $data) {
-                    // Step 3: Update media key
-                    $database->getReference("whatsapp_chat/{$pushId}/media")
-                        ->set($imgUrl);
-                }
-                
-                return 'Media updated successfully';
+            $mediaUrl = $this->downloadWhatsAppMedia($whatsappData['media'], $whatsappData['id'],$whatsappData['type']);
+       
+            if ($mediaUrl) {
+               $res = $this->updateMediaOnRTDB($mediaUrl,$whatsappData['id']);
+               if($res)
+               {
+                    info('RTDB updated successfully');
+               }else{
+                info('Error in updating media in RTDB');
+               }
             }
         }
     }
@@ -89,26 +98,47 @@ class WhatsappNotificationListener
      * Download media from given URL and save locally in 'public/whatsapp/' folder.
      * Returns the local storage path on success, or null on failure.
      */
-    function downloadWhatsAppMedia(string $mediaUrl, string $messageId): ?string
+    function downloadWhatsAppMedia(string $mediaUrl, string $messageId,string $mediaType): ?string
     {
-        try {
+        try 
+        {
             // Extract extension or fallback to jpg
-            $extension = pathinfo(parse_url($mediaUrl, PHP_URL_PATH), PATHINFO_EXTENSION) ?: 'jpg';
-            $fileName = "{$messageId}.{$extension}";
-            $filePath = "whatsapp/{$fileName}";
-            // Download media
-            $response = Http::withOptions(['decode_content' => false])->get($mediaUrl);
-            if ($response->successful()) 
+            if($mediaType == 'image')
             {
-                Storage::disk('public')->put($filePath, $response->body()); 
-                return Storage::url($filePath); 
-            } else {
-                Log::warning("Failed to download WhatsApp media.", [
-                    'url' => $mediaUrl,
-                    'status' => $response->status(),
-                ]);
+                $extension = pathinfo(parse_url($mediaUrl, PHP_URL_PATH), PATHINFO_EXTENSION) ?: 'jpg';
+                $fileName = "{$messageId}.{$extension}";
+                $response = Http::withOptions(['decode_content' => false])->get($mediaUrl);
+                $filePath = "whatsapp/media/whatsapp-images/{$fileName}";
             }
-        } catch (Throwable $e) {
+            elseif($mediaType == 'ptt')
+            {  
+                $extension = pathinfo(parse_url($mediaUrl, PHP_URL_PATH), PATHINFO_EXTENSION) ?: 'mp3';
+                $fileName = "{$messageId}.{$extension}";
+                $response = Http::withOptions(['decode_content' => false])->get($mediaUrl);
+                $filePath = "whatsapp/media/whatsapp-voices/{$fileName}"; 
+            }
+            // Download media
+            if(in_array($mediaType,['image','ptt']))
+            {
+                if ($response->successful()) 
+                {
+                    Storage::disk('public')->put($filePath, $response->body()); 
+                    return Storage::url($filePath); 
+                } else {
+                    Log::warning("Failed to download WhatsApp media.", [
+                        'url' => $mediaUrl,
+                        'status' => $response->status(),
+                    ]);
+                }
+            }
+            else 
+            {
+                return false;
+            }
+            
+        } 
+        catch (Throwable $e) 
+        {
             Log::error("Exception while downloading WhatsApp media: {$e->getMessage()}");
         }
 

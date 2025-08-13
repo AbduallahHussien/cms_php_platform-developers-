@@ -23,8 +23,10 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Botble\Base\Facades\ACL;
 use Botble\Whatsapp\Http\Requests\SendWhatsappImageRequest;
+use Botble\Whatsapp\Http\Requests\SendWhatsappVoiceRequest;
 use Botble\Whatsapp\Models\WhatsappSetting;
 use Botble\Whatsapp\Http\Services\WhatsappService;
+use Illuminate\Support\Facades\Storage;
 use Pusher\Pusher;
 class WhatsappController extends BaseController
 {
@@ -120,9 +122,7 @@ class WhatsappController extends BaseController
     }
     //Send Image 
     public function send_image(SendWhatsappImageRequest $request) 
-    {
-        // info('img request');
-        // info($request->all());
+    { 
         
         $validated = $request->validated();
 
@@ -150,44 +150,58 @@ class WhatsappController extends BaseController
     
     //send voice 
     public function send_voice(Request $request){
-        $sett = whatsapp_settings();
 
-        if(isset($_FILES['file']) and !$_FILES['file']['error']){
-            $referenceId = Auth::id();
-            $chat_id = $request->chat_id;
-            $fname = rand(1,10000000000000000)."-".date("Y-m-d").".mp3";
-            move_uploaded_file($_FILES['file']['tmp_name'], "record".$fname);
-            $file_path = "record".$fname;
-            $curl = curl_init();
+        // $validated = $request->validated();         
+        // $to = $validated['to'];
+        // $base64Voice = $validated['audio'];
+         
+        
+        try 
+        {
+            $file = $request->audio; 
+            // Store original file
+            $originalFileName = uniqid() . '.' . $file->getClientOriginalExtension();
+            $originalPath = $file->storeAs('voices', $originalFileName, 'public');
 
-            curl_setopt_array($curl, array(
-            CURLOPT_URL => "https://api.ultramsg.com/".$sett[0]->ultramsg_whatsapp_instance_id."/messages/audio",
-            CURLOPT_RETURNTRANSFER => true,
-            CURLOPT_ENCODING => "",
-            CURLOPT_MAXREDIRS => 10,
-            CURLOPT_TIMEOUT => 30,
-            CURLOPT_SSL_VERIFYHOST => 0,
-            CURLOPT_SSL_VERIFYPEER => 0,
-            CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
-            CURLOPT_CUSTOMREQUEST => "POST",
-            CURLOPT_POSTFIELDS => "token=".$sett[0]->ultramsg_whatsapp_token."&to=$chat_id&audio=".URL::to('/')."/".$file_path."&referenceId=$referenceId&nocache=",
-            CURLOPT_HTTPHEADER => array(
-                "content-type: application/x-www-form-urlencoded"
-            ),
-            ));
+            $oggFileName  = uniqid() . '.ogg';  
+            Storage::disk('public')->makeDirectory('whatsapp/media/whatsapp-voices/sent');
+            $oggRelativePath  = "whatsapp/media/whatsapp-voices/sent/{$oggFileName}";
+            $oggFullPath = Storage::disk('public')->path($oggRelativePath);
 
-            $response = curl_exec($curl);
-            $err = curl_error($curl);
 
-            curl_close($curl);
-           
-            File::delete($file_path);
-            return  $response  ;
-            
+            // Step 3: Convert to OGG using FFmpeg (requires FFmpeg installed on server)
+            $originalFullPath = Storage::disk('public')->path($originalPath);
+            $cmd = "ffmpeg -i " . escapeshellarg($originalFullPath) . " -acodec libopus " . escapeshellarg($oggFullPath) . " 2>&1";
+            $output = shell_exec($cmd);
+            info('output');
+            info($output); // log the ffmpeg output 
+             // 4️⃣ Delete original file to save space
+            Storage::disk('public')->delete($originalPath);
+            // Step 4: Get public URL for the converted file
+            $oggUrl = Storage::disk('public')->url($oggRelativePath);
+            dd($oggUrl);
         }
+        catch(Exception $ex)
+        {
+            info($ex->getMessage());
+            dd($ex->getMessage());
+        }
+        
 
-            //End Send voice
-            
+
+        $res_send_voice = $this->whatsappService->send_voice($to,$base64Voice);
+  
+        if($res_send_voice['code'] ==0)
+        {
+            return response()->json([
+                'success' => false,
+                'message' => $res_send_voice['msg']
+            ]);
+        }
+        return response()->json([
+            'success' => true,
+            'message' => $res_send_voice['msg']
+        ]);        
     }
     //End Send voice
 

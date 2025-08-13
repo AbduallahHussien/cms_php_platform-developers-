@@ -59,7 +59,7 @@ class MediaUploadHandler {
         $("#_modal_image_preview #sendImageBtn").on("click", function () {
             const file = $("#_modal_image_preview").data("fileData"); // store file object earlier
             const chatId = $("#_modal_image_preview").data("chatId");
-
+            
             if (!file || !chatId) {
                 toastr.error("Missing image", "Error", {
                     timeOut: 5000,
@@ -79,6 +79,10 @@ class MediaUploadHandler {
                 data: formData,
                 processData: false,
                 contentType: false,
+                beforeSend:function(){
+                    $('#sendImageBtn').css('pointer-events','none');
+                    $('#sendImageBtn').text('Sending ...');
+                },
                 success: function (response) {
                     if (response.success) {
                         toastr.success(response.message,"Success");
@@ -119,6 +123,10 @@ class MediaUploadHandler {
                         );
                     }
                 },
+                complete:function(){
+                    $('#sendImageBtn').css('pointer-events','auto');
+                    $('#sendImageBtn').text('Send');
+                }
             });
 
             $("#conversation").scrollTop(

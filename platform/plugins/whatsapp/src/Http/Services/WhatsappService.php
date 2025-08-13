@@ -33,20 +33,20 @@ class WhatsappService
     {
         // Parse the old URL
         $parsedUrl = parse_url($oldUrl);
-    
+
         // Get the path and query if exists
         $path = $parsedUrl['path'] ?? '';
         $query = isset($parsedUrl['query']) ? '?' . $parsedUrl['query'] : '';
-    
+
         // Make sure $newDomain has no trailing slash
         $newDomain = rtrim($newDomain, '/');
-    
+
         // Compose new URL
         return $newDomain . $path . $query;
     }
-    
 
-    
+
+
     public function send_img($to, $base64Image): array
     {
         try {
@@ -58,33 +58,32 @@ class WhatsappService
                 $imageData = base64_decode($imageData);
                 $extension = strtolower($type[1]);
                 $filename = uniqid() . '.' . $extension;
-                $filePath = "whatsapp/{$filename}";
+                $filePath = "whatsapp/media/whatsapp-images/sent/{$filename}";
                 Storage::disk('public')->put($filePath, $imageData);
                 $imgUrl = Storage::url($filePath);
-            
+
                 // $url can now be saved to DB or returned
             } else {
                 throw new Exception('Invalid image data');
             }
 
 
-            if(!$imgUrl)
-            {
+            if (!$imgUrl) {
                 throw new Exception('imgUrl is required');
             }
 
             // $newDomain = 'https://d1d59fb97fb9.ngrok-free.app';
             // $newUrl = $this->replaceDomainAuto($imgUrl, $newDomain);
-            
+
             // info('newUrl');
             // info($newUrl);
 
-            $response = $this->ultramsgService->sendImageMessage($to, $imgUrl,'',0,$imgUrl); 
- 
-            if (is_string($response)) { 
-                $response = json_decode($response, true); 
-            } 
-            if (isset($response['sent']) && $response['sent'] === 'true') { 
+            $response = $this->ultramsgService->sendImageMessage($to, $imgUrl, '', 0, $imgUrl);
+
+            if (is_string($response)) {
+                $response = json_decode($response, true);
+            }
+            if (isset($response['sent']) && $response['sent'] === 'true') {
                 return [
                     'code' => 1,
                     'data' => [
@@ -92,10 +91,10 @@ class WhatsappService
                         'id' => $response['id'] ?? null,
                     ],
                     'msg' => 'Image is sent successfully'
-                ]; 
+                ];
             }
-            
-            if (isset($response['error'])) {  
+
+            if (isset($response['error'])) {
 
                 if (is_string($response['error'])) {
                     return [
@@ -103,7 +102,7 @@ class WhatsappService
                         'msg' => $response['error']
                     ];
                 }
-                
+
                 $errors = [];
                 foreach ($response['error'] as $errorItem) {
                     // $errorItem is like ['image' => 'file extension not supported']
@@ -111,19 +110,90 @@ class WhatsappService
                         $errors[] = "$field: $msg";
                     }
                 }
-                
+
                 return [
                     'code' => 0,
                     'msg' => implode("; ", $errors)
                 ];
             }
-             
+
             // Unexpected response format
             return [
                 'code' => 0,
                 'msg' => 'Unknown response format'
             ];
         } catch (Throwable $ex) {
+            return [
+                'code' => 0,
+                'msg' => $ex->getMessage(),
+                'line' => $ex->getLine()
+            ];
+        }
+    }
+
+    public function send_voice($to, $base64Audio): array
+    {
+        try {
+            
+            $audioUrl = null;
+
+            if (preg_match('/^data:audio\/(ogg|webm|m4a)(;codecs=opus)?;base64,/', $base64Audio, $type)) {
+                $audioData = substr($base64Audio, strpos($base64Audio, ',') + 1);
+                $audioData = base64_decode($audioData);
+            
+                // Force extension .ogg if codec is opus (or just always .ogg)
+                if (isset($type[2]) && strpos($type[2], 'codecs=opus') !== false) {
+                    $extension = 'ogg';
+                } else {
+                    $extension = strtolower($type[1]);
+                }
+            
+                $filename = uniqid() . '.' . $extension;
+                $filePath = "whatsapp/media/whatsapp-voices/sent/{$filename}";
+                Storage::disk('public')->put($filePath, $audioData);
+                $audioUrl = Storage::url($filePath);
+            } else {
+                throw new \Exception('Invalid audio data');
+            }
+            
+
+            if (!$audioUrl) {
+                throw new \Exception('audioUrl is required');
+            }
+
+            // Send via UltraMsg (HTTP URL method)
+            $response = $this->ultramsgService->sendVoiceMessage($to, $base64Audio);
+
+            if (is_string($response)) {
+                $response = json_decode($response, true);
+            }
+
+            if (isset($response['sent']) && $response['sent'] === 'true') {
+                return [
+                    'code' => 1,
+                    'data' => [
+                        'message' => $response['message'] ?? 'ok',
+                        'id' => $response['id'] ?? null,
+                    ],
+                    'msg' => 'Voice message sent successfully'
+                ];
+            }
+
+            if (isset($response['error'])) {
+                if (is_string($response['error'])) {
+                    return ['code' => 0, 'msg' => $response['error']];
+                }
+                $errors = [];
+                foreach ($response['error'] as $errorItem) {
+                    foreach ($errorItem as $field => $msg) {
+                        $errors[] = "$field: $msg";
+                    }
+                }
+                return ['code' => 0, 'msg' => implode("; ", $errors)];
+            }
+
+            return ['code' => 0, 'msg' => 'Unknown response format'];
+        } catch (\Throwable $ex) {
             return [
                 'code' => 0,
                 'msg' => $ex->getMessage(),

@@ -1112,232 +1112,232 @@ class WhatsappJs {
           var chat_id  = $('#conversation').data('receiver_id');
       
             //Event Name
-             channel.bind('App\\Events\\NotificationEvent', function(data) {
+            //  channel.bind('App\\Events\\NotificationEvent', function(data) {
               
               
-                 $.ajax({
-                      headers: {
-                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                     },
-                        url: save_chat_route,
-                        type: 'post',
-                        data: { "data": data},
-                        success: function(response) {
-                          if(response.action == 'done'){
+            //      $.ajax({
+            //           headers: {
+            //             'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            //          },
+            //             url: save_chat_route,
+            //             type: 'post',
+            //             data: { "data": data},
+            //             success: function(response) {
+            //               if(response.action == 'done'){
                           
-                                // RE ORDER CHAT 
-                                  if(data.event_type == "message_received"){    
-                                    $('[data-chat_id="'+data.from+'"]').insertBefore('.sideBar-body:first-child');
-                                  var unread_count =  $('[data-chat_id="'+data.from+'"] .unread').html();
-                                  if(unread_count){
-                                    $('[data-chat_id="'+data.from+'"] .unread').html(parseInt(unread_count)+1);
-                                  }else{
-                                    $('[data-chat_id="'+data.from+'"]').append(`<span class="unread">1</span>`);
-                                  }
-                                  }else{  
-                                      $('[data-chat_id="'+data.to+'"]').insertBefore('.sideBar-body:first-child');
-                                  }
-                                //END  RE ORDER CHAT 
-                                var receiver_id =   $('#conversation').data('receiver_id');
-                                if(receiver_id && receiver_id !=''){
+            //                     // RE ORDER CHAT 
+            //                       if(data.event_type == "message_received"){    
+            //                         $('[data-chat_id="'+data.from+'"]').insertBefore('.sideBar-body:first-child');
+            //                       var unread_count =  $('[data-chat_id="'+data.from+'"] .unread').html();
+            //                       if(unread_count){
+            //                         $('[data-chat_id="'+data.from+'"] .unread').html(parseInt(unread_count)+1);
+            //                       }else{
+            //                         $('[data-chat_id="'+data.from+'"]').append(`<span class="unread">1</span>`);
+            //                       }
+            //                       }else{  
+            //                           $('[data-chat_id="'+data.to+'"]').insertBefore('.sideBar-body:first-child');
+            //                       }
+            //                     //END  RE ORDER CHAT 
+            //                     var receiver_id =   $('#conversation').data('receiver_id');
+            //                     if(receiver_id && receiver_id !=''){
                                   
-                                    var mainClass = "";
-                                    var subClass = "";
-                                    //Check Message Type
-                                      if(data.event_type == "message_received"){
-                                          mainClass = "message-main-receiver";
-                                          subClass = "receiver";
+            //                         var mainClass = "";
+            //                         var subClass = "";
+            //                         //Check Message Type
+            //                           if(data.event_type == "message_received"){
+            //                               mainClass = "message-main-receiver";
+            //                               subClass = "receiver";
                                           
-                                          $('[data-chat_id="'+data.from+'"]').insertBefore('.sideBar-body:first-child');
-                                      }else{
-                                          mainClass = "message-main-sender";
-                                          subClass = "sender" ;
-                                          $('[data-chat_id="'+data.to+'"]').insertBefore('.sideBar-body:first-child');
-                                      }
-                                      var pushname = '';
-                                      if(data.pushname !=null){
-                                          pushname = data.pushname;
-                                      }else{
-                                          pushname = 'me' ;
-                                      }
-                                      //CHECK IF CONVERSATION OPEN 
-                                          if(subClass == 'receiver' && receiver_id == data.from || subClass == 'sender' && receiver_id == data.to  ){
-                                            if(data.type == "image"){
+            //                               $('[data-chat_id="'+data.from+'"]').insertBefore('.sideBar-body:first-child');
+            //                           }else{
+            //                               mainClass = "message-main-sender";
+            //                               subClass = "sender" ;
+            //                               $('[data-chat_id="'+data.to+'"]').insertBefore('.sideBar-body:first-child');
+            //                           }
+            //                           var pushname = '';
+            //                           if(data.pushname !=null){
+            //                               pushname = data.pushname;
+            //                           }else{
+            //                               pushname = 'me' ;
+            //                           }
+            //                           //CHECK IF CONVERSATION OPEN 
+            //                               if(subClass == 'receiver' && receiver_id == data.from || subClass == 'sender' && receiver_id == data.to  ){
+            //                                 if(data.type == "image"){
                                     
                                                 
-                                              $('#conversation').append(
-                                                ` 
-                                                  <div class="row message-body">
-                                                      <div class="col-12 `+mainClass+`">
-                                                      <div class="`+subClass+`">
-                                                          <div class="message-text">
-                                                          <img id="uploadedImage" src="`+data.media+`" alt="Uploaded Image" accept="image/png, image/jpeg">
+            //                                   $('#conversation').append(
+            //                                     ` 
+            //                                       <div class="row message-body">
+            //                                           <div class="col-12 `+mainClass+`">
+            //                                           <div class="`+subClass+`">
+            //                                               <div class="message-text">
+            //                                               <img id="uploadedImage" src="`+data.media+`" alt="Uploaded Image" accept="image/png, image/jpeg">
                                                             
-                                                          </div>
-                                                          <span class="message-time pull-right">
-                                                          `+ convert_time(data.time)+`
-                                                          </span>
-                                                          <span>
-                                                            <a href="`+data.media+`" download  target="_blank">
-                                                              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-download" viewBox="0 0 16 16">
-                                                                <path d="M.5 9.9a.5.5 0 0 1 .5.5v2.5a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-2.5a.5.5 0 0 1 1 0v2.5a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2v-2.5a.5.5 0 0 1 .5-.5z"/>
-                                                                <path d="M7.646 11.854a.5.5 0 0 0 .708 0l3-3a.5.5 0 0 0-.708-.708L8.5 10.293V1.5a.5.5 0 0 0-1 0v8.793L5.354 8.146a.5.5 0 1 0-.708.708l3 3z"/>
-                                                              </svg>
-                                                            </a>
-                                                          </span>
+            //                                               </div>
+            //                                               <span class="message-time pull-right">
+            //                                               `+ convert_time(data.time)+`
+            //                                               </span>
+            //                                               <span>
+            //                                                 <a href="`+data.media+`" download  target="_blank">
+            //                                                   <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-download" viewBox="0 0 16 16">
+            //                                                     <path d="M.5 9.9a.5.5 0 0 1 .5.5v2.5a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-2.5a.5.5 0 0 1 1 0v2.5a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2v-2.5a.5.5 0 0 1 .5-.5z"/>
+            //                                                     <path d="M7.646 11.854a.5.5 0 0 0 .708 0l3-3a.5.5 0 0 0-.708-.708L8.5 10.293V1.5a.5.5 0 0 0-1 0v8.793L5.354 8.146a.5.5 0 1 0-.708.708l3 3z"/>
+            //                                                   </svg>
+            //                                                 </a>
+            //                                               </span>
                                                           
-                                                          <span class="message-time pull-right">`+pushname+`</span>
-                                                      </div>
-                                                      </div>
-                                                  </div>    
-                                                `);
-                                              }else if(data.type == "ptt" || data.type == "audio"){
-                                                    $('#conversation').append(
-                                                      ` 
-                                                        <div class="row message-body">
-                                                            <div class="col-12 `+mainClass+`">
-                                                              <div class="`+subClass+`">
-                                                                <div class="message-text">
-                                                                <audio controls>
-                                                                    <source src="`+data.media+`" type="audio/mpeg">
-                                                                </audio>
+            //                                               <span class="message-time pull-right">`+pushname+`</span>
+            //                                           </div>
+            //                                           </div>
+            //                                       </div>    
+            //                                     `);
+            //                                   }else if(data.type == "ptt" || data.type == "audio"){
+            //                                         $('#conversation').append(
+            //                                           ` 
+            //                                             <div class="row message-body">
+            //                                                 <div class="col-12 `+mainClass+`">
+            //                                                   <div class="`+subClass+`">
+            //                                                     <div class="message-text">
+            //                                                     <audio controls>
+            //                                                         <source src="`+data.media+`" type="audio/mpeg">
+            //                                                     </audio>
                                                                   
-                                                                </div>
-                                                                <span class="message-time pull-right">
-                                                                `+ convert_time(data.time)+`
-                                                                </span>
-                                                                <span>
-                                                                  <a href="`+data.media+`" download  target="_blank">
-                                                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-download" viewBox="0 0 16 16">
-                                                                      <path d="M.5 9.9a.5.5 0 0 1 .5.5v2.5a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-2.5a.5.5 0 0 1 1 0v2.5a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2v-2.5a.5.5 0 0 1 .5-.5z"/>
-                                                                      <path d="M7.646 11.854a.5.5 0 0 0 .708 0l3-3a.5.5 0 0 0-.708-.708L8.5 10.293V1.5a.5.5 0 0 0-1 0v8.793L5.354 8.146a.5.5 0 1 0-.708.708l3 3z"/>
-                                                                    </svg>
-                                                                  </a>
-                                                                </span>
+            //                                                     </div>
+            //                                                     <span class="message-time pull-right">
+            //                                                     `+ convert_time(data.time)+`
+            //                                                     </span>
+            //                                                     <span>
+            //                                                       <a href="`+data.media+`" download  target="_blank">
+            //                                                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-download" viewBox="0 0 16 16">
+            //                                                           <path d="M.5 9.9a.5.5 0 0 1 .5.5v2.5a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-2.5a.5.5 0 0 1 1 0v2.5a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2v-2.5a.5.5 0 0 1 .5-.5z"/>
+            //                                                           <path d="M7.646 11.854a.5.5 0 0 0 .708 0l3-3a.5.5 0 0 0-.708-.708L8.5 10.293V1.5a.5.5 0 0 0-1 0v8.793L5.354 8.146a.5.5 0 1 0-.708.708l3 3z"/>
+            //                                                         </svg>
+            //                                                       </a>
+            //                                                     </span>
                                                                 
-                                                                <span class="message-time pull-right">`+pushname+`</span>
-                                                            </div>
-                                                            </div>
-                                                        </div>    
-                                                      `);
-                                              }else if(data.type == "video" ){
-                                                    $('#conversation').append(
-                                                      ` 
-                                                        <div class="row message-body">
-                                                            <div class="col-12 `+mainClass+`">
-                                                              <div class="`+subClass+`">
-                                                                <div class="message-text">
+            //                                                     <span class="message-time pull-right">`+pushname+`</span>
+            //                                                 </div>
+            //                                                 </div>
+            //                                             </div>    
+            //                                           `);
+            //                                   }else if(data.type == "video" ){
+            //                                         $('#conversation').append(
+            //                                           ` 
+            //                                             <div class="row message-body">
+            //                                                 <div class="col-12 `+mainClass+`">
+            //                                                   <div class="`+subClass+`">
+            //                                                     <div class="message-text">
                                                                 
-                                                                <video width="210" height="150" controls>
-                                                                  <source src="`+data.media+`" type="video/mp4">
-                                                                  <source src="`+data.media+`" type="video/ogg">
-                                                                </video>
+            //                                                     <video width="210" height="150" controls>
+            //                                                       <source src="`+data.media+`" type="video/mp4">
+            //                                                       <source src="`+data.media+`" type="video/ogg">
+            //                                                     </video>
                                                                   
-                                                                </div>
-                                                                <span class="message-time pull-right">
-                                                                `+ convert_time(data.time)+`
-                                                                </span>
-                                                                <span>
-                                                                  <a href="`+data.media+`" download  target="_blank">
-                                                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-download" viewBox="0 0 16 16">
-                                                                      <path d="M.5 9.9a.5.5 0 0 1 .5.5v2.5a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-2.5a.5.5 0 0 1 1 0v2.5a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2v-2.5a.5.5 0 0 1 .5-.5z"/>
-                                                                      <path d="M7.646 11.854a.5.5 0 0 0 .708 0l3-3a.5.5 0 0 0-.708-.708L8.5 10.293V1.5a.5.5 0 0 0-1 0v8.793L5.354 8.146a.5.5 0 1 0-.708.708l3 3z"/>
-                                                                    </svg>
-                                                                  </a>
-                                                                </span>
+            //                                                     </div>
+            //                                                     <span class="message-time pull-right">
+            //                                                     `+ convert_time(data.time)+`
+            //                                                     </span>
+            //                                                     <span>
+            //                                                       <a href="`+data.media+`" download  target="_blank">
+            //                                                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-download" viewBox="0 0 16 16">
+            //                                                           <path d="M.5 9.9a.5.5 0 0 1 .5.5v2.5a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-2.5a.5.5 0 0 1 1 0v2.5a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2v-2.5a.5.5 0 0 1 .5-.5z"/>
+            //                                                           <path d="M7.646 11.854a.5.5 0 0 0 .708 0l3-3a.5.5 0 0 0-.708-.708L8.5 10.293V1.5a.5.5 0 0 0-1 0v8.793L5.354 8.146a.5.5 0 1 0-.708.708l3 3z"/>
+            //                                                         </svg>
+            //                                                       </a>
+            //                                                     </span>
                                                                 
-                                                                <span class="message-time pull-right">`+pushname+`</span>
-                                                            </div>
-                                                            </div>
-                                                        </div>    
-                                                      `);
-                                              }else if(data.type == "location" ){
-                                                  $('#conversation').append(
-                                                    ` 
-                                                      <div class="row message-body">
-                                                          <div class="col-12 `+mainClass+`">
-                                                            <div class="`+subClass+`">
-                                                              <div class="message-text">
-                                                                <a   href="https://maps.google.com/maps?q=`+data.latitude+`%2C`+data.longitude+`&amp;z=17&amp;hl=en" target="_blank" aria-label="Open map location">
-                                                                    <img style="width:100%" crossorigin="anonymous" src=https://maps.googleapis.com/maps/api/staticmap?zoom=15&size=270x200&scale=1&language=en&client=gme-whatsappinc&markers=color%3Ared%7C`+data.latitude+`%2C+`+data.longitude+`&signature=KN6_HP6wExvhlWIXmMBppuhuxIo">
-                                                                </a>
-                                                              </div>
-                                                              <span class="message-time pull-right">
-                                                              `+ convert_time(data.time)+`
-                                                              </span>
+            //                                                     <span class="message-time pull-right">`+pushname+`</span>
+            //                                                 </div>
+            //                                                 </div>
+            //                                             </div>    
+            //                                           `);
+            //                                   }else if(data.type == "location" ){
+            //                                       $('#conversation').append(
+            //                                         ` 
+            //                                           <div class="row message-body">
+            //                                               <div class="col-12 `+mainClass+`">
+            //                                                 <div class="`+subClass+`">
+            //                                                   <div class="message-text">
+            //                                                     <a   href="https://maps.google.com/maps?q=`+data.latitude+`%2C`+data.longitude+`&amp;z=17&amp;hl=en" target="_blank" aria-label="Open map location">
+            //                                                         <img style="width:100%" crossorigin="anonymous" src=https://maps.googleapis.com/maps/api/staticmap?zoom=15&size=270x200&scale=1&language=en&client=gme-whatsappinc&markers=color%3Ared%7C`+data.latitude+`%2C+`+data.longitude+`&signature=KN6_HP6wExvhlWIXmMBppuhuxIo">
+            //                                                     </a>
+            //                                                   </div>
+            //                                                   <span class="message-time pull-right">
+            //                                                   `+ convert_time(data.time)+`
+            //                                                   </span>
                                                             
                                                               
-                                                              <span class="message-time pull-right">`+pushname+`</span>
-                                                          </div>
-                                                          </div>
-                                                      </div>    
-                                                    `);
-                                              }else if(data.type == "document"){
-                                                      $('#conversation').append(
-                                                        ` 
-                                                          <div class="row message-body">
-                                                              <div class="col-12 `+mainClass+`">
-                                                                <div class="`+subClass+`">
-                                                                  <div class="message-text">
-                                                                    <span> `+data.type+`</span>
-                                                                  </div>
-                                                                  <span class="message-time pull-right">
-                                                                  `+ convert_time(data.time)+`
-                                                                  </span>
-                                                                  <span>
-                                                                    <a href="`+data.media+`" download  target="_blank">
-                                                                      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-download" viewBox="0 0 16 16">
-                                                                        <path d="M.5 9.9a.5.5 0 0 1 .5.5v2.5a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-2.5a.5.5 0 0 1 1 0v2.5a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2v-2.5a.5.5 0 0 1 .5-.5z"/>
-                                                                        <path d="M7.646 11.854a.5.5 0 0 0 .708 0l3-3a.5.5 0 0 0-.708-.708L8.5 10.293V1.5a.5.5 0 0 0-1 0v8.793L5.354 8.146a.5.5 0 1 0-.708.708l3 3z"/>
-                                                                      </svg>
-                                                                    </a>
-                                                                  </span>
+            //                                                   <span class="message-time pull-right">`+pushname+`</span>
+            //                                               </div>
+            //                                               </div>
+            //                                           </div>    
+            //                                         `);
+            //                                   }else if(data.type == "document"){
+            //                                           $('#conversation').append(
+            //                                             ` 
+            //                                               <div class="row message-body">
+            //                                                   <div class="col-12 `+mainClass+`">
+            //                                                     <div class="`+subClass+`">
+            //                                                       <div class="message-text">
+            //                                                         <span> `+data.type+`</span>
+            //                                                       </div>
+            //                                                       <span class="message-time pull-right">
+            //                                                       `+ convert_time(data.time)+`
+            //                                                       </span>
+            //                                                       <span>
+            //                                                         <a href="`+data.media+`" download  target="_blank">
+            //                                                           <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-download" viewBox="0 0 16 16">
+            //                                                             <path d="M.5 9.9a.5.5 0 0 1 .5.5v2.5a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-2.5a.5.5 0 0 1 1 0v2.5a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2v-2.5a.5.5 0 0 1 .5-.5z"/>
+            //                                                             <path d="M7.646 11.854a.5.5 0 0 0 .708 0l3-3a.5.5 0 0 0-.708-.708L8.5 10.293V1.5a.5.5 0 0 0-1 0v8.793L5.354 8.146a.5.5 0 1 0-.708.708l3 3z"/>
+            //                                                           </svg>
+            //                                                         </a>
+            //                                                       </span>
                                                                   
-                                                                  <span class="message-time pull-right">`+pushname+`</span>
-                                                              </div>
-                                                              </div>
-                                                          </div>    
-                                                        `);
-                                              }else{
-                                                  $('#conversation').append(
-                                                  ` 
-                                                    <div class="row message-body">
-                                                        <div class="col-12 `+mainClass+`">
-                                                          <div class="`+subClass+`">
-                                                            <div class="message-text">
-                                                            `+data.body+`
-                                                            </div>
-                                                            <span class="message-time pull-right">
-                                                            `+ convert_time(data.time)+`
-                                                            </span>
-                                                            <span class="message-time pull-right">`+pushname+`</span>
-                                                        </div>
-                                                        </div>
-                                                    </div>    
-                                                  `);
-                                              }
-                                              // $('.sideBar').empty();
-                                              // get_all_chat();
-                                              $("#conversation").scrollTop($("#conversation").prop("scrollHeight"));
-                                          }else{
-                                            // $('.sideBar').empty();
-                                            // get_all_chat();
-                                          }
+            //                                                       <span class="message-time pull-right">`+pushname+`</span>
+            //                                                   </div>
+            //                                                   </div>
+            //                                               </div>    
+            //                                             `);
+            //                                   }else{
+            //                                       $('#conversation').append(
+            //                                       ` 
+            //                                         <div class="row message-body">
+            //                                             <div class="col-12 `+mainClass+`">
+            //                                               <div class="`+subClass+`">
+            //                                                 <div class="message-text">
+            //                                                 `+data.body+`
+            //                                                 </div>
+            //                                                 <span class="message-time pull-right">
+            //                                                 `+ convert_time(data.time)+`
+            //                                                 </span>
+            //                                                 <span class="message-time pull-right">`+pushname+`</span>
+            //                                             </div>
+            //                                             </div>
+            //                                         </div>    
+            //                                       `);
+            //                                   }
+            //                                   // $('.sideBar').empty();
+            //                                   // get_all_chat();
+            //                                   $("#conversation").scrollTop($("#conversation").prop("scrollHeight"));
+            //                               }else{
+            //                                 // $('.sideBar').empty();
+            //                                 // get_all_chat();
+            //                               }
                 
                                           
-                                }
-                          }
+            //                     }
+            //               }
                           
-                        },
-                        error: function(){
-                            return false;
-                        }
-                });
+            //             },
+            //             error: function(){
+            //                 return false;
+            //             }
+            //     });
             
               
           
                   
-            });
+            // });
             
         // Map 
         if (document.getElementById('map-canvas')) {
@@ -1407,10 +1407,10 @@ class WhatsappJs {
                
             }
         //End Map
-      
+      console.log('before button');
         // recording
           const button = document.querySelector('.reply-recording');
-      
+      console.log('after button');
           // set the options of this 3rd party mp3 js encoder
           const recorder = new MicRecorder({
               bitRate: 128
@@ -1418,9 +1418,10 @@ class WhatsappJs {
         
           // start recording with a click of the button
           button.addEventListener('click', startRecording);
-        
+          
           // start the recording
             function startRecording() {
+              alert('recording in progress');
                 var chat_id  = $('#conversation').data('receiver_id');
                 if(chat_id && chat_id !=""){
                     recorder.start().then(() => {
