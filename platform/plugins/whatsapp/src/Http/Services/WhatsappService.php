@@ -49,36 +49,9 @@ class WhatsappService
 
     public function send_img($to, $base64Image): array
     {
-        try {
+        try { 
 
-            $imgUrl = null;
-
-            if (preg_match('/^data:image\/(\w+);base64,/', $base64Image, $type)) {
-                $imageData = substr($base64Image, strpos($base64Image, ',') + 1);
-                $imageData = base64_decode($imageData);
-                $extension = strtolower($type[1]);
-                $filename = uniqid() . '.' . $extension;
-                $filePath = "whatsapp/media/whatsapp-images/sent/{$filename}";
-                Storage::disk('public')->put($filePath, $imageData);
-                $imgUrl = Storage::url($filePath);
-
-                // $url can now be saved to DB or returned
-            } else {
-                throw new Exception('Invalid image data');
-            }
-
-
-            if (!$imgUrl) {
-                throw new Exception('imgUrl is required');
-            }
-
-            // $newDomain = 'https://d1d59fb97fb9.ngrok-free.app';
-            // $newUrl = $this->replaceDomainAuto($imgUrl, $newDomain);
-
-            // info('newUrl');
-            // info($newUrl);
-
-            $response = $this->ultramsgService->sendImageMessage($to, $imgUrl, '', 0, $imgUrl);
+            $response = $this->ultramsgService->sendImageMessage($to, $base64Image);
 
             if (is_string($response)) {
                 $response = json_decode($response, true);
@@ -131,40 +104,14 @@ class WhatsappService
         }
     }
 
-    public function send_voice($to, $base64Audio): array
+    public function send_voice($to, $oggBase64Audio): array
     {
-        try {
-            
-            $audioUrl = null;
+        try 
+        { 
+            $response = $this->ultramsgService->sendVoiceMessage($to, $oggBase64Audio);
 
-            if (preg_match('/^data:audio\/(ogg|webm|m4a)(;codecs=opus)?;base64,/', $base64Audio, $type)) {
-                $audioData = substr($base64Audio, strpos($base64Audio, ',') + 1);
-                $audioData = base64_decode($audioData);
-            
-                // Force extension .ogg if codec is opus (or just always .ogg)
-                if (isset($type[2]) && strpos($type[2], 'codecs=opus') !== false) {
-                    $extension = 'ogg';
-                } else {
-                    $extension = strtolower($type[1]);
-                }
-            
-                $filename = uniqid() . '.' . $extension;
-                $filePath = "whatsapp/media/whatsapp-voices/sent/{$filename}";
-                Storage::disk('public')->put($filePath, $audioData);
-                $audioUrl = Storage::url($filePath);
-            } else {
-                throw new \Exception('Invalid audio data');
-            }
-            
-
-            if (!$audioUrl) {
-                throw new \Exception('audioUrl is required');
-            }
-
-            // Send via UltraMsg (HTTP URL method)
-            $response = $this->ultramsgService->sendVoiceMessage($to, $base64Audio);
-
-            if (is_string($response)) {
+            if (is_string($response)) 
+            {
                 $response = json_decode($response, true);
             }
 
@@ -179,7 +126,8 @@ class WhatsappService
                 ];
             }
 
-            if (isset($response['error'])) {
+            if (isset($response['error'])) 
+            {
                 if (is_string($response['error'])) {
                     return ['code' => 0, 'msg' => $response['error']];
                 }
@@ -193,7 +141,7 @@ class WhatsappService
             }
 
             return ['code' => 0, 'msg' => 'Unknown response format'];
-        } catch (\Throwable $ex) {
+        } catch (Throwable $ex) {
             return [
                 'code' => 0,
                 'msg' => $ex->getMessage(),

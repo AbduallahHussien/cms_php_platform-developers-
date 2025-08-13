@@ -125,7 +125,7 @@ class WhatsappController extends BaseController
     { 
         
         $validated = $request->validated();
-
+        
         $to = $validated['to'];
         $base64Image = $validated['image'];
          
@@ -149,16 +149,13 @@ class WhatsappController extends BaseController
     //End Send Image 
     
     //send voice 
-    public function send_voice(Request $request){
-
-        // $validated = $request->validated();         
-        // $to = $validated['to'];
-        // $base64Voice = $validated['audio'];
-         
-        
+    public function send_voice(SendWhatsappVoiceRequest $request)
+    {     
         try 
         {
-            $file = $request->audio; 
+            $validated = $request->validated();
+            $file = $validated['audio']; 
+
             // Store original file
             $originalFileName = uniqid() . '.' . $file->getClientOriginalExtension();
             $originalPath = $file->storeAs('voices', $originalFileName, 'public');
@@ -167,41 +164,41 @@ class WhatsappController extends BaseController
             Storage::disk('public')->makeDirectory('whatsapp/media/whatsapp-voices/sent');
             $oggRelativePath  = "whatsapp/media/whatsapp-voices/sent/{$oggFileName}";
             $oggFullPath = Storage::disk('public')->path($oggRelativePath);
-
-
             // Step 3: Convert to OGG using FFmpeg (requires FFmpeg installed on server)
             $originalFullPath = Storage::disk('public')->path($originalPath);
             $cmd = "ffmpeg -i " . escapeshellarg($originalFullPath) . " -acodec libopus " . escapeshellarg($oggFullPath) . " 2>&1";
             $output = shell_exec($cmd);
-            info('output');
-            info($output); // log the ffmpeg output 
-             // 4️⃣ Delete original file to save space
-            Storage::disk('public')->delete($originalPath);
-            // Step 4: Get public URL for the converted file
-            $oggUrl = Storage::disk('public')->url($oggRelativePath);
-            dd($oggUrl);
+
+            // info('output');
+            // info($output); // log the ffmpeg output  
+            
+            // Read the converted file and encode in Base64
+            $oggContent = file_get_contents($oggFullPath);
+            $oggBase64 = base64_encode($oggContent);
+
+            // Delete temporary files
+            Storage::disk('public')->delete([$originalPath, $oggRelativePath]); 
+
+            $res_send_voice = $this->whatsappService->send_voice($validated['to'],$oggBase64);
+  
+            if($res_send_voice['code'] ==0)
+            {
+                throw new Exception($res_send_voice['msg']);
+            }
+
+            return response()->json([
+                'success' => true,
+                'message' => $res_send_voice['msg']
+            ]);  
         }
         catch(Exception $ex)
         {
-            info($ex->getMessage());
-            dd($ex->getMessage());
-        }
-        
-
-
-        $res_send_voice = $this->whatsappService->send_voice($to,$base64Voice);
-  
-        if($res_send_voice['code'] ==0)
-        {
             return response()->json([
                 'success' => false,
-                'message' => $res_send_voice['msg']
+                'message' => $ex->getMessage()
             ]);
         }
-        return response()->json([
-            'success' => true,
-            'message' => $res_send_voice['msg']
-        ]);        
+              
     }
     //End Send voice
 

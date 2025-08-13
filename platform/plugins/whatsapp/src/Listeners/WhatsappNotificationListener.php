@@ -48,10 +48,10 @@ class WhatsappNotificationListener
 
         if (function_exists('whatsapp_insert_chat')) 
         {
-            if($whatsappData['type'] == 'image' && $whatsappData['fromMe'] && $payload['event_type'] == 'message_create')
-            {
-                $whatsappData['media'] = $payload['referenceId'];   
-            }
+            // if($whatsappData['type'] == 'image' && $whatsappData['fromMe'] && $payload['event_type'] == 'message_create')
+            // {
+            //     $whatsappData['media'] = $payload['referenceId'];   
+            // }
 
             whatsapp_insert_chat(
                 $payload['instanceId'] ?? null,
@@ -77,9 +77,9 @@ class WhatsappNotificationListener
         }
 
         // Handle media download for images if media URL exists
-        if (!empty($whatsappData['media']) && $payload['event_type'] == 'message_received') 
+        if (!empty($whatsappData['media'])) 
         {
-            $mediaUrl = $this->downloadWhatsAppMedia($whatsappData['media'], $whatsappData['id'],$whatsappData['type']);
+            $mediaUrl = $this->downloadWhatsAppMedia($whatsappData['media'], $whatsappData['id'],$whatsappData['type'],$payload['event_type']);
        
             if ($mediaUrl) {
                $res = $this->updateMediaOnRTDB($mediaUrl,$whatsappData['id']);
@@ -98,7 +98,7 @@ class WhatsappNotificationListener
      * Download media from given URL and save locally in 'public/whatsapp/' folder.
      * Returns the local storage path on success, or null on failure.
      */
-    function downloadWhatsAppMedia(string $mediaUrl, string $messageId,string $mediaType): ?string
+    function downloadWhatsAppMedia(string $mediaUrl, string $messageId,string $mediaType,string $eventType): ?string
     {
         try 
         {
@@ -108,14 +108,30 @@ class WhatsappNotificationListener
                 $extension = pathinfo(parse_url($mediaUrl, PHP_URL_PATH), PATHINFO_EXTENSION) ?: 'jpg';
                 $fileName = "{$messageId}.{$extension}";
                 $response = Http::withOptions(['decode_content' => false])->get($mediaUrl);
-                $filePath = "whatsapp/media/whatsapp-images/{$fileName}";
+
+                if($eventType == 'message_received')
+                {
+                    $filePath = "whatsapp/media/whatsapp-images/{$fileName}";
+                }
+                elseif($eventType == 'message_create')
+                {
+                    $filePath = "whatsapp/media/whatsapp-images/sent/{$fileName}";
+                }
+                
             }
             elseif($mediaType == 'ptt')
             {  
                 $extension = pathinfo(parse_url($mediaUrl, PHP_URL_PATH), PATHINFO_EXTENSION) ?: 'mp3';
                 $fileName = "{$messageId}.{$extension}";
                 $response = Http::withOptions(['decode_content' => false])->get($mediaUrl);
-                $filePath = "whatsapp/media/whatsapp-voices/{$fileName}"; 
+                if($eventType == 'message_received')
+                {
+                    $filePath = "whatsapp/media/whatsapp-voices/{$fileName}"; 
+                }
+                elseif($eventType == 'message_create')
+                {
+                    $filePath = "whatsapp/media/whatsapp-voices/sent/{$fileName}"; 
+                }
             }
             // Download media
             if(in_array($mediaType,['image','ptt']))

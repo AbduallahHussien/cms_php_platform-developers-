@@ -103,15 +103,15 @@
                 <span id="voice-hint">Recording…</span>
             </div>
 
-            <audio id="voice-preview" class="w-100" controls style="display:none;"></audio>
+            {{-- <audio id="voice-preview" class="w-100" controls style="display:none;"></audio> --}}
 
             <div id="voice-error" class="voice-error" style="display:none;"></div>
         </div>
 
         <div class="voice-actions">
-            <button id="voice-stop" class="danger">Stop</button>
-            <button id="voice-restart" class="secondary" style="display:none;">Re-record</button>
-            <button id="voice-send" class="primary" disabled>Send</button>
+            {{-- <button id="voice-stop" class="danger">Stop</button> --}}
+            {{-- <button id="voice-restart" class="secondary" style="display:none;">Re-record</button> --}}
+            <button id="voice-send" class="primary">Send</button>
             <button id="voice-cancel" class="secondary">Cancel</button>
         </div>
     </div>

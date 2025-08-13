@@ -37,11 +37,11 @@ class Recording {
             }
 
             function setUIRecording() {
-                $("#voice-preview").hide().attr("src", "");
+                // $("#voice-preview").hide().attr("src", "");
                 $("#voice-hint").text("Recording…");
-                $("#voice-stop").show();
-                $("#voice-restart").hide();
-                $("#voice-send").prop("disabled", true);
+                // $("#voice-stop").show();
+                // $("#voice-restart").hide();
+                // $("#voice-send").prop("disabled", true);
                 $("#voice-error").hide().text("");
             }
 
@@ -91,8 +91,8 @@ class Recording {
                         });
                         console.log('Blob type:', finalBlob.type);
 
-                        const url = URL.createObjectURL(finalBlob);
-                        setUIStopped(url);
+                        // const url = URL.createObjectURL(finalBlob);
+                        // setUIStopped(url);
                     });
 
                     setUIRecording();
@@ -106,22 +106,22 @@ class Recording {
                 }
             }
 
-            function stopRecording() {
-                if (mediaRecorder && mediaRecorder.state !== "inactive") {
-                    mediaRecorder.stop();
-                }
-            }
+            // function stopRecording() {
+            //     if (mediaRecorder && mediaRecorder.state !== "inactive") {
+            //         mediaRecorder.stop();
+            //     }
+            // }
 
-            function restartRecording() {
-                const el = document.getElementById("voice-preview");
-                if (el.src) {
-                    try {
-                        URL.revokeObjectURL(el.src);
-                    } catch {}
-                    el.removeAttribute("src");
-                }
-                startRecording();
-            }
+            // function restartRecording() {
+            //     const el = document.getElementById("voice-preview");
+            //     if (el.src) {
+            //         try {
+            //             URL.revokeObjectURL(el.src);
+            //         } catch {}
+            //         el.removeAttribute("src");
+            //     }
+            //     startRecording();
+            // }
 
             function startTimer() {
                 startAt = Date.now();
@@ -153,20 +153,20 @@ class Recording {
                     mediaStream = null;
                 }
                 stopTimer();
-                const el = document.getElementById("voice-preview");
-                if (el.src) {
-                    try {
-                        URL.revokeObjectURL(el.src);
-                    } catch {}
-                    el.removeAttribute("src");
-                }
+                // const el = document.getElementById("voice-preview");
+                // if (el.src) {
+                //     try {
+                //         URL.revokeObjectURL(el.src);
+                //     } catch {}
+                //     el.removeAttribute("src");
+                // }
                 $("#voice-modal").fadeOut(100);
                 $("#voice-error").hide().text("");
                 $("#voice-timer").text("00:00");
                 $("#voice-hint").text("Recording…");
-                $("#voice-send").prop("disabled", true);
-                $("#voice-stop").show();
-                $("#voice-restart").hide();
+                // $("#voice-send").prop("disabled", true);
+                // $("#voice-stop").show();
+                // $("#voice-restart").hide();
                 chunks = [];
                 finalBlob = null;
             }
@@ -185,31 +185,38 @@ class Recording {
             // }
 
             async function sendAudio() {
+              
                 if (mediaRecorder && mediaRecorder.state === "recording") {
                     await new Promise((resolve) => {
                         mediaRecorder.addEventListener("stop", resolve, { once: true });
                         mediaRecorder.stop();
                     });
                 }
+            
                 if (!finalBlob) {
                     showError("No audio to send.");
                     return;
                 }
 
-                try {
+                try { 
                     const formData = new FormData();
                     formData.append('to', $("#conversation").data("receiver_id"));
 
                     // Derive extension from mime type: e.g. audio/webm -> webm
                     const ext = (finalBlob.type.match(/audio\/(\w+)/) || [null, 'webm'])[1];
                     formData.append('audio', finalBlob, `voice.${ext}`);
-
+              
                     $.ajax({
                         url: send_voice_route,
                         method: "POST",
                         data: formData,
                         processData: false,  // Important for FormData
                         contentType: false,  // Important for FormData
+                        beforeSend:function(){
+                            $("#voice-send").prop("disabled", true);
+                            $("#voice-send").text('Sending ...');
+
+                        },
                         success: function (data) {
                             if (data.success) {
                                 toastr.success("Audio sent successfully!");
@@ -220,18 +227,22 @@ class Recording {
                         error: function () {
                             showError("Failed to send audio.");
                         },
-                    });
-
-                    closeModal();
+                        complete:function(){ 
+                            $("#voice-send").prop("disabled", false);
+                            $("#voice-send").text('Send'); 
+                            closeModal(); 
+                        }
+                    }); 
+                    
                 } catch (err) {
                     showError(err?.message || "Failed to send audio.");
-                }
+                } 
             }
 
 
             $(document).on("click", ".voice-message-button", showModal);
-            $(document).on("click", "#voice-stop", stopRecording);
-            $(document).on("click", "#voice-restart", restartRecording);
+            // $(document).on("click", "#voice-stop", stopRecording);
+            // $(document).on("click", "#voice-restart", restartRecording);
             $(document).on("click", "#voice-send", sendAudio);
             $(document).on("click", "#voice-cancel, .voice-close", closeModal);
             $(document).on("click", "#voice-modal", function (e) {

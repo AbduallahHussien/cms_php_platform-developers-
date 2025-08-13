@@ -228,9 +228,9 @@ class UltramsgService
 	public function sendRequest($method, $path, $params = array())
 	{
 
-		if (array_key_exists('image', $params)) {
-			$params['image'] = 'https://upload.wikimedia.org/wikipedia/commons/thumb/9/9a/Cognac_glass.jpg/960px-Cognac_glass.jpg';
-		}
+		// if (array_key_exists('image', $params)) {
+		// 	$params['image'] = 'https://upload.wikimedia.org/wikipedia/commons/thumb/9/9a/Cognac_glass.jpg/960px-Cognac_glass.jpg';
+		// }
 
 
 		info('params');
