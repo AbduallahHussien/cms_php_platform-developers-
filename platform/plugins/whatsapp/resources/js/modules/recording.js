@@ -231,6 +231,7 @@ class Recording {
                             $("#voice-send").prop("disabled", false);
                             $("#voice-send").text('Send'); 
                             closeModal(); 
+                            $("#conversation").scrollTop($("#conversation").prop("scrollHeight"));
                         }
                     }); 
                     

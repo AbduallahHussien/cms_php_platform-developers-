@@ -1,133 +1,48 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Bootstrap 5 Attachment Popup</title>
-    <!-- Bootstrap 5 CSS -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <!-- Font Awesome for icons -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Attachment Menu Clone</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
 </head>
-<body>
-    <div class="container mt-3 position-relative">
-        <!-- Attachment button at the top -->
-        <button id="attachmentButton" class="btn btn-success rounded-circle p-3">
-            <i class="fas fa-paperclip fs-4"></i>
-        </button>
-        
-        <!-- Popup menu (positioned below) -->
-        <div id="attachmentPopup" class="card position-absolute top-100 start-0 mt-2 d-none" style="width: 250px;">
-            <div class="card-body p-0">
-                <div class="list-group list-group-flush">
-                    <a href="#" class="list-group-item list-group-item-action d-flex align-items-center attachment-item" data-type="photo">
-                        <div class="bg-success bg-opacity-10 rounded-circle d-flex align-items-center justify-content-center me-3" style="width: 40px; height: 40px;">
-                            <i class="fas fa-camera text-success"></i>
-                        </div>
-                        <span>Photo & Video</span>
-                    </a>
-                    <a href="#" class="list-group-item list-group-item-action d-flex align-items-center attachment-item" data-type="document">
-                        <div class="bg-secondary bg-opacity-10 rounded-circle d-flex align-items-center justify-content-center me-3" style="width: 40px; height: 40px;">
-                            <i class="fas fa-file text-secondary"></i>
-                        </div>
-                        <span>Document</span>
-                    </a>
-                    <a href="#" class="list-group-item list-group-item-action d-flex align-items-center attachment-item" data-type="camera">
-                        <div class="bg-primary bg-opacity-10 rounded-circle d-flex align-items-center justify-content-center me-3" style="width: 40px; height: 40px;">
-                            <i class="fas fa-camera-retro text-primary"></i>
-                        </div>
-                        <span>Camera</span>
-                    </a>
-                    <a href="#" class="list-group-item list-group-item-action d-flex align-items-center attachment-item" data-type="contact">
-                        <div class="bg-warning bg-opacity-10 rounded-circle d-flex align-items-center justify-content-center me-3" style="width: 40px; height: 40px;">
-                            <i class="fas fa-user text-warning"></i>
-                        </div>
-                        <span>Contact</span>
-                    </a>
-                    <a href="#" class="list-group-item list-group-item-action d-flex align-items-center attachment-item" data-type="location">
-                        <div class="bg-danger bg-opacity-10 rounded-circle d-flex align-items-center justify-content-center me-3" style="width: 40px; height: 40px;">
-                            <i class="fas fa-map-marker-alt text-danger"></i>
-                        </div>
-                        <span>Location</span>
-                    </a>
-                </div>
-            </div>
-        </div>
-        
-        <!-- Hidden file inputs -->
-        <input type="file" id="photoInput" accept="image/*,video/*" multiple class="d-none">
-        <input type="file" id="documentInput" class="d-none">
-        
-        <!-- Some sample content to demonstrate positioning -->
-        <div class="mt-5 pt-5">
-            <h4>Page Content</h4>
-            <p>This shows the popup will appear below the button when at the top of the page.</p>
-        </div>
-    </div>
+<body class="p-4">
 
-    <!-- jQuery and Bootstrap JS -->
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-    
-    <script>
-        $(document).ready(function() {
-            // Toggle popup visibility
-            $('#attachmentButton').click(function(e) {
-                e.stopPropagation();
-                $('#attachmentPopup').toggleClass('d-none');
-            });
-            
-            // Close popup when clicking elsewhere
-            $(document).click(function() {
-                $('#attachmentPopup').addClass('d-none');
-            });
-            
-            // Prevent popup from closing when clicking inside it
-            $('#attachmentPopup').click(function(e) {
-                e.stopPropagation();
-            });
-            
-            // Handle attachment item clicks
-            $('.attachment-item').click(function(e) {
-                e.preventDefault();
-                const type = $(this).data('type');
-                
-                switch(type) {
-                    case 'photo':
-                        $('#photoInput').click();
-                        break;
-                    case 'document':
-                        $('#documentInput').click();
-                        break;
-                    case 'camera':
-                        alert('Camera functionality would open here');
-                        break;
-                    case 'contact':
-                        alert('Contact selection would open here');
-                        break;
-                    case 'location':
-                        alert('Location selection would open here');
-                        break;
-                }
-                
-                $('#attachmentPopup').addClass('d-none');
-            });
-            
-            // Handle file selection
-            $('#photoInput').change(function() {
-                const files = $(this)[0].files;
-                if (files.length > 0) {
-                    alert(`Selected ${files.length} photo/video file(s)`);
-                }
-            });
-            
-            $('#documentInput').change(function() {
-                const files = $(this)[0].files;
-                if (files.length > 0) {
-                    alert(`Selected ${files.length} document file(s)`);
-                }
-            });
-        });
-    </script>
+<div class="dropdown">
+  <!-- Attachment Button -->
+  <button class="btn btn-light border rounded-circle p-2" type="button" id="attachmentMenu" data-bs-toggle="dropdown" aria-expanded="false">
+    📎
+  </button>
+
+  <!-- Dropdown Menu -->
+  <ul class="dropdown-menu" aria-labelledby="attachmentMenu">
+    <li>
+      <label class="dropdown-item">
+        📷 Photos & Videos
+        <input type="file" accept="image/*,video/*" hidden>
+      </label>
+    </li>
+    <li>
+      <label class="dropdown-item">
+        📄 Documents
+        <input type="file" hidden>
+      </label>
+    </li>
+    <li>
+      <label class="dropdown-item">
+        🎤 Voice
+        <input type="file" accept="audio/*" hidden>
+      </label>
+    </li>
+    <li>
+      <label class="dropdown-item">
+        👤 Contacts
+        <input type="file" hidden>
+      </label>
+    </li>
+  </ul>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

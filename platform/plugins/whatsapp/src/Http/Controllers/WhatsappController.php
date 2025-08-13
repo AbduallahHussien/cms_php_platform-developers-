@@ -60,9 +60,10 @@ class WhatsappController extends BaseController
         page_title()->setTitle(trans('plugins/whatsapp::whatsapp.name'));
         
         Assets::addScriptsDirectly([
-            'https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js',
+            'https://maps.googleapis.com/maps/api/js?key='.env('LOCATION_API_KEY').'&libraries=places',
+            // 'https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js',
             'vendor/core/plugins/whatsapp/plugins/custom/bootstrap/js/bootstrap.bundle.js',
-            'https://maps.googleapis.com/maps/api/js',
+            // 'https://maps.googleapis.com/maps/api/js',
             // 'https://maps.google.com/maps/api/js?sensor=false',
             'vendor/core/plugins/whatsapp/plugins/waitme/waitMe.min.js',
             'vendor/core/plugins/whatsapp/plugins/noty/lib/noty.js',
