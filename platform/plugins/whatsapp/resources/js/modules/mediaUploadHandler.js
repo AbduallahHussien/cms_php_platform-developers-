@@ -1,19 +1,22 @@
 import toastr from "toastr";
 class MediaUploadHandler {
-    init() {
+    init() 
+    {
         $("#OpenImgUpload").on("click", function () {
             if (
                 $("#conversation").data("receiver_id") &&
                 $("#conversation").data("receiver_id") != ""
             ) {
-                $("#imgupload").trigger("click");
+                $("#photoInput").trigger("click");
             } else {
                 return false;
             }
         });
 
-        $("#imgupload").on("change", function () {
+        $("#photoInput").on("change", function () 
+        {
             const chat_id = $("#conversation").data("receiver_id");
+            
             if (!chat_id) return;
             const file = this.files[0];
             if (!file) return;
@@ -24,7 +27,8 @@ class MediaUploadHandler {
                 const fileData = event.target.result;
                 if (!fileData) return;
 
-                if (fileType === "image") {
+                if (fileType === "image") 
+                {
                     $("#imagePreview").attr("src", fileData);
                     $("#_modal_image_preview")
                         .data("fileData", fileData)
@@ -44,9 +48,11 @@ class MediaUploadHandler {
                             // Handle error if needed
                         },
                     });
-                } else if (fileType === "text" || fileType === "application") {
-                    send_document(fileData, chat_id);
-                } else if (fileType === "video") {
+                } 
+                // else if (fileType === "text" || fileType === "application") {
+                //     send_document(fileData, chat_id);
+                // } 
+                else if (fileType === "video") {
                     send_video(fileData, chat_id);
                 } else {
                     return false;
@@ -157,32 +163,32 @@ class MediaUploadHandler {
                 );
             });
         }
-        function send_document(file, chat_id) {
-            var settings = {
-                async: true,
-                crossDomain: true,
-                url:
-                    "https://api.ultramsg.com/" +
-                    instance +
-                    "/messages/document",
-                method: "POST",
-                headers: {},
-                data: {
-                    token: token,
-                    to: chat_id,
-                    filename: "File",
-                    document: file,
-                    referenceId: referenceId,
-                    nocache: "",
-                },
-            };
+        // function send_document(file, chat_id) {
+        //     var settings = {
+        //         async: true,
+        //         crossDomain: true,
+        //         url:
+        //             "https://api.ultramsg.com/" +
+        //             instance +
+        //             "/messages/document",
+        //         method: "POST",
+        //         headers: {},
+        //         data: {
+        //             token: token,
+        //             to: chat_id,
+        //             filename: "File",
+        //             document: file,
+        //             referenceId: referenceId,
+        //             nocache: "",
+        //         },
+        //     };
 
-            $.ajax(settings).done(function (response) {
-                $("#conversation").scrollTop(
-                    $("#conversation").prop("scrollHeight"),
-                );
-            });
-        }
+        //     $.ajax(settings).done(function (response) {
+        //         $("#conversation").scrollTop(
+        //             $("#conversation").prop("scrollHeight"),
+        //         );
+        //     });
+        // }
     }
 }
 

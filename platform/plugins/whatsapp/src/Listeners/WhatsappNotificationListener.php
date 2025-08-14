@@ -42,8 +42,8 @@ class WhatsappNotificationListener
     public function handle(WhatsappNotificationEvent $event)
     {
         $payload = $event->data;
-        // info('payload');
-        // info($payload);
+        info('payload');
+        info($payload);
         $whatsappData = $payload['data'] ?? [];
 
         if (function_exists('whatsapp_insert_chat')) 
@@ -52,6 +52,12 @@ class WhatsappNotificationListener
             // {
             //     $whatsappData['media'] = $payload['referenceId'];   
             // }
+         
+            if($whatsappData['type'] == 'document')
+            {
+                $whatsappData['body'] = $whatsappData['filename'];
+                
+            }
 
             whatsapp_insert_chat(
                 $payload['instanceId'] ?? null,

@@ -1,13 +1,12 @@
 // platform/plugins/whatsapp/resources/js/chat.js
 import { db, ref, onChildAdded,query, orderByChild, limitToLast, get,child } from './firebase';
+import { convertTime } from './helpers.js'; 
 
-// Reference the chat path in Firebase
+import { renderLocationSlot, renderLocation, renderDocumentSlot, renderDocument } from './renderingHelpers.js';
+ 
 
-
-
-
-///////////////////////////////////////////////////////////////////////////////
 $(function() {
+
   $(document).on("click",".sideBar-body",function() 
   { 
     $('.sideBar-body').removeClass('hover');
@@ -69,9 +68,9 @@ $(function() {
     // instance_id = "117593"; 
     if (chat_id && instance_id) { 
       loadChatMessages(chat_id, instance_id[1]).then(data => {
-     
+       
         $.each(data, function(index) {
-                    
+                console.log('data',data)   
               var mainClass = "";
               var subClass = "";
               
@@ -94,7 +93,7 @@ $(function() {
                           <div class="message-text">
                           <img id="uploadedImage" src="${data[index].media}" alt="Uploaded Image" accept="image/png, image/jpeg">
                           </div>
-                          <span class="message-time pull-right">`+ convert_time(data[index].time)+`</span>
+                          <span class="message-time pull-right">`+ convertTime(data[index].time)+`</span>
                           <span>
                             <a href="`+data[index].media+`" download  target="_blank">
                               <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-download" viewBox="0 0 16 16">
@@ -124,7 +123,7 @@ $(function() {
                             
                           </div>
                           <span class="message-time pull-right">
-                          `+ convert_time(data[index].time)+`
+                          `+ convertTime(data[index].time)+`
                           </span>
                           <span>
                             <a href="`+data[index].media+`" download  target="_blank">
@@ -142,58 +141,16 @@ $(function() {
                 `);
             }
             else if(data[index].type === "location" ){
-              console.log('data.lo_latitude',data.lo_latitude)
-              console.log('data.lo_longitude',data.lo_longitude)
-              $('#conversation').append(`
-                <div class="row message-body">
-                  <div class="col-12 ${mainClass}">
-                    <div class="${subClass}">
-                      <div class="message-text">
-                        <iframe 
-                          width="270" 
-                          height="200" 
-                          style="border:0;width:100%" 
-                          loading="lazy" 
-                          allowfullscreen 
-                          referrerpolicy="no-referrer-when-downgrade"
-                          src="https://www.google.com/maps?q=${data.lo_latitude},${data.lo_longitude}&z=17&output=embed">
-                        </iframe>
-                      </div>
-                      <span class="message-time pull-right">
-                        ${convert_time(data.time)}
-                      </span>
-                      <span class="message-time pull-right">${pushname}</span>
-                    </div>
-                  </div>
-                </div>
-              `);
-            }else if(data[index].type == "document"){
-
-          
-              $('#conversation').append(
-                ` 
-                  <div class="row message-body">
-                      <div class="col-12 `+mainClass+`">
-                      <div class="`+subClass+`">
-                            <div class="message-text">`+data[index].body+`</div>
-                          <span class="message-time pull-right">
-                          `+ convert_time(data[index].time)+`
-                          </span>
-                          <span>
-                            <a href="`+data[index].media+`" download  target="_blank">
-                              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-download" viewBox="0 0 16 16">
-                                <path d="M.5 9.9a.5.5 0 0 1 .5.5v2.5a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-2.5a.5.5 0 0 1 1 0v2.5a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2v-2.5a.5.5 0 0 1 .5-.5z"/>
-                                <path d="M7.646 11.854a.5.5 0 0 0 .708 0l3-3a.5.5 0 0 0-.708-.708L8.5 10.293V1.5a.5.5 0 0 0-1 0v8.793L5.354 8.146a.5.5 0 1 0-.708.708l3 3z"/>
-                              </svg>
-                            </a>
-                          </span>
-                          
-                          <span class="message-time pull-right">`+data[index].pushname+`</span>
-                      </div>
-                      </div>
-                  </div>    
-                `);
-            }else if(data[index].type == "video" ){
+              const slot = renderLocationSlot(data[index].lo_latitude, data[index].lo_longitude);
+              const messageHTML = renderLocation(mainClass, subClass, data[index].pushname, data[index].time, slot);
+              $('#conversation').append(messageHTML);
+            }
+            else if(data[index].type == "document") 
+            {
+              const documentSlot = renderDocumentSlot(data[index].body,data[index].media);
+              $('#conversation').append(renderDocument(mainClass,subClass,data[index].pushname,data[index].time,documentSlot));
+            }
+            else if(data[index].type == "video" ){
 
           
               $('#conversation').append(
@@ -209,7 +166,7 @@ $(function() {
                             
                           </div>
                           <span class="message-time pull-right">
-                          `+ convert_time(data[index].time)+`
+                          `+ convertTime(data[index].time)+`
                           </span>
                           <span>
                             <a href="`+data[index].media+`" download  target="_blank">
@@ -233,7 +190,7 @@ $(function() {
                           <div class="col-12 `+mainClass+` ">
                             <div class="`+subClass+`">
                                 <div class="message-text">`+data[index].body+`</div>
-                                <span class="message-time pull-right">`+ convert_time(data[index].time)+`</span>
+                                <span class="message-time pull-right">`+ convertTime(data[index].time)+`</span>
                                 <span class="message-time pull-right">`+data[index].pushname+`</span>
                             </div>
                           </div>
@@ -342,7 +299,7 @@ onChildAdded(chatRef, (snapshot) => {
                                     
                                   </div>
                                   <span class="message-time pull-right">
-                                  `+ convert_time(data.time)+`
+                                  `+ convertTime(data.time)+`
                                   </span>
                                   <span>
                                     <a href="`+data.media+`" download  target="_blank">
@@ -371,7 +328,7 @@ onChildAdded(chatRef, (snapshot) => {
                                           
                                         </div>
                                         <span class="message-time pull-right">
-                                        `+ convert_time(data.time)+`
+                                        `+ convertTime(data.time)+`
                                         </span>
                                         <span>
                                           <a href="`+data.media+`" download  target="_blank">
@@ -389,53 +346,9 @@ onChildAdded(chatRef, (snapshot) => {
                               `);
                       }
                       else if(data.type == "location" ){
-                        console.log('data.lo_latitude',data.lo_latitude)
-                        console.log('data.lo_longitude',data.lo_longitude)
-                        $('#conversation').append(`
-                          <div class="row message-body">
-                            <div class="col-12 ${mainClass}">
-                              <div class="${subClass}">
-                                <div class="message-text">
-                                  <iframe 
-                                    width="270" 
-                                    height="200" 
-                                    style="border:0;width:100%" 
-                                    loading="lazy" 
-                                    allowfullscreen 
-                                    referrerpolicy="no-referrer-when-downgrade"
-                                    src="https://www.google.com/maps?q=${data.lo_latitude},${data.lo_longitude}&z=17&output=embed">
-                                  </iframe>
-                                </div>
-                                <span class="message-time pull-right">
-                                  ${convert_time(data.time)}
-                                </span>
-                                <span class="message-time pull-right">${pushname}</span>
-                              </div>
-                            </div>
-                          </div>
-                        `);
-                        
-                        // $('#conversation').append(
-                        //   `
-                        //     <div class="row message-body">
-                        //       <div class="col-12 ${mainClass}">
-                        //         <div class="${subClass}">
-                        //           <div class="message-text">
-                        //             <a href="https://maps.google.com/maps?q=${data.lo_latitude},${data.lo_longitude}&z=17&hl=en"
-                        //                target="_blank" aria-label="Open map location">
-                        //               <img style="width:100%" crossorigin="anonymous"
-                        //                    src="https://maps.googleapis.com/maps/api/staticmap?zoom=15&size=270x200&scale=1&language=en&client=gme-whatsappinc&markers=color%3Ared%7C${data.lo_latitude},${data.lo_longitude}&signature=KN6_HP6wExvhlWIXmMBppuhuxIo">
-                        //             </a>
-                        //           </div>
-                        //           <span class="message-time pull-right">
-                        //             ${convert_time(data.time)}
-                        //           </span>
-                        //           <span class="message-time pull-right">${pushname}</span>
-                        //         </div>
-                        //       </div>
-                        //     </div>
-                        //   `
-                        // );                        
+                        const slot = renderLocationSlot(data.lo_latitude, data.lo_longitude);
+                        const messageHTML = renderLocation(mainClass, subClass, pushname, data.time, slot);
+                        $('#conversation').append(messageHTML);                      
                       }
                       else if(data.type == "video" ){
                             $('#conversation').append(
@@ -452,7 +365,7 @@ onChildAdded(chatRef, (snapshot) => {
                                           
                                         </div>
                                         <span class="message-time pull-right">
-                                        `+ convert_time(data.time)+`
+                                        `+ convertTime(data.time)+`
                                         </span>
                                         <span>
                                           <a href="`+data.media+`" download  target="_blank">
@@ -470,31 +383,8 @@ onChildAdded(chatRef, (snapshot) => {
                               `);
                       }
                       else if(data.type == "document"){
-                              $('#conversation').append(
-                                ` 
-                                  <div class="row message-body">
-                                      <div class="col-12 `+mainClass+`">
-                                        <div class="`+subClass+`">
-                                          <div class="message-text">
-                                            <span> `+data.type+`</span>
-                                          </div>
-                                          <span class="message-time pull-right">
-                                          `+ convert_time(data.time)+`
-                                          </span>
-                                          <span>
-                                            <a href="`+data.media+`" download  target="_blank">
-                                              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-download" viewBox="0 0 16 16">
-                                                <path d="M.5 9.9a.5.5 0 0 1 .5.5v2.5a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-2.5a.5.5 0 0 1 1 0v2.5a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2v-2.5a.5.5 0 0 1 .5-.5z"/>
-                                                <path d="M7.646 11.854a.5.5 0 0 0 .708 0l3-3a.5.5 0 0 0-.708-.708L8.5 10.293V1.5a.5.5 0 0 0-1 0v8.793L5.354 8.146a.5.5 0 1 0-.708.708l3 3z"/>
-                                              </svg>
-                                            </a>
-                                          </span>
-                                          
-                                          <span class="message-time pull-right">`+pushname+`</span>
-                                      </div>
-                                      </div>
-                                  </div>    
-                                `);
+                        const documentSlot = renderDocumentSlot(data.body,data.media);
+                        $('#conversation').append(renderDocument(mainClass,subClass,pushname,data.time,documentSlot));
                       }else{
                           $('#conversation').append(
                           ` 
@@ -505,7 +395,7 @@ onChildAdded(chatRef, (snapshot) => {
                                     `+data.body+`
                                     </div>
                                     <span class="message-time pull-right">
-                                    `+ convert_time(data.time)+`
+                                    `+ convertTime(data.time)+`
                                     </span>
                                     <span class="message-time pull-right">`+pushname+`</span>
                                 </div>
@@ -524,20 +414,7 @@ onChildAdded(chatRef, (snapshot) => {
                   
         }
   
-});
-
-function convert_time(timestamp){
-    var date = new Date(timestamp * 1000);
-    // Hours part from the timestamp
-    var hours = date.getHours();
-    // Minutes part from the timestamp
-    var minutes = "0" + date.getMinutes();
-    // Seconds part from the timestamp
-    var seconds = "0" + date.getSeconds();
-    // Will display time in 10:30:23 format
-    var formattedTime = hours + ':' + minutes.substr(-2);
-    return(formattedTime);
-};
+}); 
 
 
 

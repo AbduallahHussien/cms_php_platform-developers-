@@ -93,7 +93,10 @@ class SendLocation {
             },
             complete:function(){
                 $("#sendCurrentLocation").css('pointer-events','auto'); 
-                $("#sendCurrentLocation").text('Send Current Location')
+                $("#sendCurrentLocation").text('Send Current Location');
+                $("#conversation").scrollTop(
+                    $("#conversation").prop("scrollHeight"),
+                );
             }
         });
     }
