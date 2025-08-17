@@ -8,4 +8,4 @@ import './modules/recording';
 import './modules/sendLocation';
 import './modules/documentUploadHandler';
 import './modules/audioUploadHandler';
-// import './modules/conversationTypeHandler';
+import './modules/conversationTypeHandler';
