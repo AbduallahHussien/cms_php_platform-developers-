@@ -62,3 +62,71 @@ import { convertTime } from './helpers.js';
         </div>
     </div>`
   );
+
+
+// In your renderingHelpers.js
+export const renderVideoSlot = (videoName, videoUrl) => {
+    if (!videoName) videoName = "Video";
+
+    return `
+    <div class="d-flex flex-column bg-light p-2 rounded">
+        
+        <video controls class="w-100 rounded" style="max-height: 210px;">
+            <source src="${videoUrl}" type="video/mp4">
+            <source src="${videoUrl}" type="video/ogg">
+            Your browser does not support the video tag.
+        </video>
+        <a href="${videoUrl}" download class="btn btn-sm btn-link mt-1">
+            <i class="bi bi-download"></i> Download
+        </a>
+    </div>`;
+};
+
+export const renderVideo = (mainClass, subClass, pushname, time, slot) => `
+<div class="row message-body mb-2">
+    <div class="col-12 ${mainClass}">
+        <div class="${subClass} p-2 rounded">
+            <div class="d-flex justify-content-between small text-muted mb-1">
+                <span>${pushname}</span>
+                <span>${convertTime(time)}</span>
+            </div>
+            ${slot}
+        </div>
+    </div>
+</div>`;
+
+
+
+
+// In your renderingHelpers.js
+
+export const renderAudioSlot = (audioName, audioUrl) => {
+    if (!audioName) audioName = "Audio";
+
+    return `
+    <div class="d-flex flex-column bg-light p-2 rounded">
+        <div class="fw-bold mb-1">${audioName}</div>
+        <audio controls class="w-100">
+            <source src="${audioUrl}" type="audio/mpeg">
+            <source src="${audioUrl}" type="audio/ogg">
+            <source src="${audioUrl}" type="audio/aac">
+            Your browser does not support the audio element.
+        </audio>
+        <a href="${audioUrl}" download class="btn btn-sm btn-link mt-1">
+            <i class="bi bi-download"></i> Download
+        </a>
+    </div>`;
+};
+
+export const renderAudio = (mainClass, subClass, pushname, time, slot) => `
+<div class="row message-body mb-2">
+    <div class="col-12 ${mainClass}">
+        <div class="${subClass} p-2 rounded">
+            <div class="d-flex justify-content-between small text-muted mb-1">
+                <span>${pushname}</span>
+                <span>${convertTime(time)}</span>
+            </div>
+            ${slot}
+        </div>
+    </div>
+</div>`;

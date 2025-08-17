@@ -112,9 +112,17 @@ class WhatsappNotificationListener
                     $defaultExtension = 'jpg';
                     $mediaSubFolder = 'whatsapp-images';
                     break;
+                case 'video':  // <-- new case for video
+                    $defaultExtension = 'mp4';
+                    $mediaSubFolder = 'whatsapp-videos';
+                    break;
                 case 'ptt': // ptt is push-to-talk (voice note)
                     $defaultExtension = 'ogg'; // WhatsApp often uses .ogg for voice notes
                     $mediaSubFolder = 'whatsapp-voices';
+                    break;
+                case 'audio': // regular audio file (mp3, aac, etc.)
+                    $defaultExtension = 'mp3'; // default common audio format
+                    $mediaSubFolder = 'whatsapp-audios';
                     break;
                 case 'document':
                     $defaultExtension = 'bin'; // A generic binary default

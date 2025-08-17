@@ -104,6 +104,7 @@
                 </div>
             </div>
             
+         
             <div class="attachment-item" id="openDocumetUpload">
                 <div class="attachment-icon" style="background-color: #128C7E;">
                     <i class="fas fa-file"></i>
@@ -114,7 +115,28 @@
                 </div>
             </div>
             
-            {{-- <div class="attachment-item" onclick="startVoiceRecording()">
+        
+            <div class="attachment-item" id="openAudioUpload">
+                <div class="attachment-icon" style="background-color: #9B59B6;">
+                    <i class="fas fa-music"></i>
+                </div>
+                <div class="attachment-text">
+                    <h6>Audio File</h6>
+                    <p>Share music or audio clips</p>
+                </div>
+            </div>
+            
+            <div class="attachment-item" data-bs-toggle="modal" data-bs-target="#location">
+                <div class="attachment-icon" style="background-color: #25D366;">
+                    <i class="fas fa-map-marker-alt"></i>
+                </div>
+                <div class="attachment-text">
+                    <h6>Location</h6>
+                    <p>Share your location</p>
+                </div>
+            </div>
+
+                {{-- <div class="attachment-item" onclick="startVoiceRecording()">
                 <div class="attachment-icon" style="background-color: #34B7F1;">
                     <i class="fas fa-microphone"></i>
                 </div>
@@ -133,21 +155,12 @@
                     <p>Share a contact</p>
                 </div>
             </div> --}}
-            
-            {{-- <div class="attachment-item" onclick="document.getElementById('locationInput').click()">
-                <div class="attachment-icon" style="background-color: #25D366;">
-                    <i class="fas fa-map-marker-alt"></i>
-                </div>
-                <div class="attachment-text">
-                    <h6>Location</h6>
-                    <p>Share your location</p>
-                </div>
-            </div> --}}
         </div>
         
         <!-- Hidden file inputs -->
         <input type="file" id="photoInput" class="file-input" accept="image/*,video/*" multiple>
         <input type="file" id="documentInput" class="file-input" accept=".pdf,.doc,.docx,.txt,.xls,.xlsx,.ppt,.pptx">
+        <input type="file" id="audioInput" class="file-input" accept="audio/*">
         <input type="file" id="contactInput" class="file-input" accept=".vcf">
         <input type="file" id="locationInput" class="file-input">
     </div>

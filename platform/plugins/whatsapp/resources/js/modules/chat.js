@@ -2,7 +2,16 @@
 import { db, ref, onChildAdded,query, orderByChild, limitToLast, get,child } from './firebase';
 import { convertTime } from './helpers.js'; 
 
-import { renderLocationSlot, renderLocation, renderDocumentSlot, renderDocument } from './renderingHelpers.js';
+import { renderLocationSlot, 
+         renderLocation, 
+         renderDocumentSlot, 
+         renderDocument, 
+         renderVideoSlot, 
+         renderVideo,
+         renderAudioSlot,
+         renderAudio } 
+from './renderingHelpers.js';
+
  
 
 $(function() {
@@ -70,7 +79,7 @@ $(function() {
       loadChatMessages(chat_id, instance_id[1]).then(data => {
        
         $.each(data, function(index) {
-                console.log('data',data)   
+                // console.log('data',data)   
               var mainClass = "";
               var subClass = "";
               
@@ -108,38 +117,12 @@ $(function() {
                       </div>
                   </div>`);
                 
-            }else if(data[index].type == "ptt" || data[index].type == "audio"){
-
+            }else if (data[index].type === "audio") {
+              const slot = renderAudioSlot("Audio", data[index].media);
+              const messageHTML = renderAudio(mainClass, subClass, data[index].pushname, data[index].time, slot);
+              $('#conversation').append(messageHTML);
+          }
           
-              $('#conversation').append(
-                ` 
-                  <div class="row message-body">
-                      <div class="col-12 `+mainClass+`">
-                      <div class="`+subClass+`">
-                          <div class="message-text">
-                          <audio controls>
-                              <source src="`+data[index].media+`" type="audio/mpeg">
-                          </audio>
-                            
-                          </div>
-                          <span class="message-time pull-right">
-                          `+ convertTime(data[index].time)+`
-                          </span>
-                          <span>
-                            <a href="`+data[index].media+`" download  target="_blank">
-                              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-download" viewBox="0 0 16 16">
-                                <path d="M.5 9.9a.5.5 0 0 1 .5.5v2.5a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-2.5a.5.5 0 0 1 1 0v2.5a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2v-2.5a.5.5 0 0 1 .5-.5z"/>
-                                <path d="M7.646 11.854a.5.5 0 0 0 .708 0l3-3a.5.5 0 0 0-.708-.708L8.5 10.293V1.5a.5.5 0 0 0-1 0v8.793L5.354 8.146a.5.5 0 1 0-.708.708l3 3z"/>
-                              </svg>
-                            </a>
-                          </span>
-                          
-                          <span class="message-time pull-right">`+data[index].pushname+`</span>
-                      </div>
-                      </div>
-                  </div>    
-                `);
-            }
             else if(data[index].type === "location" ){
               const slot = renderLocationSlot(data[index].lo_latitude, data[index].lo_longitude);
               const messageHTML = renderLocation(mainClass, subClass, data[index].pushname, data[index].time, slot);
@@ -150,39 +133,12 @@ $(function() {
               const documentSlot = renderDocumentSlot(data[index].body,data[index].media);
               $('#conversation').append(renderDocument(mainClass,subClass,data[index].pushname,data[index].time,documentSlot));
             }
-            else if(data[index].type == "video" ){
-
-          
-              $('#conversation').append(
-                ` 
-                  <div class="row message-body">
-                      <div class="col-12 `+mainClass+`">
-                      <div class="`+subClass+`">
-                          <div class="message-text">
-                            <video width="210" height="150" controls>
-                              <source src="`+data[index].media+`" type="video/mp4">
-                              <source src="`+data[index].media+`" type="video/ogg">
-                        </video>
-                            
-                          </div>
-                          <span class="message-time pull-right">
-                          `+ convertTime(data[index].time)+`
-                          </span>
-                          <span>
-                            <a href="`+data[index].media+`" download  target="_blank">
-                              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-download" viewBox="0 0 16 16">
-                                <path d="M.5 9.9a.5.5 0 0 1 .5.5v2.5a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-2.5a.5.5 0 0 1 1 0v2.5a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2v-2.5a.5.5 0 0 1 .5-.5z"/>
-                                <path d="M7.646 11.854a.5.5 0 0 0 .708 0l3-3a.5.5 0 0 0-.708-.708L8.5 10.293V1.5a.5.5 0 0 0-1 0v8.793L5.354 8.146a.5.5 0 1 0-.708.708l3 3z"/>
-                              </svg>
-                            </a>
-                          </span>
-                          
-                          <span class="message-time pull-right">`+data[index].pushname+`</span>
-                      </div>
-                      </div>
-                  </div>    
-                `);
-            }else{          
+            else if (data[index].type === "video") {
+              const slot = renderVideoSlot(data[index].pushname, data[index].media);
+              const messageHTML = renderVideo(mainClass, subClass, data[index].pushname, data[index].time, slot);
+              $('#conversation').append(messageHTML);
+          }
+          else{          
             
               $('#conversation').append(
               ` 
@@ -315,77 +271,13 @@ onChildAdded(chatRef, (snapshot) => {
                               </div>
                           </div>    
                         `);
-                      }else if(data.type == "ptt" || data.type == "audio"){
-                            $('#conversation').append(
-                              ` 
-                                <div class="row message-body">
-                                    <div class="col-12 `+mainClass+`">
-                                      <div class="`+subClass+`">
-                                        <div class="message-text">
-                                        <audio controls>
-                                            <source src="`+data.media+`" type="audio/mpeg">
-                                        </audio>
-                                          
-                                        </div>
-                                        <span class="message-time pull-right">
-                                        `+ convertTime(data.time)+`
-                                        </span>
-                                        <span>
-                                          <a href="`+data.media+`" download  target="_blank">
-                                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-download" viewBox="0 0 16 16">
-                                              <path d="M.5 9.9a.5.5 0 0 1 .5.5v2.5a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-2.5a.5.5 0 0 1 1 0v2.5a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2v-2.5a.5.5 0 0 1 .5-.5z"/>
-                                              <path d="M7.646 11.854a.5.5 0 0 0 .708 0l3-3a.5.5 0 0 0-.708-.708L8.5 10.293V1.5a.5.5 0 0 0-1 0v8.793L5.354 8.146a.5.5 0 1 0-.708.708l3 3z"/>
-                                            </svg>
-                                          </a>
-                                        </span>
-                                        
-                                        <span class="message-time pull-right">`+pushname+`</span>
-                                    </div>
-                                    </div>
-                                </div>    
-                              `);
                       }
-                      else if(data.type == "location" ){
-                        const slot = renderLocationSlot(data.lo_latitude, data.lo_longitude);
-                        const messageHTML = renderLocation(mainClass, subClass, pushname, data.time, slot);
-                        $('#conversation').append(messageHTML);                      
-                      }
-                      else if(data.type == "video" ){
-                            $('#conversation').append(
-                              ` 
-                                <div class="row message-body">
-                                    <div class="col-12 `+mainClass+`">
-                                      <div class="`+subClass+`">
-                                        <div class="message-text">
-                                        
-                                        <video width="210" height="150" controls>
-                                          <source src="`+data.media+`" type="video/mp4">
-                                          <source src="`+data.media+`" type="video/ogg">
-                                        </video>
-                                          
-                                        </div>
-                                        <span class="message-time pull-right">
-                                        `+ convertTime(data.time)+`
-                                        </span>
-                                        <span>
-                                          <a href="`+data.media+`" download  target="_blank">
-                                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-download" viewBox="0 0 16 16">
-                                              <path d="M.5 9.9a.5.5 0 0 1 .5.5v2.5a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-2.5a.5.5 0 0 1 1 0v2.5a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2v-2.5a.5.5 0 0 1 .5-.5z"/>
-                                              <path d="M7.646 11.854a.5.5 0 0 0 .708 0l3-3a.5.5 0 0 0-.708-.708L8.5 10.293V1.5a.5.5 0 0 0-1 0v8.793L5.354 8.146a.5.5 0 1 0-.708.708l3 3z"/>
-                                            </svg>
-                                          </a>
-                                        </span>
-                                        
-                                        <span class="message-time pull-right">`+pushname+`</span>
-                                    </div>
-                                    </div>
-                                </div>    
-                              `);
-                      }
-                      else if(data.type == "document"){
-                        const documentSlot = renderDocumentSlot(data.body,data.media);
-                        $('#conversation').append(renderDocument(mainClass,subClass,pushname,data.time,documentSlot));
-                      }else{
+                    else if (data.type === "audio") {
+                        const slot = renderAudioSlot("Audio", data.media);
+                        const messageHTML = renderAudio(mainClass, subClass, pushname, data.time, slot);
+                        $('#conversation').append(messageHTML);
+                    }
+                    else{
                           $('#conversation').append(
                           ` 
                             <div class="row message-body">

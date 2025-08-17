@@ -1,6 +1,23 @@
 class DocumentUploadHandler {
     init() {
 
+        $('#modal_preview_file').on('hidden.bs.modal', function () {
+            // Hide & clear the PDF iframe
+            $('#docPreview').hide().attr('src', '');
+        
+            // Hide & clear generic file info
+            $('#fileInfo').hide();
+            $('#fileName').text('');
+            $('#fileSize').text('');
+        
+            // Reset file input so user can re-upload
+            $('#documentInput').val('');
+        
+            // Reset Send button state
+            $('#sendDocument').css('pointer-events', 'auto').text('Send');
+        });
+
+        
         $("#openDocumetUpload").on("click", function () {
             if (
                 $("#conversation").data("receiver_id") &&
@@ -23,6 +40,8 @@ class DocumentUploadHandler {
             if (!chat_id) return;
             const file = this.files[0];
             if (!file) return;
+
+
             // Validate file size (30 MB limit)
             if (file.size > 30 * 1024 * 1024) {
                 toastr.error("File is too large! Max size is 30MB.");
@@ -77,6 +96,7 @@ class DocumentUploadHandler {
                     return;
                 }
 
+                
                 // Reset preview sections
                 $("#docPreview").hide();
                 $("#fileInfo").hide();
