@@ -1055,31 +1055,31 @@ class WhatsappJs {
         //END Get Messages Form Chat
       
         //Conversation Action
-            $(document).on("click","#conversation-type",function() {
-              var action = $(this).data('action');
-              var chat_id = $(this).data('chat_id');
-              var chat_title = $(this).data('chat_title');
-              var chat_img = $(this).data('chat_img');
+            // $(document).on("click","#conversation-type",function() {
+            //   var action = $(this).data('action');
+            //   var chat_id = $(this).data('chat_id');
+            //   var chat_title = $(this).data('chat_title');
+            //   var chat_img = $(this).data('chat_img');
       
-              if(action == "close"){
-                $('#conversation-type').data('action','open').removeClass('btn-success').addClass('btn-secondary').text('Open Conversation');
-              }else{
-                $('#conversation-type').data('action','close').removeClass('btn-secondary').addClass('btn-success').text('Close Conversation');
-              }
+            //   if(action == "close"){
+            //     $('#conversation-type').data('action','open').removeClass('btn-success').addClass('btn-secondary').text('Open Conversation');
+            //   }else{
+            //     $('#conversation-type').data('action','close').removeClass('btn-secondary').addClass('btn-success').text('Close Conversation');
+            //   }
       
-                $.ajax({
-                  headers: {
-                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                 },
-                  url: set_con_route,
-                  type: 'post',
-                  data: { "chat_id":chat_id , "action":action ,"img":chat_img , "title":chat_title},
-                  success: function(response) {
-                  }
-                });
+            //     $.ajax({
+            //       headers: {
+            //         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            //      },
+            //       url: set_con_route,
+            //       type: 'post',
+            //       data: { "chat_id":chat_id , "action":action ,"img":chat_img , "title":chat_title},
+            //       success: function(response) {
+            //       }
+            //     });
       
       
-            });
+            // });
         //End Conversation Action
       
         //Function Convert Time

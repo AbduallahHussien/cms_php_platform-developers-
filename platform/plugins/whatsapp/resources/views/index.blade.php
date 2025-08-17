@@ -261,9 +261,7 @@
                                 <!-- END CONVERSATION NAME -->
 
                                 <!-- CONVERSATION TYPE -->
-                                <div class="col-4 conversation-type">
-                                    <button type="button" class="btn btn-success d-none" id="conversation-type" data-action="" data-chat_id="" data-chat_img="" data-chat_title="">Open Conversation</button>
-                                </div>
+                                @include('plugins/whatsapp::partials._btn_conversation_type')
                                 <!-- END CONVERSATION TYPE -->
                             </div>
                             <!-- END CONVERSATION HEADING -->

@@ -1,6 +1,18 @@
 // ✅ Import Firebase SDK from node_modules
 import { initializeApp } from "firebase/app";
-import { getDatabase, ref, set, onValue, onChildAdded, query, orderByChild, limitToLast, get,child } from "firebase/database";
+import { getDatabase, 
+         ref, 
+         update,
+         set,
+         push, 
+         onValue, 
+         onChildAdded, 
+         query, 
+         orderByChild, 
+         limitToLast, 
+         get,
+         child 
+} from "firebase/database";
 
 // ✅ Your Firebase config
 
@@ -33,4 +45,4 @@ const app = initializeApp(firebaseConfig);
 const db = getDatabase(app);
 
 // ✅ Export database so you can use it anywhere in Laravel
-export { db, ref, set, onValue, onChildAdded, query, orderByChild, limitToLast, get,child };
+export { db, ref, set,push,update, onValue, onChildAdded, query, orderByChild, limitToLast, get,child };
