@@ -1,7 +1,7 @@
-import { convertTime } from './helpers.js'; 
+import { convertTime } from "./helpers.js";
 
-  // Render a single location slot
-  export const renderLocationSlot = (latitude, longitude) => {
+// Render a single location slot
+export const renderLocationSlot = (latitude, longitude) => {
     return `
     <div class="d-flex justify-content-center bg-light p-2 rounded">
         <iframe
@@ -14,10 +14,10 @@ import { convertTime } from './helpers.js';
             src="https://www.google.com/maps?q=${latitude},${longitude}&z=17&output=embed">
         </iframe>
     </div>`;
-  };
+};
 
-  // Render the full message for location
-  export const renderLocation = (mainClass, subClass, pushname, time, slot) => `
+// Render the full message for location
+export const renderLocation = (mainClass, subClass, pushname, time, slot) => `
   <div class="row message-body mb-2">
     <div class="col-12 ${mainClass}">
         <div class="${subClass} p-2 rounded">
@@ -30,13 +30,11 @@ import { convertTime } from './helpers.js';
     </div>
   </div>`;
 
-
-  export const renderDocumentSlot = (ultramsg_body ,ultramsg_media) => 
-  {
-     if(!ultramsg_body){
-      ultramsg_body = 'File name';
-     }
-    return  `<div class="d-flex align-items-center bg-light p-2 rounded">
+export const renderDocumentSlot = (ultramsg_body, ultramsg_media) => {
+    if (!ultramsg_body) {
+        ultramsg_body = "File name";
+    }
+    return `<div class="d-flex align-items-center bg-light p-2 rounded">
                   <div class="me-3 text-secondary">
                       <i class="fas fa-file-alt fa-lg"></i>
                   </div>
@@ -46,10 +44,10 @@ import { convertTime } from './helpers.js';
                           <i class="bi bi-download"></i> Download
                       </a>
                   </div>
-            </div>`
-  };
+            </div>`;
+};
 
-  export const renderDocument = (mainClass,subClass,pushname,time,slot) => (
+export const renderDocument = (mainClass, subClass, pushname, time, slot) =>
     `<div class="row message-body mb-2">
         <div class="col-12 ${mainClass}">
             <div class="${subClass} p-2 rounded">
@@ -60,9 +58,7 @@ import { convertTime } from './helpers.js';
                 ${slot}
             </div>
         </div>
-    </div>`
-  );
-
+    </div>`;
 
 // In your renderingHelpers.js
 export const renderVideoSlot = (videoName, videoUrl) => {
@@ -94,9 +90,6 @@ export const renderVideo = (mainClass, subClass, pushname, time, slot) => `
         </div>
     </div>
 </div>`;
-
-
-
 
 // In your renderingHelpers.js
 
@@ -130,3 +123,99 @@ export const renderAudio = (mainClass, subClass, pushname, time, slot) => `
         </div>
     </div>
 </div>`;
+
+
+
+
+
+
+export const renderChatMessages = (data, prepend = false) => {
+    $.each(data, function (index) {
+        let mainClass = "";
+        let subClass = "";
+
+        if (data[index].event_type == "message_received") {
+            mainClass = "message-main-receiver";
+            subClass = "receiver";
+        } else {
+            mainClass = "message-main-sender";
+            subClass = "sender";
+        }
+
+        let messageHTML;
+
+        switch (data[index].type) {
+            case "image":
+                messageHTML = `
+                <div class="row message-body">
+                    <div class="col-12 ${mainClass}">
+                        <div class="${subClass}">
+                            <div class="message-text">
+                                <img id="uploadedImage" src="${data[index].media}" alt="Uploaded Image" accept="image/png, image/jpeg">
+                            </div>
+                            <span class="message-time pull-right">${convertTime(data[index].time)}</span>
+                            <span>
+                                <a href="${data[index].media}" download target="_blank">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-download" viewBox="0 0 16 16">
+                                        <path d="M.5 9.9a.5.5 0 0 1 .5.5v2.5a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-2.5a.5.5 0 0 1 1 0v2.5a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2v-2.5a.5.5 0 0 1 .5-.5z"/>
+                                        <path d="M7.646 11.854a.5.5 0 0 0 .708 0l3-3a.5.5 0 0 0-.708-.708L8.5 10.293V1.5a.5.5 0 0 0-1 0v8.793L5.354 8.146a.5.5 0 1 0-.708.708l3 3z"/>
+                                    </svg>
+                                </a>
+                            </span>
+                            <span class="message-time pull-right">${data[index].pushname}</span>
+                        </div>
+                    </div>
+                </div>`;
+                break;
+
+            case "audio":
+                const audioSlot = renderAudioSlot("Audio", data[index].media);
+                messageHTML = renderAudio(mainClass, subClass, data[index].pushname, data[index].time, audioSlot);
+                break;
+
+            case "location":
+                const locationSlot = renderLocationSlot(data[index].lo_latitude, data[index].lo_longitude);
+                messageHTML = renderLocation(mainClass, subClass, data[index].pushname, data[index].time, locationSlot);
+                break;
+
+            case "document":
+                const documentSlot = renderDocumentSlot(data[index].body, data[index].media);
+                messageHTML = renderDocument(mainClass, subClass, data[index].pushname, data[index].time, documentSlot);
+                break;
+
+            case "video":
+                const videoSlot = renderVideoSlot(data[index].pushname, data[index].media);
+                messageHTML = renderVideo(mainClass, subClass, data[index].pushname, data[index].time, videoSlot);
+                break;
+
+            default:
+                messageHTML = `
+                <div class="row message-body">
+                    <div class="col-12 ${mainClass}">
+                        <div class="${subClass}">
+                            <div class="message-text">${data[index].body}</div>
+                            <span class="message-time pull-right">${convertTime(data[index].time)}</span>
+                            <span class="message-time pull-right">${data[index].pushname}</span>
+                        </div>
+                    </div>
+                </div>`;
+        }
+
+        if (!prepend) {
+            // Save scroll position before prepending
+            const conversation = $("#conversation");
+            const oldScrollHeight = conversation.prop("scrollHeight");
+            
+            conversation.prepend(messageHTML);
+            
+            // Adjust scroll to keep the previous position
+            const newScrollHeight = conversation.prop("scrollHeight");
+            conversation.scrollTop(newScrollHeight - oldScrollHeight);
+        } else {
+            $("#conversation").append(messageHTML);
+            // Scroll to bottom for new messages
+            $("#conversation").scrollTop($("#conversation").prop("scrollHeight"));
+        }
+    });
+};
+

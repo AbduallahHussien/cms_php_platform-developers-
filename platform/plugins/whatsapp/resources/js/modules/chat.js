@@ -1,5 +1,18 @@
 // platform/plugins/whatsapp/resources/js/chat.js
-import { db, ref, get, set, update, push,onChildAdded,query, orderByChild, limitToLast,child } from './firebase';
+import { db,
+         ref,
+         get,
+         set, 
+         update, 
+         push,
+         onChildAdded,
+         query, 
+         orderByChild, 
+         limitToLast,
+         child,
+         orderByKey,
+         startAfter,
+         endBefore } from './firebase';
  
 import { convertTime } from './helpers.js'; 
 
@@ -10,16 +23,22 @@ import { renderLocationSlot,
          renderVideoSlot, 
          renderVideo,
          renderAudioSlot,
-         renderAudio } 
-from './renderingHelpers.js';
+         renderAudio,
+         renderChatMessages } 
+  from './renderingHelpers.js';
+
 import { handleConversation } from './conversationTypeHandler.js'
- 
+import { loadInitial, loadRecentMessages, loadOlderMessages } from './chatLoader.js'
+        
+
+import { GlobalState } from './state.js';
 
 
 $(function() {
 
   $(document).on("click",".sideBar-body",function() 
   { 
+    console.log(1);
     $('.sideBar-body').removeClass('hover');
     $(this).addClass('hover');
     $('.conversation').removeClass('d-none');
@@ -29,161 +48,55 @@ $(function() {
     if (window.innerWidth < 700){
       $(".side").css({"display": "none"});
     }
-    var instance_id  = instance.split(/(\d+)/);
+
+    console.log(2);
+    GlobalState.instance_id  = instance.split(/(\d+)/)[1];
+    // alert(GlobalState.instance_id)
     var chatName = ($(this).find('.name-meta').text());
-    var chat_id = $(this).data('chat_id');
+    GlobalState.chat_id = $(this).data('chat_id');
     
     var chat_img = $(this).find('img').attr('src');
     var chat_title = $(this).find('.name-meta').text();
 
     $('#conversation-type').data('chat_title',chat_title);
     $('#conversation-type').data('chat_img',chat_img);
-    //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-  
     
-
- 
- 
-    handleConversation(chat_id);
-
-
-
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    handleConversation(GlobalState.chat_id);
+    //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    console.log(3);
     $('a.heading-name-meta').empty().text(chatName);
     $('#conversation').empty();
     
-    $('#conversation').data("receiver_id",chat_id);
+    $('#conversation').data("receiver_id",GlobalState.chat_id);
     
-    heading_image(chat_id);
+    heading_image(GlobalState.chat_id);
     
-    async function loadChatMessages(chat_id, instance_id) {
-      const snapshot = await get(child(ref(db), 'whatsapp_chat'));
-   
-      if (snapshot.exists()) {
-         
-        let messages = [];
-    
-        snapshot.forEach(childSnapshot => {
-          const msg = childSnapshot.val();
-
-          if (
-            msg.chat_id === instance_id 
-            &&
-            String(msg.msg_id).includes(chat_id)
-          ) {
-            messages.push(msg);
-          }
-        });
-    
-        // Sort by time ascending
-        messages.sort((a, b) => a.time - b.time); 
-    
-        // Now use `messages` array to update DOM
-        return messages;
-      } else { 
-        return [];
-      }
-    }
-    
+    console.log(4);
     // // Example usage:
     // chat_id = "963995275137@c.us";
     // instance_id = "117593"; 
-    if (chat_id && instance_id) { 
-      loadChatMessages(chat_id, instance_id[1]).then(data => {
-       
-        $.each(data, function(index) {
-                // console.log('data',data)   
-              var mainClass = "";
-              var subClass = "";
-              
-              if(data[index].event_type == "message_received"){
-                  mainClass = "message-main-receiver";
-                  subClass = "receiver";
-              }else{
-                  mainClass = "message-main-sender";
-                  subClass = "sender" ;
-              }
-             
-              // check type message
-            if(data[index].type == "image" )
-            {
-                
-                $('#conversation').append(
-                `<div class="row message-body">
-                      <div class="col-12 `+mainClass+`">
-                      <div class="`+subClass+`">
-                          <div class="message-text">
-                          <img id="uploadedImage" src="${data[index].media}" alt="Uploaded Image" accept="image/png, image/jpeg">
-                          </div>
-                          <span class="message-time pull-right">`+ convertTime(data[index].time)+`</span>
-                          <span>
-                            <a href="`+data[index].media+`" download  target="_blank">
-                              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-download" viewBox="0 0 16 16">
-                                <path d="M.5 9.9a.5.5 0 0 1 .5.5v2.5a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-2.5a.5.5 0 0 1 1 0v2.5a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2v-2.5a.5.5 0 0 1 .5-.5z"/>
-                                <path d="M7.646 11.854a.5.5 0 0 0 .708 0l3-3a.5.5 0 0 0-.708-.708L8.5 10.293V1.5a.5.5 0 0 0-1 0v8.793L5.354 8.146a.5.5 0 1 0-.708.708l3 3z"/>
-                              </svg>
-                            </a>
-                          </span>
-                          
-                          <span class="message-time pull-right">`+data[index].pushname+`</span>
-                      </div>
-                      </div>
-                  </div>`);
-                
-            }else if (data[index].type === "audio") {
-              const slot = renderAudioSlot("Audio", data[index].media);
-              const messageHTML = renderAudio(mainClass, subClass, data[index].pushname, data[index].time, slot);
-              $('#conversation').append(messageHTML);
-          }
-          
-            else if(data[index].type === "location" ){
-              const slot = renderLocationSlot(data[index].lo_latitude, data[index].lo_longitude);
-              const messageHTML = renderLocation(mainClass, subClass, data[index].pushname, data[index].time, slot);
-              $('#conversation').append(messageHTML);
-            }
-            else if(data[index].type == "document") 
-            {
-              const documentSlot = renderDocumentSlot(data[index].body,data[index].media);
-              $('#conversation').append(renderDocument(mainClass,subClass,data[index].pushname,data[index].time,documentSlot));
-            }
-            else if (data[index].type === "video") {
-              const slot = renderVideoSlot(data[index].pushname, data[index].media);
-              const messageHTML = renderVideo(mainClass, subClass, data[index].pushname, data[index].time, slot);
-              $('#conversation').append(messageHTML);
-          }
-          else{          
-            
-              $('#conversation').append(
-              ` 
-                      <div class="row message-body">
-                          <div class="col-12 `+mainClass+` ">
-                            <div class="`+subClass+`">
-                                <div class="message-text">`+data[index].body+`</div>
-                                <span class="message-time pull-right">`+ convertTime(data[index].time)+`</span>
-                                <span class="message-time pull-right">`+data[index].pushname+`</span>
-                            </div>
-                          </div>
-                      </div>    
-              `);
-              
-            }
-            });   
-        $("#conversation").scrollTop($("#conversation").prop("scrollHeight"));
 
-      });
+    if (GlobalState.chat_id && GlobalState.instance_id) { 
+      // return;
+      console.log(5);
+      loadInitial(GlobalState.chat_id, GlobalState.instance_id);
+      // loadRecentMessages(chat_id, instance_id[1]).then(data => {
+      //   renderChatMessages(data);
+      // });
       // console.log('after loadChatMessages')
     } else {
       console.warn("Missing chat_id or instance_id");
-  }  
+    }  
        
-          
+    console.log(7);   
   });
-
+  console.log(8);
   function heading_image(chat_id){
     var settings = {
         "async": true,
         "crossDomain": true,
-        "url": "https://api.ultramsg.com/"+instance+"/contacts/image?token="+token+"&chatId="+chat_id+"",
+        "url": "https://api.ultramsg.com/"+instance+"/contacts/image?token="+token+"&chatId="+GlobalState.chat_id+"",
         "method": "GET",
         "headers": {
         "content-type": "application/x-www-form-urlencoded"
@@ -198,26 +111,45 @@ $(function() {
 
         }
     });
-}
+  }
+  console.log(9);
 });
+
+console.log(10);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 ///////////////////////////////////////////////////////////////////////////////
 // Listen for new messages
-const chatRef = ref(db, 'whatsapp_chat');
+const chatRef = ref(db, 'whatsapp_chat'); 
 
-onChildAdded(chatRef, (snapshot) => {
-
-    const data = snapshot.val();
-
-    // // 1. Basic validation
-    // if (!data || !data.event_type) {
-    //     console.error("🔥 Received invalid data from Firebase:", message);
-    //     return;
-    // }
-    // alert("Hello eng");
-    //     debugger;
-                          
+onChildAdded(chatRef, (snapshot) => { 
+    const data = snapshot.val(); 
+    console.log('data',data);
         // RE ORDER CHAT 
           if(data.event_type == "message_received"){    
             $('[data-chat_id="'+data.from+'"]').insertBefore('.sideBar-body:first-child');
@@ -321,5 +253,5 @@ onChildAdded(chatRef, (snapshot) => {
   
 }); 
 
-
+ 
 

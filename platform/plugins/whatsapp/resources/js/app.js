@@ -2,6 +2,7 @@ import './modules/helpers';
 import './modules/renderingHelpers';
 import './modules/firebase';
 import './modules/settings';
+import './modules/chatLoader';
 import './modules/chat';
 import './modules/mediaUploadHandler';
 import './modules/recording';
