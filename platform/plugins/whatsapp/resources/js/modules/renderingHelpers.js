@@ -130,11 +130,16 @@ export const renderAudio = (mainClass, subClass, pushname, time, slot) => `
 
 
 export const renderChatMessages = (data, prepend = false) => {
-    $.each(data, function (index) {
+    const conversation = $("#conversation");
+
+    // Reverse data when prepending so oldest message comes first
+    const messages = prepend ? [...data].reverse() : data;
+
+    $.each(messages, function (index) {
         let mainClass = "";
         let subClass = "";
 
-        if (data[index].event_type == "message_received") {
+        if (messages[index].event_type === "message_received") {
             mainClass = "message-main-receiver";
             subClass = "receiver";
         } else {
@@ -144,48 +149,48 @@ export const renderChatMessages = (data, prepend = false) => {
 
         let messageHTML;
 
-        switch (data[index].type) {
+        switch (messages[index].type) {
             case "image":
                 messageHTML = `
                 <div class="row message-body">
                     <div class="col-12 ${mainClass}">
                         <div class="${subClass}">
                             <div class="message-text">
-                                <img id="uploadedImage" src="${data[index].media}" alt="Uploaded Image" accept="image/png, image/jpeg">
+                                <img src="${messages[index].media}" alt="Uploaded Image" accept="image/png, image/jpeg">
                             </div>
-                            <span class="message-time pull-right">${convertTime(data[index].time)}</span>
+                            <span class="message-time pull-right">${convertTime(messages[index].time)}</span>
                             <span>
-                                <a href="${data[index].media}" download target="_blank">
+                                <a href="${messages[index].media}" download target="_blank">
                                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-download" viewBox="0 0 16 16">
                                         <path d="M.5 9.9a.5.5 0 0 1 .5.5v2.5a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-2.5a.5.5 0 0 1 1 0v2.5a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2v-2.5a.5.5 0 0 1 .5-.5z"/>
                                         <path d="M7.646 11.854a.5.5 0 0 0 .708 0l3-3a.5.5 0 0 0-.708-.708L8.5 10.293V1.5a.5.5 0 0 0-1 0v8.793L5.354 8.146a.5.5 0 1 0-.708.708l3 3z"/>
                                     </svg>
                                 </a>
                             </span>
-                            <span class="message-time pull-right">${data[index].pushname}</span>
+                            <span class="message-time pull-right">${messages[index].pushname}</span>
                         </div>
                     </div>
                 </div>`;
                 break;
 
             case "audio":
-                const audioSlot = renderAudioSlot("Audio", data[index].media);
-                messageHTML = renderAudio(mainClass, subClass, data[index].pushname, data[index].time, audioSlot);
+                const audioSlot = renderAudioSlot("Audio", messages[index].media);
+                messageHTML = renderAudio(mainClass, subClass, messages[index].pushname, messages[index].time, audioSlot);
                 break;
 
             case "location":
-                const locationSlot = renderLocationSlot(data[index].lo_latitude, data[index].lo_longitude);
-                messageHTML = renderLocation(mainClass, subClass, data[index].pushname, data[index].time, locationSlot);
+                const locationSlot = renderLocationSlot(messages[index].lo_latitude, messages[index].lo_longitude);
+                messageHTML = renderLocation(mainClass, subClass, messages[index].pushname, messages[index].time, locationSlot);
                 break;
 
             case "document":
-                const documentSlot = renderDocumentSlot(data[index].body, data[index].media);
-                messageHTML = renderDocument(mainClass, subClass, data[index].pushname, data[index].time, documentSlot);
+                const documentSlot = renderDocumentSlot(messages[index].body, messages[index].media);
+                messageHTML = renderDocument(mainClass, subClass, messages[index].pushname, messages[index].time, documentSlot);
                 break;
 
             case "video":
-                const videoSlot = renderVideoSlot(data[index].pushname, data[index].media);
-                messageHTML = renderVideo(mainClass, subClass, data[index].pushname, data[index].time, videoSlot);
+                const videoSlot = renderVideoSlot(messages[index].pushname, messages[index].media);
+                messageHTML = renderVideo(mainClass, subClass, messages[index].pushname, messages[index].time, videoSlot);
                 break;
 
             default:
@@ -193,29 +198,26 @@ export const renderChatMessages = (data, prepend = false) => {
                 <div class="row message-body">
                     <div class="col-12 ${mainClass}">
                         <div class="${subClass}">
-                            <div class="message-text">${data[index].body}</div>
-                            <span class="message-time pull-right">${convertTime(data[index].time)}</span>
-                            <span class="message-time pull-right">${data[index].pushname}</span>
+                            <div class="message-text">${messages[index].body}</div>
+                            <span class="message-time pull-right">${convertTime(messages[index].time)}</span>
+                            <span class="message-time pull-right">${messages[index].pushname}</span>
                         </div>
                     </div>
                 </div>`;
         }
 
-        if (!prepend) {
-            // Save scroll position before prepending
-            const conversation = $("#conversation");
+        if (prepend) {
+            // Preserve scroll position when prepending
             const oldScrollHeight = conversation.prop("scrollHeight");
-            
             conversation.prepend(messageHTML);
-            
-            // Adjust scroll to keep the previous position
             const newScrollHeight = conversation.prop("scrollHeight");
             conversation.scrollTop(newScrollHeight - oldScrollHeight);
         } else {
-            $("#conversation").append(messageHTML);
+            conversation.append(messageHTML);
             // Scroll to bottom for new messages
-            $("#conversation").scrollTop($("#conversation").prop("scrollHeight"));
+            conversation.scrollTop(conversation.prop("scrollHeight"));
         }
     });
 };
+
 

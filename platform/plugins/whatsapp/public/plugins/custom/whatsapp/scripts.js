@@ -1376,12 +1376,12 @@ class WhatsappJs {
                 var input = document.getElementById('search_input');
                 map.controls[google.maps.ControlPosition.TOP_LEFT].push(input);
       
-                var searchBox = new google.maps.places.SearchBox(input);
+                // var searchBox = new google.maps.places.SearchBox(input);
       
-                google.maps.event.addListener(searchBox, 'places_changed', function() {
-                var places = searchBox.getPlaces();
-                placeMarker(places[0].geometry.location);
-                });
+                // google.maps.event.addListener(searchBox, 'places_changed', function() {
+                // var places = searchBox.getPlaces();
+                // placeMarker(places[0].geometry.location);
+                // });
                                                 
                 marker = new google.maps.Marker({
                 map: map

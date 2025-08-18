@@ -608,21 +608,20 @@ audio {
   border-color: #5ab34b;
   color: #fff;
 }
-span.view-more {
+/* span.view-more {
   background: #fefefd;
   padding: 6px;
   color: lightslategray;
   border-radius: 9px;
 
-}
+} */
 
-div#view-more {
+/* div.view-more {
   cursor: pointer;
-  position: absolute;
-  display: inline-block;
+  position: absolute; 
   left: 62%;
   top: 75px;
-}
+} */
 .button--stop:hover {
   background: #4fabe4;
   border-color: #39a0e1;

@@ -1,134 +1,114 @@
-import { db,
-    ref,
-    get,
-    set, 
-    update, 
-    push,
-    onChildAdded,
-    query, 
-    orderByChild, 
-    limitToLast,
-    child,
-    endBefore } from './firebase';
+import { db, ref, get, query, orderByChild, limitToLast, endAt } from './firebase';
+import { renderChatMessages } from './renderingHelpers.js';
+import { GlobalState } from './state.js';
 
-    import { renderChatMessages } from './renderingHelpers.js';
+const MESSAGES_PER_PAGE = 5;
+let chatMessages = [];
+let oldestTime = null;
 
-    const MESSAGES_PER_PAGE = 5;
-    let chatMessages =[];
-    let oldestTime = null;
+// ------------------ Load Latest Messages ------------------
+export async function loadRecentMessages(chat_id, instance_id) {
+  const messagesRef = ref(db, "whatsapp_chat");
 
-    import { GlobalState } from './state.js';
+  const q = query(
+    messagesRef,
+    orderByChild("time"),
+    limitToLast(MESSAGES_PER_PAGE)
+  );
 
-    // Load latest N messages
-    export async function loadRecentMessages(chat_id,instance_id) {
-      const messagesRef = ref(db, "whatsapp_chat");
+  const snapshot = await get(q);
 
-      const q = query(
-        messagesRef,
-        orderByChild("time"),
-        limitToLast(MESSAGES_PER_PAGE)
-      );
-
-      const snapshot = await get(q);
-
-      let messages = [];
-      if (snapshot.exists()) {
-        snapshot.forEach((childSnapshot) => {
-          const msg = childSnapshot.val();
-          if (msg.chat_id === instance_id && String(msg.msg_id).includes(chat_id)) {
-            messages.push(msg);
-          }
-        });
-
-        messages.sort((a, b) => a.time - b.time);
+  let messages = [];
+  if (snapshot.exists()) {
+    snapshot.forEach((childSnapshot) => {
+      const msg = childSnapshot.val();
+      if (msg.chat_id === instance_id && String(msg.msg_id).includes(chat_id)) {
+        messages.push(msg);
       }
+    });
 
-      return messages;
-    }
+    // Always ascending: oldest → newest
+    messages.sort((a, b) => a.time - b.time);
+  }
 
-    // Load older messages (pagination)
-  export async function loadOlderMessages(chat_id,instance_id, oldestTime) {
-    const messagesRef = ref(db, "whatsapp_chat");
+  return messages;
+}
 
-    const q = query(
-      messagesRef,
-      orderByChild("time"),
-      endBefore(oldestTime), // load messages older than current oldest
-      limitToLast(MESSAGES_PER_PAGE)
+// ------------------ Load Older Messages ------------------
+export async function loadOlderMessages(chat_id, instance_id, oldestTime) {
+  const messagesRef = ref(db, "whatsapp_chat");
+
+  const boundary = Number(oldestTime);
+  if (!Number.isFinite(boundary)) return [];
+
+  const q = query(
+    messagesRef,
+    orderByChild("time"),
+    endAt(boundary - 1), // strictly older than current oldest
+    limitToLast(MESSAGES_PER_PAGE)
+  );
+
+  const snapshot = await get(q);
+
+  let messages = [];
+  if (snapshot.exists()) {
+    snapshot.forEach((childSnapshot) => {
+      const msg = childSnapshot.val();
+      if (msg.chat_id === instance_id && String(msg.msg_id).includes(chat_id)) {
+        messages.push(msg);
+      }
+    });
+
+    // Always ascending
+    messages.sort((a, b) => a.time - b.time);
+  }
+  return messages;
+}
+
+// ------------------ Initial Load ------------------
+export async function loadInitial(chat_id, instance_id) {
+  const recentMessages = await loadRecentMessages(chat_id, instance_id);
+
+  chatMessages = recentMessages.slice();
+
+  // oldest = first element in ascending list
+  oldestTime = chatMessages.length ? chatMessages[0].time : null;
+
+  renderChatMessages(recentMessages);
+}
+
+// ------------------ View More Button ------------------
+$(document).on("click", "#view-more", async function () {
+  if (!Number.isFinite(Number(oldestTime))) return;
+
+  const $btn = $(this).prop("disabled", true);
+  $btn.find(".btn-text").text("Loading..."); // only update text
+
+  try {
+    const olderMessages = await loadOlderMessages(
+      GlobalState.chat_id,
+      GlobalState.instance_id,
+      oldestTime
     );
 
-    const snapshot = await get(q);
-    // console.log('snapshot',snapshot)
-    let messages = [];
-    if (snapshot.exists()) {
-      snapshot.forEach((childSnapshot) => {
-        const msg = childSnapshot.val();
-        console.log('instance_id',instance_id);
-        console.log('msg',msg);
-        console.log('chat_id',chat_id);
-        if (msg.chat_id === instance_id && String(msg.msg_id).includes(chat_id)) {
-          messages.push(msg);
-        }
-      });
-
-      messages.sort((a, b) => a.time - b.time);
-    }
-
-    return messages;
-  }
-
-
-  export async function loadInitial(chat_id,instance_id) {
-    console.log('loadInitial');
-    let messages = await loadRecentMessages(chat_id,instance_id);
-    console.log('messages',messages)
-    chatMessages = messages;
-    oldestTime = chatMessages.length ? chatMessages[0].time : null;
-    renderChatMessages(chatMessages);
-  }
-
-
-  $(document).on("click", "#view-more", async function () {
-
-    if (!oldestTime) return;
-  
-    let olderMessages = await loadOlderMessages(GlobalState.chat_id,GlobalState.instance_id,oldestTime);
-    console.log('olderMessages',olderMessages)
     if (olderMessages.length > 0) {
       chatMessages = [...olderMessages, ...chatMessages];
-      oldestTime = chatMessages[0].time; // update oldest
-      renderChatMessages(olderMessages);
+
+      // update oldestTime to the true oldest
+      oldestTime = chatMessages[0].time;
+
+      renderChatMessages(olderMessages, true); // prepend mode
+      $btn.prop("disabled", false);
+      $btn.find(".btn-text").text("view more"); // only update text
     } else {
-      // no more messages
-      $("#view-more").prop("disabled", true).text("No more messages");
+      $btn.prop("disabled", true);
+      $btn.find(".btn-text").text("No more messages"); // update text
+      $btn.find("i").remove(); // remove the icon
     }
-  });
+  } catch (e) {
+    $btn.prop("disabled", false);
+    $btn.find(".btn-text").text("View more"); // only update text
+    console.error(e);
+  }
+});
 
-   // async function loadChatMessages(chat_id, instance_id) {
-    //   const snapshot = await get(child(ref(db), 'whatsapp_chat'));
-   
-    //   if (snapshot.exists()) {
-         
-    //     let messages = [];
-    
-    //     snapshot.forEach(childSnapshot => {
-    //       const msg = childSnapshot.val();
-
-    //       if (
-    //         msg.chat_id === instance_id 
-    //         &&
-    //         String(msg.msg_id).includes(chat_id)
-    //       ) {
-    //         messages.push(msg);
-    //       }
-    //     });
-    
-    //     // Sort by time ascending
-    //     messages.sort((a, b) => a.time - b.time); 
-    
-    //     // Now use `messages` array to update DOM
-    //     return messages;
-    //   } else { 
-    //     return [];
-    //   }
-    // }

@@ -5,8 +5,8 @@
 
 
             <div class="d-flex justify-content-center gap-2">
-                <button id="sendImageBtn" class="btn btn-primary">Send</button>
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <button id="sendImageBtn" class="btn btn-primary">Send</button>
             </div>
         </div>
     </div>

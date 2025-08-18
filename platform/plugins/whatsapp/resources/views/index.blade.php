@@ -265,13 +265,8 @@
                                 <!-- END CONVERSATION TYPE -->
                             </div>
                             <!-- END CONVERSATION HEADING -->
-
-                            <div class="col text-center" id="view-more">
-                                <span class="view-more">
-                                    view more 
-                                    <i class="fas fa-arrow-up"></i>
-                                </span>
-                            </div>
+                            @include('plugins/whatsapp::partials._btn_view_more')
+                              
                             
                             
                                 <div class="row message" id="conversation" data-receiver_id="">  </div>
