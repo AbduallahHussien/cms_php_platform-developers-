@@ -16,7 +16,8 @@ import {
     endBefore,
     orderByKey,
     startAfter,
-    endAt
+    endAt,
+    equalTo
 } from "firebase/database";
 
 // ✅ Your Firebase config
@@ -63,5 +64,6 @@ export {
     get,
     child,
     endAt,
-    startAfter
+    startAfter,
+    equalTo
 };

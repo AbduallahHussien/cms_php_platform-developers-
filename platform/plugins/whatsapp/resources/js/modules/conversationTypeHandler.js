@@ -1,5 +1,6 @@
-import { db, ref, get, update, push } from './firebase';
-
+ import { db, getDatabase, ref, query, orderByChild, equalTo, get, push, update } from './firebase';
+ import { convertTime } from "./helpers.js";
+ import { renderChatsList } from './renderingHelpers.js';
 // Click handler for the conversation-type button
 
 $(document).on("click", "#conversation-type", async function () {
@@ -124,3 +125,103 @@ export async function handleConversation(chat_id) {
         console.error("Error handling conversation:", error);
     }
 }
+
+
+$(function()
+{
+    $('#conversations_types').on('change', function () {
+        // $('.sideBar').empty();
+        $('.sideBar').html(`
+            <div class="d-flex justify-content-center align-items-center p-3">
+                <div class="spinner-border text-primary" role="status">
+                    <span class="visually-hidden">Loading...</span>
+                </div>
+            </div>
+        `);
+    
+        const selectedConversationType = this.value;
+        if (selectedConversationType === "all") {
+            renderChatsList();
+            return;
+        }
+    
+        // Reference with query
+        const convRef = query(
+            ref(db, "whatsapp_conversation_type"),
+            orderByChild("conversation_type"),
+            equalTo(selectedConversationType)
+        );
+    
+        get(convRef).then((snapshot) => {
+            if (!snapshot.exists()) {
+                console.log("No open conversations found");
+                return;
+            }
+    
+            const chatIds = [];
+            snapshot.forEach((child) => {
+                chatIds.push(child.val().chat_id);
+            });
+    
+            // console.log("Open chat_ids:", chatIds);
+    
+            $.ajax({
+                url: `https://api.ultramsg.com/${instance}/chats?token=${token}`,
+                method: "GET",
+                headers: { "content-type": "application/x-www-form-urlencoded" }
+            }).done(function (response) {
+                $.each(response, function (index, chat) {
+                    const chat_id = chat.id;
+                    const selector = chat_id.replace('@', '').replace('.', '');
+    
+                    if (!chatIds.includes(chat_id)) return;
+                    $('.sideBar').empty();
+                    $('.sideBar').append(`
+                        <div class="row sideBar-body" 
+                             data-chat_id="${chat_id}" 
+                             data-selector="${selector}">
+                            
+                            <div class="col-3 sideBar-avatar avatar${selector}"></div>
+                            <div class="col-9 sideBar-main">
+                                <div class="row">
+                                    <div class="col-8 sideBar-name">
+                                        <span class="name-meta">${chat.name}</span>
+                                    </div>
+                                    <div class="col-4 pull-right sideBar-time">
+                                        <span class="time-meta pull-right">${convertTime(chat.last_time)}</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    `);
+    
+                    // unread badge
+                    if (chat.unread > 0) {
+                        $(`[data-selector=${selector}]`).append(`
+                            <span class="unread">${chat.unread}</span>
+                        `);
+                    }
+    
+                    // fetch avatar
+                    $.ajax({
+                        url: `https://api.ultramsg.com/${instance}/contacts/image?token=${token}&chatId=${chat_id}`,
+                        method: "GET",
+                        headers: { "content-type": "application/x-www-form-urlencoded" }
+                    }).done(function (data) {
+                        const $avatar = $(`.avatar${selector}`).empty();
+    
+                        if (data.success) {
+                            $avatar.append(`<div class="avatar-icon"><img src="${data.success}"></div>`);
+                        } else {
+                            $avatar.append(`<i class="fas fa-user-circle fa-3x text-secondary"></i>`);
+                        }
+                    });
+                });
+            });
+    
+        }).catch((error) => {
+            console.error("Error fetching conversations:", error);
+        });
+    });
+    
+});

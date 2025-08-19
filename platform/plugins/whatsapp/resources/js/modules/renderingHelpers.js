@@ -1,5 +1,71 @@
 import { convertTime } from "./helpers.js";
 
+export const renderChatsList = (instance,token) => {
+    $.ajax({
+        async: true,
+        crossDomain: true,
+        url: `https://api.ultramsg.com/${instance}/chats?token=${token}`,
+        method: "GET",
+        headers: { "content-type": "application/x-www-form-urlencoded" },
+    }).done(function (response) {
+        $('.sideBar').empty();
+        response.forEach((chat) => {
+            const chatId = chat.id;
+            const selector = chatId.replace("@", "").replace(".", "");
+
+            if (chatId === "963983882481@c.us") return; // skip this chat
+
+            // Append chat item
+            $(".sideBar").append(`
+                <div class="row sideBar-body" data-chat_id="${chatId}" data-selector="${selector}">
+                    <div class="col-3 sideBar-avatar avatar${selector}"></div>
+                    <div class="col-9 sideBar-main">
+                        <div class="row">
+                            <div class="col-8 sideBar-name">
+                                <span class="name-meta">${chat.name}</span>
+                            </div>
+                            <div class="col-4 sideBar-time text-end">
+                                <span class="time-meta">${convertTime(chat.last_time)}</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `);
+
+            // Add unread count if any
+            if (chat.unread > 0) {
+                $(`[data-selector=${selector}]`).append(
+                    `<span class="unread">${chat.unread}</span>`,
+                );
+            }
+
+            // Fetch profile image
+            $.ajax({
+                url: `https://api.ultramsg.com/${instance}/contacts/image?token=${token}&chatId=${chatId}`,
+                method: "GET",
+                headers: {
+                    "content-type": "application/x-www-form-urlencoded",
+                },
+            }).done(function (data) {
+                const $avatar = $(`.avatar${selector}`);
+                $avatar.empty();
+
+                if (data.success) {
+                    $avatar.append(
+                        `<div class="avatar-icon"><img src="${data.success}" /></div>`,
+                    );
+                } else {
+                    $avatar.append(`
+                        <span class="default-avatar">
+                            <i class="fa fa-user-circle fa-3x text-muted"></i>
+                        </span>
+                    `);
+                }
+            });
+        });
+    });
+};
+
 // Render a single location slot
 export const renderLocationSlot = (latitude, longitude) => {
     return `
@@ -124,11 +190,6 @@ export const renderAudio = (mainClass, subClass, pushname, time, slot) => `
     </div>
 </div>`;
 
-
-
-
-
-
 export const renderChatMessages = (data, prepend = false) => {
     const conversation = $("#conversation");
 
@@ -174,23 +235,59 @@ export const renderChatMessages = (data, prepend = false) => {
                 break;
 
             case "audio":
-                const audioSlot = renderAudioSlot("Audio", messages[index].media);
-                messageHTML = renderAudio(mainClass, subClass, messages[index].pushname, messages[index].time, audioSlot);
+                const audioSlot = renderAudioSlot(
+                    "Audio",
+                    messages[index].media,
+                );
+                messageHTML = renderAudio(
+                    mainClass,
+                    subClass,
+                    messages[index].pushname,
+                    messages[index].time,
+                    audioSlot,
+                );
                 break;
 
             case "location":
-                const locationSlot = renderLocationSlot(messages[index].lo_latitude, messages[index].lo_longitude);
-                messageHTML = renderLocation(mainClass, subClass, messages[index].pushname, messages[index].time, locationSlot);
+                const locationSlot = renderLocationSlot(
+                    messages[index].lo_latitude,
+                    messages[index].lo_longitude,
+                );
+                messageHTML = renderLocation(
+                    mainClass,
+                    subClass,
+                    messages[index].pushname,
+                    messages[index].time,
+                    locationSlot,
+                );
                 break;
 
             case "document":
-                const documentSlot = renderDocumentSlot(messages[index].body, messages[index].media);
-                messageHTML = renderDocument(mainClass, subClass, messages[index].pushname, messages[index].time, documentSlot);
+                const documentSlot = renderDocumentSlot(
+                    messages[index].body,
+                    messages[index].media,
+                );
+                messageHTML = renderDocument(
+                    mainClass,
+                    subClass,
+                    messages[index].pushname,
+                    messages[index].time,
+                    documentSlot,
+                );
                 break;
 
             case "video":
-                const videoSlot = renderVideoSlot(messages[index].pushname, messages[index].media);
-                messageHTML = renderVideo(mainClass, subClass, messages[index].pushname, messages[index].time, videoSlot);
+                const videoSlot = renderVideoSlot(
+                    messages[index].pushname,
+                    messages[index].media,
+                );
+                messageHTML = renderVideo(
+                    mainClass,
+                    subClass,
+                    messages[index].pushname,
+                    messages[index].time,
+                    videoSlot,
+                );
                 break;
 
             default:
@@ -219,5 +316,3 @@ export const renderChatMessages = (data, prepend = false) => {
         }
     });
 };
-
-

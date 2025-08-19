@@ -87,6 +87,7 @@ class WhatsappController extends BaseController
 
         ]);
         $sett = whatsapp_settings();
+
         if($sett &&$sett !=''){
                 $params=array(
                     'token' => $sett[0]->ultramsg_whatsapp_token
@@ -108,7 +109,7 @@ class WhatsappController extends BaseController
         
                 $response = curl_exec($curl);
                 $user = json_decode($response, TRUE);
-               
+            //    dd($user);
                 return view('plugins/whatsapp::index',compact('user'));
         }else{
             $user = array(
