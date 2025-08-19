@@ -346,40 +346,40 @@ class WhatsappJs {
           // });
       
         // send audio
-            function send_audio(blob){
-              var chat_id  = $('#conversation').data('receiver_id');
+        //     function send_audio(blob){
+        //       var chat_id  = $('#conversation').data('receiver_id');
             
-              var data = new FormData();
-              data.append('file', blob);
-              data.append('chat_id', chat_id);
+        //       var data = new FormData();
+        //       data.append('file', blob);
+        //       data.append('chat_id', chat_id);
             
-              $.ajax({
-                headers: {
-                  'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-               },
-                url : send_voice_route,
-                type: 'POST',
-                data: data,
-                contentType: false,
-                processData: false,
-                success: function(data) {
-        //             $('#conversation').append(
-        //               `  
-        //                 <div class="row message-body">
-        //                     <div class="col-12 message-main-sender">
-        //                         <div class="sender">
-        //                             <audio controls>
-        //                                 <source src="`+URL.createObjectURL(blob)+`" type="audio/mpeg">
-        //                             </audio>
-        //                         </div>
-        //                     </div>
-        // `);
-                },    
-                error: function() {
-                  alert("not so boa!");
-                }
-              });
-            }
+        //       $.ajax({
+        //         headers: {
+        //           'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+        //        },
+        //         url : send_voice_route,
+        //         type: 'POST',
+        //         data: data,
+        //         contentType: false,
+        //         processData: false,
+        //         success: function(data) {
+        // //             $('#conversation').append(
+        // //               `  
+        // //                 <div class="row message-body">
+        // //                     <div class="col-12 message-main-sender">
+        // //                         <div class="sender">
+        // //                             <audio controls>
+        // //                                 <source src="`+URL.createObjectURL(blob)+`" type="audio/mpeg">
+        // //                             </audio>
+        // //                         </div>
+        // //                     </div>
+        // // `);
+        //         },    
+        //         error: function() {
+        //           alert("not so boa!");
+        //         }
+        //       });
+        //     }
         // End  send audio
       
 
@@ -534,67 +534,52 @@ class WhatsappJs {
         
         
         // send location
-            function send_location(lat,lng,address){
+            // function send_location(lat,lng,address){
             
-              var chat_id  = $('#conversation').data('receiver_id');
-              if(chat_id){
-                  var settings = {
-                    "async": true,
-                    "crossDomain": true,
-                    "url": "https://api.ultramsg.com/"+instance+"/messages/location",
-                    "method": "POST",
-                    "headers": {},
-                    "data": {
-                      "token": token,
-                      "to": chat_id,
-                      "address": "Location",
-                      "lat": lat,
-                      "lng": lng,
-                      "referenceId": referenceId
-                    }
-                  }
+            //   var chat_id  = $('#conversation').data('receiver_id');
+            //   if(chat_id){
+            //       var settings = {
+            //         "async": true,
+            //         "crossDomain": true,
+            //         "url": "https://api.ultramsg.com/"+instance+"/messages/location",
+            //         "method": "POST",
+            //         "headers": {},
+            //         "data": {
+            //           "token": token,
+            //           "to": chat_id,
+            //           "address": "Location",
+            //           "lat": lat,
+            //           "lng": lng,
+            //           "referenceId": referenceId
+            //         }
+            //       }
                   
-                  $.ajax(settings).done(function (response) {
-                    // $('#conversation').append(
-                    //   `  
-                    //     <div class="row message-body">
-                    //         <div class="col-12 message-main-sender">
-                    //         <div class="sender">
-                    //             <div class="message-text">
-                    //               Location
-                    //             </div>
-                    //             <span class="message-time pull-right">
-                    //             `+ datetime +` 
-                    //             </span>
+            //       $.ajax(settings).done(function (response) {
+            //         // $('#conversation').append(
+            //         //   `  
+            //         //     <div class="row message-body">
+            //         //         <div class="col-12 message-main-sender">
+            //         //         <div class="sender">
+            //         //             <div class="message-text">
+            //         //               Location
+            //         //             </div>
+            //         //             <span class="message-time pull-right">
+            //         //             `+ datetime +` 
+            //         //             </span>
                               
-                    //             <span class="message-time pull-right"></span>
-                    //         </div>
-                    //         </div>
-                    //     </div>
-                    //   `);
-                      $("#conversation").scrollTop($("#conversation").prop("scrollHeight"));
-                  });
-              }
+            //         //             <span class="message-time pull-right"></span>
+            //         //         </div>
+            //         //         </div>
+            //         //     </div>
+            //         //   `);
+            //           $("#conversation").scrollTop($("#conversation").prop("scrollHeight"));
+            //       });
+            //   }
               
-            }       
+            // }       
         //End send loction
           
-        // send Message
-            $(document).on('keypress',function(e) {
-            if(e.which == 13) {
-              var chat_id  = $('#conversation').data('receiver_id');
-              var message = $('#comment').val();
-              
-                  if(message){
-                    Send_message(chat_id ,message );
-                  }
-                  
-                $("#conversation").scrollTop($("#conversation").prop("scrollHeight"));
-                $('#comment').val('');
-                return false;
-              }
-            });  
-        // End send Message
+        
       
         //Send message
             function Send_message(chat_id , message){
@@ -705,6 +690,8 @@ class WhatsappJs {
       
         // Get All Chats 
             // renderChatsList();
+            // console.log('instance in scripts : ',instance);
+            // console.log('token in scripts : ',token);
             // function renderChatsList(){                
             //   var settings = {
             //           "async": true,
@@ -767,26 +754,26 @@ class WhatsappJs {
         // Get All Chats
       
         // Add Heading Image
-            function heading_image(chat_id){
-                var settings = {
-                    "async": true,
-                    "crossDomain": true,
-                    "url": "https://api.ultramsg.com/"+instance+"/contacts/image?token="+token+"&chatId="+chat_id+"",
-                    "method": "GET",
-                    "headers": {
-                    "content-type": "application/x-www-form-urlencoded"
-                    }
-                }
-                $.ajax(settings).done(function (data) {
-                    //check if has image 
-                    if(data.success){
-                        $(".conversation .heading-avatar-icon").empty().append(` <img src="`+data.success+`"> `);
-                    }else{
-                        $(".conversation .heading-avatar-icon").empty().append(`<span data-testid="default-user" data-icon="default-user" class=""><svg viewBox="0 0 212 212" width="40" height="40" class=""><path fill="#DFE5E7" class="background" d="M106.251.5C164.653.5 212 47.846 212 106.25S164.653 212 106.25 212C47.846 212 .5 164.654.5 106.25S47.846.5 106.251.5z"></path><g fill="#FFF"><path class="primary" d="M173.561 171.615a62.767 62.767 0 0 0-2.065-2.955 67.7 67.7 0 0 0-2.608-3.299 70.112 70.112 0 0 0-3.184-3.527 71.097 71.097 0 0 0-5.924-5.47 72.458 72.458 0 0 0-10.204-7.026 75.2 75.2 0 0 0-5.98-3.055c-.062-.028-.118-.059-.18-.087-9.792-4.44-22.106-7.529-37.416-7.529s-27.624 3.089-37.416 7.529c-.338.153-.653.318-.985.474a75.37 75.37 0 0 0-6.229 3.298 72.589 72.589 0 0 0-9.15 6.395 71.243 71.243 0 0 0-5.924 5.47 70.064 70.064 0 0 0-3.184 3.527 67.142 67.142 0 0 0-2.609 3.299 63.292 63.292 0 0 0-2.065 2.955 56.33 56.33 0 0 0-1.447 2.324c-.033.056-.073.119-.104.174a47.92 47.92 0 0 0-1.07 1.926c-.559 1.068-.818 1.678-.818 1.678v.398c18.285 17.927 43.322 28.985 70.945 28.985 27.678 0 52.761-11.103 71.055-29.095v-.289s-.619-1.45-1.992-3.778a58.346 58.346 0 0 0-1.446-2.322zM106.002 125.5c2.645 0 5.212-.253 7.68-.737a38.272 38.272 0 0 0 3.624-.896 37.124 37.124 0 0 0 5.12-1.958 36.307 36.307 0 0 0 6.15-3.67 35.923 35.923 0 0 0 9.489-10.48 36.558 36.558 0 0 0 2.422-4.84 37.051 37.051 0 0 0 1.716-5.25c.299-1.208.542-2.443.725-3.701.275-1.887.417-3.827.417-5.811s-.142-3.925-.417-5.811a38.734 38.734 0 0 0-1.215-5.494 36.68 36.68 0 0 0-3.648-8.298 35.923 35.923 0 0 0-9.489-10.48 36.347 36.347 0 0 0-6.15-3.67 37.124 37.124 0 0 0-5.12-1.958 37.67 37.67 0 0 0-3.624-.896 39.875 39.875 0 0 0-7.68-.737c-21.162 0-37.345 16.183-37.345 37.345 0 21.159 16.183 37.342 37.345 37.342z"></path></g></svg></span>`);
+            // function heading_image(chat_id){
+            //     var settings = {
+            //         "async": true,
+            //         "crossDomain": true,
+            //         "url": "https://api.ultramsg.com/"+instance+"/contacts/image?token="+token+"&chatId="+chat_id+"",
+            //         "method": "GET",
+            //         "headers": {
+            //         "content-type": "application/x-www-form-urlencoded"
+            //         }
+            //     }
+            //     $.ajax(settings).done(function (data) {
+            //         //check if has image 
+            //         if(data.success){
+            //             $(".conversation .heading-avatar-icon").empty().append(` <img src="`+data.success+`"> `);
+            //         }else{
+            //             $(".conversation .heading-avatar-icon").empty().append(`<span data-testid="default-user" data-icon="default-user" class=""><svg viewBox="0 0 212 212" width="40" height="40" class=""><path fill="#DFE5E7" class="background" d="M106.251.5C164.653.5 212 47.846 212 106.25S164.653 212 106.25 212C47.846 212 .5 164.654.5 106.25S47.846.5 106.251.5z"></path><g fill="#FFF"><path class="primary" d="M173.561 171.615a62.767 62.767 0 0 0-2.065-2.955 67.7 67.7 0 0 0-2.608-3.299 70.112 70.112 0 0 0-3.184-3.527 71.097 71.097 0 0 0-5.924-5.47 72.458 72.458 0 0 0-10.204-7.026 75.2 75.2 0 0 0-5.98-3.055c-.062-.028-.118-.059-.18-.087-9.792-4.44-22.106-7.529-37.416-7.529s-27.624 3.089-37.416 7.529c-.338.153-.653.318-.985.474a75.37 75.37 0 0 0-6.229 3.298 72.589 72.589 0 0 0-9.15 6.395 71.243 71.243 0 0 0-5.924 5.47 70.064 70.064 0 0 0-3.184 3.527 67.142 67.142 0 0 0-2.609 3.299 63.292 63.292 0 0 0-2.065 2.955 56.33 56.33 0 0 0-1.447 2.324c-.033.056-.073.119-.104.174a47.92 47.92 0 0 0-1.07 1.926c-.559 1.068-.818 1.678-.818 1.678v.398c18.285 17.927 43.322 28.985 70.945 28.985 27.678 0 52.761-11.103 71.055-29.095v-.289s-.619-1.45-1.992-3.778a58.346 58.346 0 0 0-1.446-2.322zM106.002 125.5c2.645 0 5.212-.253 7.68-.737a38.272 38.272 0 0 0 3.624-.896 37.124 37.124 0 0 0 5.12-1.958 36.307 36.307 0 0 0 6.15-3.67 35.923 35.923 0 0 0 9.489-10.48 36.558 36.558 0 0 0 2.422-4.84 37.051 37.051 0 0 0 1.716-5.25c.299-1.208.542-2.443.725-3.701.275-1.887.417-3.827.417-5.811s-.142-3.925-.417-5.811a38.734 38.734 0 0 0-1.215-5.494 36.68 36.68 0 0 0-3.648-8.298 35.923 35.923 0 0 0-9.489-10.48 36.347 36.347 0 0 0-6.15-3.67 37.124 37.124 0 0 0-5.12-1.958 37.67 37.67 0 0 0-3.624-.896 39.875 39.875 0 0 0-7.68-.737c-21.162 0-37.345 16.183-37.345 37.345 0 21.159 16.183 37.342 37.345 37.342z"></path></g></svg></span>`);
       
-                    }
-                });
-            }
+            //         }
+            //     });
+            // }
         // End  Add Heading Image
       
         // New Chat
@@ -819,12 +806,12 @@ class WhatsappJs {
             });
         //End New Chat
       
-            $('#backChat').click(function(){
-              $(".side").css({"display": "block"}); 
-            });
-            if (window.innerWidth > 700){
-              $("#backChat").css({"display": "none"});
-            }
+            // $('#backChat').click(function(){
+            //   $(".side").css({"display": "block"}); 
+            // });
+            // if (window.innerWidth > 700){
+            //   $("#backChat").css({"display": "none"});
+            // }
       
         //Get Messages Form Chat
             // $(document).on("click",".sideBar-body",function() {
@@ -2275,7 +2262,7 @@ class WhatsappJs {
 }
 
 $(document).ready(() => {
-  new WhatsappJs().init();
+  // new WhatsappJs().init();
 });
 
 

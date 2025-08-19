@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WhatsApp Web</title>
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootstrap Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.3/font/bootstrap-icons.css">
+</head>
+<body class="bg-light">
+    <!-- Main Container -->
+    <div class="container-fluid vh-100 bg-light">
+        <div class="row h-100">
+            <!-- Left Sidebar - Contacts List -->
+            <div class="col-md-4 col-lg-4 col-xl-3 border-end bg-white p-0 d-flex flex-column">
+                <!-- Profile Header -->
+                <div class="d-flex justify-content-between align-items-center p-3 border-bottom">
+                    <div class="d-flex align-items-center">
+                        <img src="https://placehold.co/40" class="rounded-circle me-3" alt="Profile">
+                        <span class="fw-semibold">Your Name</span>
+                    </div>
+                    <div>
+                        <button class="btn btn-light btn-sm"><i class="bi bi-three-dots-vertical"></i></button>
+                    </div>
+                </div>
+
+                <!-- Notifications -->
+                <div class="p-3 bg-light border-bottom">
+                    <div class="alert alert-info py-2 d-flex align-items-center">
+                        <i class="bi bi-bell-fill me-2"></i>
+                        <small>Get notified of new messages</small>
+                    </div>
+                </div>
+
+                <!-- Search Box -->
+                <div class="p-3 border-bottom">
+                    <div class="input-group">
+                        <span class="input-group-text bg-light border-0"><i class="bi bi-search"></i></span>
+                        <input type="text" class="form-control bg-light border-0" placeholder="Search or start new chat">
+                    </div>
+                </div>
+
+                <!-- Contacts List -->
+                <div class="flex-grow-1 overflow-auto">
+                    <div class="list-group list-group-flush">
+                        <!-- Contact Item -->
+                        <a href="#" class="list-group-item list-group-item-action border-0">
+                            <div class="d-flex align-items-center">
+                                <img src="https://placehold.co/50" class="rounded-circle me-3" alt="Contact">
+                                <div class="flex-grow-1">
+                                    <div class="d-flex justify-content-between align-items-center">
+                                        <h6 class="mb-0">John Doe</h6>
+                                        <small class="text-muted">12:45 PM</small>
+                                    </div>
+                                    <p class="mb-0 text-muted">Hey there! How are you?</p>
+                                </div>
+                            </div>
+                        </a>
+                        
+                        <!-- More contacts -->
+                        <a href="#" class="list-group-item list-group-item-action border-0">
+                            <div class="d-flex align-items-center">
+                                <img src="https://placehold.co/50" class="rounded-circle me-3" alt="Contact">
+                                <div class="flex-grow-1">
+                                    <div class="d-flex justify-content-between align-items-center">
+                                        <h6 class="mb-0">Jane Smith</h6>
+                                        <small class="text-muted">11:30 AM</small>
+                                    </div>
+                                    <p class="mb-0 text-muted">Are we still meeting tomorrow?</p>
+                                </div>
+                            </div>
+                        </a>
+                        
+                        <a href="#" class="list-group-item list-group-item-action border-0">
+                            <div class="d-flex align-items-center">
+                                <img src="https://placehold.co/50" class="rounded-circle me-3" alt="Contact">
+                                <div class="flex-grow-1">
+                                    <div class="d-flex justify-content-between align-items-center">
+                                        <h6 class="mb-0">Work Group</h6>
+                                        <small class="text-muted">Yesterday</small>
+                                    </div>
+                                    <p class="mb-0 text-muted">Sarah: I've sent the files</p>
+                                </div>
+                            </div>
+                        </a>
+                        
+                        <!-- Additional contacts -->
+                        <a href="#" class="list-group-item list-group-item-action border-0">
+                            <div class="d-flex align-items-center">
+                                <img src="https://placehold.co/50" class="rounded-circle me-3" alt="Contact">
+                                <div class="flex-grow-1">
+                                    <div class="d-flex justify-content-between align-items-center">
+                                        <h6 class="mb-0">Mom</h6>
+                                        <small class="text-muted">Yesterday</small>
+                                    </div>
+                                    <p class="mb-0 text-muted">Call me when you're free</p>
+                                </div>
+                            </div>
+                        </a>
+                        
+                        <a href="#" class="list-group-item list-group-item-action border-0">
+                            <div class="d-flex align-items-center">
+                                <img src="https://placehold.co/50" class="rounded-circle me-3" alt="Contact">
+                                <div class="flex-grow-1">
+                                    <div class="d-flex justify-content-between align-items-center">
+                                        <h6 class="mb-0">David Johnson</h6>
+                                        <small class="text-muted">Monday</small>
+                                    </div>
+                                    <p class="mb-0 text-muted">Thanks for your help!</p>
+                                </div>
+                            </div>
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Right Side - Chat Area -->
+            <div class="col-md-8 col-lg-8 col-xl-9 d-flex flex-column bg-light">
+                <!-- Chat Header -->
+                <div class="d-flex justify-content-between align-items-center p-3 bg-white border-bottom">
+                    <div class="d-flex align-items-center">
+                        <img src="https://placehold.co/40" class="rounded-circle me-3" alt="Contact">
+                        <div>
+                            <h6 class="mb-0">John Doe</h6>
+                            <small class="text-muted">last seen today at 12:30 PM</small>
+                        </div>
+                    </div>
+                    <div>
+                        <button class="btn btn-light"><i class="bi bi-search"></i></button>
+                        <button class="btn btn-light"><i class="bi bi-three-dots-vertical"></i></button>
+                    </div>
+                </div>
+
+                <!-- Chat Messages -->
+                <div class="flex-grow-1 p-3 overflow-auto bg-light">
+                    <!-- Incoming Message -->
+                    <div class="d-flex mb-3">
+                        <img src="https://placehold.co/35" class="rounded-circle me-2 align-self-end" alt="Contact">
+                        <div>
+                            <div class="bg-white rounded-3 p-3 mb-1">
+                                <p class="mb-0">Hey there! How are you doing?</p>
+                            </div>
+                            <small class="text-muted">12:30 PM</small>
+                        </div>
+                    </div>
+
+                    <!-- Outgoing Message -->
+                    <div class="d-flex justify-content-end mb-3">
+                        <div class="text-end">
+                            <div class="bg-primary text-white rounded-3 p-3 mb-1">
+                                <p class="mb-0">I'm doing great! Just working on some projects.</p>
+                            </div>
+                            <small class="text-muted">12:32 PM</small>
+                        </div>
+                    </div>
+
+                    <!-- Incoming Message -->
+                    <div class="d-flex mb-3">
+                        <img src="https://placehold.co/35" class="rounded-circle me-2 align-self-end" alt="Contact">
+                        <div>
+                            <div class="bg-white rounded-3 p-3 mb-1">
+                                <p class="mb-0">That's good to hear. Did you get the documents I sent you?</p>
+                            </div>
+                            <small class="text-muted">12:35 PM</small>
+                        </div>
+                    </div>
+
+                    <!-- Outgoing Message -->
+                    <div class="d-flex justify-content-end mb-3">
+                        <div class="text-end">
+                            <div class="bg-primary text-white rounded-3 p-3 mb-1">
+                                <p class="mb-0">Yes, I received them. Thanks for sending those over!</p>
+                            </div>
+                            <small class="text-muted">12:37 PM</small>
+                        </div>
+                    </div>
+
+                    <!-- Incoming Message -->
+                    <div class="d-flex mb-3">
+                        <img src="https://placehold.co/35" class="rounded-circle me-2 align-self-end" alt="Contact">
+                        <div>
+                            <div class="bg-white rounded-3 p-3 mb-1">
+                                <p class="mb-0">Great! Let me know if you need anything else.</p>
+                            </div>
+                            <small class="text-muted">12:40 PM</small>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Message Input -->
+                <div class="p-3 bg-white border-top">
+                    <div class="input-group">
+                        <button class="btn btn-light"><i class="bi bi-emoji-smile"></i></button>
+                        <button class="btn btn-light"><i class="bi bi-paperclip"></i></button>
+                        <input type="text" class="form-control rounded-pill mx-2" placeholder="Type a message">
+                        <button class="btn btn-light"><i class="bi bi-mic"></i></button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap 5 JS Bundle -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

@@ -116,10 +116,13 @@ class DocumentUploadHandler {
 
         // Send button click
         $("#sendDocument").on("click", function () {
+             
             if (!fileBase64Data) {
                 toastr.error("No file selected!");
                 return;
             }
+
+            const { instance, token } = window.ultraMsgConfig;
 
             $.ajax({
                 url: `https://api.ultramsg.com/${instance}/messages/document`,

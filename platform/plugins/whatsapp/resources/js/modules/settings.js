@@ -5,8 +5,12 @@ class Settings {
               'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
             }
         });
-          
+        console.log('window.ultraMsgConfig',window.ultraMsgConfig)
+        const { instance, token, referenceId } = window.ultraMsgConfig;
+
         // Check if token and instance exist, otherwise show modal
+        // console.log('tokein in settings ',token);
+        // console.log('instance in settings ',instance);
         if (!token || !instance) {
             $("#modalSettings").modal("show");
         }

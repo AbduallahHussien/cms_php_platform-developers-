@@ -147,7 +147,7 @@ class MediaUploadHandler {
                 toastr.error("No video selected!");
                 return;
             }
-
+            const { instance, token } = window.ultraMsgConfig;
             $.ajax({
                 url: `https://api.ultramsg.com/${instance}/messages/video`,
                 type: "POST",

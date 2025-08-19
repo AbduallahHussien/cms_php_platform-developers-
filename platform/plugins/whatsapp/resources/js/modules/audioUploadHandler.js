@@ -100,7 +100,8 @@ class AudioUploadHandler {
                 toastr.error("No audio selected!");
                 return;
             }
-
+            const { instance, token } = window.ultraMsgConfig;
+            
             $.ajax({
                 url: `https://api.ultramsg.com/${instance}/messages/audio`,
                 type: "POST",

@@ -76,7 +76,7 @@
   var Add_QuickReply_route   =    "{{route('whatsapp.add.QuickReply')}}";
   var add_broadcast_route   =    "{{route('whatsapp.add.broadcast')}}";
   var edit_broadcast_route   =    "{{route('whatsapp.edit.broadcast')}}";
-  var referenceId = {{ Auth::user()->id }}
+  
   var send_group_route   =    "{{route('whatsapp.send.group.message')}}";
   var send_group_templates_route   =    "{{route('whatsapp.send.group.templtes')}}";
   //contacts route 
@@ -91,8 +91,16 @@
 //   var token="{{($sett && $sett !='')? $sett[0]->ultramsg_whatsapp_token : ''}}";
 //   var instance = "{{($sett && $sett !='')? $sett[0]->ultramsg_whatsapp_instance_id : '' }}";
 
-const token = @json($whatsappToken);
-const instance = @json($instanceId);
+//     instance = 'instance137692';
+// token = 'm8b9c155gr43zwdk';
+window.ultraMsgConfig = {
+        token: @json($whatsappToken),
+        instance: @json($instanceId),
+        referenceId : @json(Auth::user()->id)
+};
+
+// const token = 'instance137692';
+// const instance = 'm8b9c155gr43zwdk';
 
 </script>
     <div id="stack-footer">

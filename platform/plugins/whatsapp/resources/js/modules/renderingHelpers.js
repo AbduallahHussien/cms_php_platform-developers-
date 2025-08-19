@@ -1,6 +1,19 @@
 import { convertTime } from "./helpers.js";
 
 export const renderChatsList = (instance,token) => {
+    //  token = 'm8b9c155gr43zwdk';
+    //  instance = 'instance137692';
+    // console.log('instance in renderingHelpers : ',instance);
+    // console.log('token in renderingHelpers : ',token);
+
+    $('.sideBar').html(`
+        <div class="d-flex justify-content-center align-items-center p-3">
+            <div class="spinner-border text-primary" role="status">
+                <span class="visually-hidden">Loading...</span>
+            </div>
+        </div>
+    `);
+    
     $.ajax({
         async: true,
         crossDomain: true,
@@ -234,7 +247,7 @@ export const renderChatMessages = (data, prepend = false) => {
                 </div>`;
                 break;
 
-            case "audio":
+            case "audio": 
                 const audioSlot = renderAudioSlot(
                     "Audio",
                     messages[index].media,
@@ -245,6 +258,20 @@ export const renderChatMessages = (data, prepend = false) => {
                     messages[index].pushname,
                     messages[index].time,
                     audioSlot,
+                );
+                break;
+            
+            case "ptt": 
+                const voiceSlot = renderAudioSlot(
+                    "Voice Message",
+                    messages[index].media,
+                );
+                messageHTML = renderAudio(
+                    mainClass,
+                    subClass,
+                    messages[index].pushname,
+                    messages[index].time,
+                    voiceSlot,
                 );
                 break;
 

@@ -775,11 +775,15 @@ button {
 
   /*Conversation*/
   .conversation {
-    padding: 0 !important;
+    display: none !important; /* hides parent + children */
+
+    /* padding: 0 !important;
     margin: 0 !important;
-    height: 100%;
+    height: 100%; 
+    border-left: 1px solid rgba(0, 0, 0, .08); */
+
+
     /*width: 100%;*/
-    border-left: 1px solid rgba(0, 0, 0, .08);
     /*overflow-y: auto;*/
   }
   .message {

@@ -67,6 +67,7 @@ class SendLocation {
             toastr.error("Cannot send location: coordinates are missing.");
             return;
         }
+        const { instance, token } = window.ultraMsgConfig;
         $.ajax({
             url: `https://api.ultramsg.com/${instance}/messages/location`,
             method: "POST",

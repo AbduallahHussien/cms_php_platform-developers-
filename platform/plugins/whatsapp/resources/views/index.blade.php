@@ -182,6 +182,9 @@
 
                     <!-- CONVERSATION -->
                         <div class="col-xs-12 col-md-8 conversation d-none">
+
+
+
                             <!-- CONVERSATION HEADING -->
                             <div class="row heading">
 
@@ -208,10 +211,24 @@
                                 <!-- END CONVERSATION NAME -->
 
                                 <!-- CONVERSATION TYPE -->
-                                @include('plugins/whatsapp::partials._btn_conversation_type')
+                                <div class="col-3 conversation-type">
+                                    <button type="button" 
+                                            class="btn btn-secondary d-none" 
+                                            id="conversation-type" 
+                                            data-action="" 
+                                            data-chat_id="" 
+                                            data-chat_img="" 
+                                            data-chat_title="">Open Conversation</button>
+                                </div>
+                                {{-- @include('plugins/whatsapp::partials._btn_conversation_type') --}}
+                                
                                 <!-- END CONVERSATION TYPE -->
                             </div>
                             <!-- END CONVERSATION HEADING -->
+
+
+
+                            
                             @include('plugins/whatsapp::partials._btn_view_more')
                               
                             

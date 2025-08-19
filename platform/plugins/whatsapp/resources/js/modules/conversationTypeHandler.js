@@ -129,7 +129,8 @@ export async function handleConversation(chat_id) {
 
 $(function()
 {
-    $('#conversations_types').on('change', function () {
+    $(document).on('change', '#conversations_types', function () {
+        const { instance, token } = window.ultraMsgConfig;
         // $('.sideBar').empty();
         $('.sideBar').html(`
             <div class="d-flex justify-content-center align-items-center p-3">
@@ -141,7 +142,7 @@ $(function()
     
         const selectedConversationType = this.value;
         if (selectedConversationType === "all") {
-            renderChatsList();
+            renderChatsList(instance,token);
             return;
         }
     
@@ -164,18 +165,20 @@ $(function()
             });
     
             // console.log("Open chat_ids:", chatIds);
-    
+            
+
             $.ajax({
                 url: `https://api.ultramsg.com/${instance}/chats?token=${token}`,
                 method: "GET",
                 headers: { "content-type": "application/x-www-form-urlencoded" }
             }).done(function (response) {
+                $('.sideBar').empty();
                 $.each(response, function (index, chat) {
                     const chat_id = chat.id;
                     const selector = chat_id.replace('@', '').replace('.', '');
     
                     if (!chatIds.includes(chat_id)) return;
-                    $('.sideBar').empty();
+                    
                     $('.sideBar').append(`
                         <div class="row sideBar-body" 
                              data-chat_id="${chat_id}" 

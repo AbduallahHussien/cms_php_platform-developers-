@@ -31,6 +31,8 @@ import {
 } from "./renderingHelpers.js";
 
 import { handleConversation } from "./conversationTypeHandler.js";
+import { sendTxtMsg } from "./sendTextMsgHandler.js";
+
 import {
     loadInitial,
     loadRecentMessages,
@@ -40,6 +42,37 @@ import {
 import { GlobalState } from "./state.js";
 
 $(function () {
+    const { instance, token, referenceId } = window.ultraMsgConfig;
+
+
+    $('#backChat').on('click',function(){
+         
+        $(".side").css({"display": "block"}); 
+      });
+      if (window.innerWidth > 700){
+        $("#backChat").css({"display": "none"});
+      }
+
+
+    // send Message
+    $(document).on("keypress", function (e) {
+        if (e.which == 13) {
+            let chat_id = $("#conversation").data("receiver_id");
+            let message = $("#comment").val();
+
+            if (message) {
+                sendTxtMsg(chat_id, message,instance, token, referenceId);
+                $("#conversation").scrollTop(
+                    $("#conversation").prop("scrollHeight"),
+                );
+                $("#comment").val("");
+            }
+
+            return false;
+        }
+    });
+    // End send Message
+
     $(document).on("click", ".sideBar-body", function () {
         GlobalState.instance_id = instance.split(/(\d+)/)[1];
         GlobalState.chat_id = $(this).data("chat_id");
@@ -56,8 +89,12 @@ $(function () {
             .empty()
             .append(` <img src="` + avatarImgSrc + `"> `);
 
-        if (window.innerWidth < 700) {
-            $(".side").css({ display: "none" });
+        if (window.innerWidth < 700) 
+        {
+            $(".side,.btn-view-more").css({ display: "none" });
+        }
+        else{
+            $(".side,.btn-view-more").css({ display: "block" });
         }
         ///////////////////////////////////////////
 
@@ -96,34 +133,36 @@ const chatRef = ref(db, "whatsapp_chat");
 
 // 3. Listen for children being added
 onChildAdded(chatRef, (snapshot) => {
-  const data = snapshot.val();
-  const messageTimestamp = (data.time || 0) * 1000;
+    const data = snapshot.val();
+    const messageTimestamp = (data.time || 0) * 1000;
 
-  // Only process NEW messages
-  if (messageTimestamp <= loadTime) return;
+    // Only process NEW messages
+    if (messageTimestamp <= loadTime) return;
 
-  // ====== REORDER CHAT SIDEBAR & UPDATE UNREAD COUNT ======
-  const chatId = data.event_type === "message_received" ? data.from : data.to;
-  const chatElement = $('[data-chat_id="' + chatId + '"]');
+    // ====== REORDER CHAT SIDEBAR & UPDATE UNREAD COUNT ======
+    const chatId = data.event_type === "message_received" ? data.from : data.to;
+    const chatElement = $('[data-chat_id="' + chatId + '"]');
 
-  // Move chat to top
-  chatElement.insertBefore(".sideBar-body:first-child");
+    // Move chat to top
+    chatElement.insertBefore(".sideBar-body:first-child");
 
-  // Update unread badge
-  if (data.event_type === "message_received") {
-      const unreadEl = chatElement.find(".unread");
-      if (unreadEl.length) {
-          unreadEl.html(parseInt(unreadEl.html()) + 1);
-      } else {
-          chatElement.append('<span class="unread">1</span>');
-      }
-  }
+    // Update unread badge
+    if (data.event_type === "message_received") {
+        const unreadEl = chatElement.find(".unread");
+        if (unreadEl.length) {
+            unreadEl.html(parseInt(unreadEl.html()) + 1);
+        } else {
+            chatElement.append('<span class="unread">1</span>');
+        }
+    }
 
-  // ====== RENDER MESSAGE IF CONVERSATION IS OPEN ======
-  const receiver_id = $("#conversation").data("receiver_id");
-  if (receiver_id && ((data.event_type === "message_received" && receiver_id == data.from) ||
-                      (data.event_type !== "message_received" && receiver_id == data.to))) {
-      renderChatMessages([data], false); // append new message
-  }
+    // ====== RENDER MESSAGE IF CONVERSATION IS OPEN ======
+    const receiver_id = $("#conversation").data("receiver_id");
+    if (
+        receiver_id &&
+        ((data.event_type === "message_received" && receiver_id == data.from) ||
+            (data.event_type !== "message_received" && receiver_id == data.to))
+    ) {
+        renderChatMessages([data], false); // append new message
+    }
 });
-

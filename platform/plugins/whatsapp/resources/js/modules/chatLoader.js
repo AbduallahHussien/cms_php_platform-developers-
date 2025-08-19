@@ -2,9 +2,13 @@ import { db, ref, get, query, orderByChild, limitToLast, endAt } from './firebas
 import { renderChatMessages,renderChatsList } from './renderingHelpers.js';
 import { GlobalState } from './state.js';
 
-console.log('instance',instance.val());
-console.log('token',token.val());
-renderChatsList(instance,token);
+// console.log('instance',instance.val());
+// console.log('token',token.val());
+// renderChatsList(window.ultraMsgConfig.instance,window.ultraMsgConfig.token);
+$(function () {
+  const { instance, token } = window.ultraMsgConfig;
+  renderChatsList(instance, token);
+}); 
 
 const MESSAGES_PER_PAGE = 5;
 let chatMessages = [];
