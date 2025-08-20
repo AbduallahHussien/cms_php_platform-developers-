@@ -91,10 +91,10 @@ $(function () {
 
         if (window.innerWidth < 700) 
         {
-            $(".side,.btn-view-more").css({ display: "none" });
+            $(".side").css({ display: "none" });
         }
         else{
-            $(".side,.btn-view-more").css({ display: "block" });
+            $(".side").css({ display: "block" });
         }
         ///////////////////////////////////////////
 

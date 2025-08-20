@@ -181,7 +181,7 @@
                     <!-- LEFT SIDES -->
 
                     <!-- CONVERSATION -->
-                        <div class="col-xs-12 col-md-8 conversation d-none">
+                        <div class="col-xs-12 col-md-8 conversation d-none position-relative">
 
 
 
