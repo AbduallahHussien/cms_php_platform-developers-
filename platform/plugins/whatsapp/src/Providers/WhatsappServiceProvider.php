@@ -15,6 +15,7 @@ use Botble\Whatsapp\Http\Services\UltramsgService;
 use Botble\Whatsapp\Models\WhatsappSetting;
 use Illuminate\Routing\Events\RouteMatched;
 use Botble\Whatsapp\Providers\EventServiceProvider;
+use Exception;
 use UltraMsg\WhatsAppApi;
 use Illuminate\Support\Facades\Schema;
 class WhatsappServiceProvider extends ServiceProvider
@@ -23,13 +24,25 @@ class WhatsappServiceProvider extends ServiceProvider
 
     protected function loadPluginDependencies(): void
     {
-        $autoload = __DIR__ . '/../../vendor/autoload.php'; // Adjusted path to be more robust
-
-        if (file_exists($autoload)) {
-            require_once $autoload;
-            info('Plugin autoloader was found and loaded!'); // Add this for debugging
-        } else {
-            info('Plugin autoloader NOT FOUND at: ' . $autoload); // Add this for debugging
+          // Only load plugin autoloader if necessary
+        try{
+            if (!class_exists(\Cocur\Slugify\Slugify::class)) {
+                info('class not exists');
+                $autoload = __DIR__ . '/../../vendor/autoload.php'; // Adjusted path to be more robust
+    
+                if (file_exists($autoload)) {
+                    require_once $autoload;
+                    info('Plugin autoloader was found and loaded!'); // Add this for debugging
+                } else {
+                    info('Plugin autoloader NOT FOUND at: ' . $autoload); // Add this for debugging
+                }
+            }
+            else{
+                info('no need to autoload');
+            }
+        }catch(Exception $ex)
+        {
+            info($ex->getMessage());
         }
     }
 

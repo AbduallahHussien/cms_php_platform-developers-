@@ -27,7 +27,6 @@
         "botble/slug": "*@dev",
         "botble/theme": "*@dev",
         "botble/widget": "*@dev",
-        "cocur/slugify": "^4.6",
         "doctrine/dbal": "^3.8",
         "guzzlehttp/guzzle": "^7.7",
         "kreait/firebase-php": "^7.16",
