@@ -14,7 +14,7 @@ return [
     */
 
     'credentials' => [
-        'file' => plugin_path('whatsapp\\whatsapp.json'), // 👈 Put your JSON here
+        'file' => plugin_path('whatsapp/whatsapp.json'), // 👈 Put your JSON here
     ],
 
     /*
