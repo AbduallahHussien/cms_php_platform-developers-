@@ -21,9 +21,22 @@ class WhatsappServiceProvider extends ServiceProvider
 {
     use LoadAndPublishDataTrait;
 
-    
+    protected function loadPluginDependencies(): void
+    {
+        $autoload = __DIR__ . '/../../vendor/autoload.php'; // Adjusted path to be more robust
+
+        if (file_exists($autoload)) {
+            require_once $autoload;
+            info('Plugin autoloader was found and loaded!'); // Add this for debugging
+        } else {
+            info('Plugin autoloader NOT FOUND at: ' . $autoload); // Add this for debugging
+        }
+    }
+
     public function register()
     {
+        $this->loadPluginDependencies();
+        
         $this->app->register(EventServiceProvider::class);
 
         $this->app->bind(WhatsappInterface::class, function () {
@@ -67,6 +80,9 @@ class WhatsappServiceProvider extends ServiceProvider
 
             return new UltramsgService($token, $instanceId);
         });
+
+
+        
     }
 
     public function boot()
