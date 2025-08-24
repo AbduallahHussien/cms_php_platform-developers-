@@ -3,6 +3,7 @@
     "description": "Whatsapp plugin",
     "type": "package",
     "require": {
-        "cocur/slugify": "^4.0"
+        "kreait/firebase-php": "^7.16",
+        "ralouphie/mimey": "*"
     }
 }

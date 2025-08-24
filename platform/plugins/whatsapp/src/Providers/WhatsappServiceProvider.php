@@ -25,10 +25,14 @@ class WhatsappServiceProvider extends ServiceProvider
     protected function loadPluginDependencies(): void
     {
           // Only load plugin autoloader if necessary
-        try{
-            if (!class_exists(\Cocur\Slugify\Slugify::class)) {
-                info('class not exists');
-                $autoload = __DIR__ . '/../../vendor/autoload.php'; // Adjusted path to be more robust
+        try
+        { 
+            if (!class_exists(\Kreait\Firebase\Factory::class) &&
+                !class_exists(\Mimey\MimeTypes::class)) 
+            {
+                // info('class not exists');
+                // $autoload = __DIR__ . '/../../vendor/autoload.php';
+                $autoload = plugin_path('whatsapp/vendor/autoload.php');
     
                 if (file_exists($autoload)) {
                     require_once $autoload;
@@ -37,7 +41,8 @@ class WhatsappServiceProvider extends ServiceProvider
                     info('Plugin autoloader NOT FOUND at: ' . $autoload); // Add this for debugging
                 }
             }
-            else{
+            else
+            {
                 info('no need to autoload');
             }
         }catch(Exception $ex)

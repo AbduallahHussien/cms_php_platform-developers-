@@ -71,18 +71,18 @@ class WhatsappController extends BaseController
             // 'https://js.pusher.com/7.2/pusher.min.js',
             'vendor/core/plugins/whatsapp/plugins/custom/whatsapp/record.js',
             'vendor/core/plugins/whatsapp/js/app.js',
-            'vendor/core/plugins/whatsapp/plugins/custom/whatsapp/scripts.js?v=100',
+            // 'vendor/core/plugins/whatsapp/plugins/custom/whatsapp/scripts.js?v=100',
         ])
         ->addStylesDirectly([
             'vendor/core/plugins/whatsapp/plugins/vendor/fonts/boxicons.css',
             'vendor/core/plugins/whatsapp/plugins/vendor/css/core.css',
             'vendor/core/plugins/whatsapp/plugins/vendor/css/theme-default.css',
-            'vendor/core/plugins/whatsapp/plugins/custom/whatsapp/style.css',    
+            'vendor/core/plugins/whatsapp/css/all.css',    
             'vendor/core/plugins/whatsapp/plugins/noty/lib/noty.css',
             'vendor/core/plugins/whatsapp/plugins/noty/lib/themes/mint.css',
             'vendor/core/plugins/whatsapp/plugins/waitme/waitMe.min.css',
             'https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css',
-            'vendor/core/plugins/whatsapp/css/toastr.min.css',
+            // 'vendor/core/plugins/whatsapp/css/toastr.min.css',
 
 
         ]);
