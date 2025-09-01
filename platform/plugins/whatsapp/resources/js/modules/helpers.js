@@ -18,3 +18,7 @@ export const convertTime = (timestamp) => {
 
     return `${hours}:${minutes} ${amPm}`;
 };
+
+
+export const sanitizeKey = (key) => (key.replace(/[.#$[\]]/g, "_"));
+  

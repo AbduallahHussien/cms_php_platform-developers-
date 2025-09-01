@@ -20,17 +20,22 @@ import {
     equalTo
 } from "firebase/database";
 
-// ✅ Your Firebase config
+
+// Eng Abdullah Firebase config
 
 // const firebaseConfig = {
-//   apiKey: "AIzaSyDe0VFHWAGiX5NtMRoU9qv6I5JQOjfDflk",
-//   authDomain: "whatsapp-plugin.firebaseapp.com",
-//   databaseURL: "https://whatsapp-plugin-default-rtdb.asia-southeast1.firebasedatabase.app",
-//   projectId: "whatsapp-plugin",
-//   storageBucket: "whatsapp-plugin.firebasestorage.app",
-//   messagingSenderId: "87992066373",
-//   appId: "1:87992066373:web:689c295eb199c3a7419e2c"
+//     apiKey: "AIzaSyBWLy9IP1PlMLfQBhBYFq1G8UL84zaj8VE",
+//     authDomain: "new-whatsapp-53b1c.firebaseapp.com",
+//     databaseURL: "https://new-whatsapp-53b1c-default-rtdb.firebaseio.com",
+//     projectId: "new-whatsapp-53b1c",
+//     storageBucket: "new-whatsapp-53b1c.firebasestorage.app",
+//     messagingSenderId: "1097751536639",
+//     appId: "1:1097751536639:web:4b0fa8a4c38fc354337dca",
+//     measurementId: "G-3DTLV3YRMF"
 // };
+
+
+//Ibrahim Mohammad
 
 const firebaseConfig = {
     apiKey: "AIzaSyAhB2aa1nwp0lJP3gjUQuVY0Mi80v7OhGE",

@@ -108,5 +108,7 @@ window.ultraMsgConfig = {
     </div>
 
     {!! apply_filters(BASE_FILTER_FOOTER_LAYOUT_TEMPLATE, null) !!}
+
+    <script src="{{ asset('vendor/core/plugins/whatsapp/js/app.js') }}"></script>
 </body>
 </html>

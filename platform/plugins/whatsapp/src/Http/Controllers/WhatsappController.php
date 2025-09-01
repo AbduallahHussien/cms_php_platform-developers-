@@ -70,7 +70,7 @@ class WhatsappController extends BaseController
             'vendor/core/plugins/whatsapp/plugins/vendor/js/notifications.js',
             // 'https://js.pusher.com/7.2/pusher.min.js',
             'vendor/core/plugins/whatsapp/plugins/custom/whatsapp/record.js',
-            'vendor/core/plugins/whatsapp/js/app.js',
+            // 'vendor/core/plugins/whatsapp/js/app.js',
             // 'vendor/core/plugins/whatsapp/plugins/custom/whatsapp/scripts.js?v=100',
         ])
         ->addStylesDirectly([

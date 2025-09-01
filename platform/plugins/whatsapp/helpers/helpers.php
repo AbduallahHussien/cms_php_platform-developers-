@@ -110,6 +110,7 @@ if (! function_exists('whatsapp_insert_chat')) {
         $time, $lo_address, $lo_latitude, $lo_longitude
     ) {
         try {
+            info('056303');
             // ✅ Determine contact ID
             $contact_id = $event_type === 'message_received' ? $from : $to;
 
@@ -166,14 +167,13 @@ if (! function_exists('whatsapp_insert_chat')) {
             ]);
 
             $imageData = $response->json();
-
-            $displayImage = null;
-            if (!empty($imageData['image'])) {
-                $displayImage = $imageData['image'];
-            } else {
-                // fallback placeholder image URL
-                $displayImage = 'https://i.pravatar.cc/300';
-            }
+            $displayImage = $imageData['image'] ?? 'https://i.pravatar.cc/300';
+            // $displayImage = null;
+            // if (!empty($imageData['image'])) {
+            //     $displayImage = $imageData['image'];
+            // } else { 
+            //     $displayImage = 'https://i.pravatar.cc/300';
+            // }
             
 
             // ✅ Update or insert contact in Firebase

@@ -10,4 +10,6 @@ import './modules/sendLocation';
 import './modules/documentUploadHandler';
 import './modules/audioUploadHandler';
 import './modules/conversationTypeHandler';
+import './modules/headerActions/contacts';
 import './modules/tmp';
+

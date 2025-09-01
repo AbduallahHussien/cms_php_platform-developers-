@@ -16,19 +16,9 @@ import {
     endBefore,
 } from "./firebase";
 
-import { convertTime } from "./helpers.js";
+// import { convertTime } from "./helpers.js";
 
-import {
-    renderLocationSlot,
-    renderLocation,
-    renderDocumentSlot,
-    renderDocument,
-    renderVideoSlot,
-    renderVideo,
-    renderAudioSlot,
-    renderAudio,
-    renderChatMessages,
-} from "./renderingHelpers.js";
+import { renderChatMessages } from "./renderingHelpers.js";
 
 import { handleConversation } from "./conversationTypeHandler.js";
 import { sendTxtMsg } from "./sendTextMsgHandler.js";
