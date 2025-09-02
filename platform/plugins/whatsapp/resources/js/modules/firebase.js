@@ -52,6 +52,8 @@ const app = initializeApp(firebaseConfig);
 
 const db = getDatabase(app);
 
+// console.log('db',db);
+
 // ✅ Export database so you can use it anywhere in Laravel
 export {
     db,

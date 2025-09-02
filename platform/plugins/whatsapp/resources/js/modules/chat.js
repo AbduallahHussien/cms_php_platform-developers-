@@ -46,12 +46,15 @@ $(function () {
 
     // send Message
     $(document).on("keypress", function (e) {
+        // console.log('click 1');
         if (e.which == 13) {
             let chat_id = $("#conversation").data("receiver_id");
             let message = $("#comment").val();
-
+            // console.log('click 2');
             if (message) {
+                // console.log('click 3');
                 sendTxtMsg(chat_id, message,instance, token, referenceId);
+                // console.log('click 4');
                 $("#conversation").scrollTop(
                     $("#conversation").prop("scrollHeight"),
                 );
@@ -120,9 +123,16 @@ const loadTime = Date.now();
 
 // 2. Reference your chat node
 const chatRef = ref(db, "whatsapp_chat");
-
+// one-time read
+// const snapshot = await get(chatRef);
+// if (snapshot.exists()) {
+//     console.log(snapshot.val()); // <-- snapshot.val() gives the data
+// } else {
+//     console.log("No data available");
+// } 
 // 3. Listen for children being added
 onChildAdded(chatRef, (snapshot) => {
+    // console.log('22'); 
     const data = snapshot.val();
     const messageTimestamp = (data.time || 0) * 1000;
 

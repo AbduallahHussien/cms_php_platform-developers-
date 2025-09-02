@@ -10,15 +10,21 @@
          min-height: inherit;
     }   
     div#spinner {
-    position: absolute;
-    top: 50%;
-    left: 39%;
-    z-index: 88888888888;
-}
+        position: absolute;
+        top: 50%;
+        left: 39%;
+        z-index: 88888888888;
+    }
+    th{
+        font-size: 13px !important;
+    }
+    td{
+        font-size: 15px !important;
+    }
 </style>
 
     <!-- container --> 
-    <div class="container-fluid">
+    <div class="container-fluid my-4">
         <div class="row">
             <div class="alert alert-danger" style="display:none" role="alert">There's a mistake ,Please try again later!</div>
             <div class="alert alert-success" style="display:none" role="alert"></div>
@@ -57,13 +63,13 @@
                         </div>
                     </div>
                 </div>
-
+                
                 <div class="card">
-                    <h5 class="card-header">All Contacts</h5>
+                    <h3 class="card-header">All Contacts</h3>
                     <div class="table-responsive text-nowrap">
                     <table class="table">
                         <thead>
-                        <tr>
+                        <tr class="text-center">
                             <th scope="col">Display</th>
                             <th scope="col">Name</th>
                             <th scope="col">Channel</th>
@@ -97,4 +103,4 @@
 
     {{-- <script src="{{ asset('vendor/core/plugins/whatsapp/plugins/custom/whatsapp/contacts.js') }}"></script> --}}
 
-@stop
+@endsection

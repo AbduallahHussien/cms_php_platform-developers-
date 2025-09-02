@@ -101,6 +101,57 @@ if (! function_exists('whatsapp_settings')) {
 // }
 
  
+ 
+
+if (!function_exists('getCountryByPhone')) {
+    /**
+     * Get country name by phone number
+     *
+     * @param string $phone
+     * @return string|null
+     */
+    function getCountryByPhone(string $phone): ?string
+    {
+        // Remove all non-numeric characters (spaces, +, etc.)
+        $digits = preg_replace('/\D+/', '', $phone);
+
+        // Mapping of country codes to country names (you can expand this)
+        $arabicCountryCodes = [
+            '213' => 'Algeria',
+            '973' => 'Bahrain',
+            '269' => 'Comoros',
+            '253' => 'Djibouti',
+            '20'  => 'Egypt',
+            '964' => 'Iraq',
+            '962' => 'Jordan',
+            '965' => 'Kuwait',
+            '961' => 'Lebanon',
+            '218' => 'Libya',
+            '222' => 'Mauritania',
+            '212' => 'Morocco',
+            '968' => 'Oman',
+            '970' => 'Palestine',
+            '974' => 'Qatar',
+            '966' => 'Saudi Arabia',
+            '252' => 'Somalia',
+            '249' => 'Sudan',
+            '963' => 'Syria',
+            '216' => 'Tunisia',
+            '971' => 'United Arab Emirates',
+            '967' => 'Yemen',
+        ];
+
+        // Check from longest code to shortest
+        foreach ($arabicCountryCodes as $code => $country) {
+            if (strpos($digits, $code) === 0) {
+                return $country;
+            }
+        }
+
+        return null; // country not found
+    }
+}
+
 
 if (! function_exists('whatsapp_insert_chat')) {
   
@@ -110,7 +161,7 @@ if (! function_exists('whatsapp_insert_chat')) {
         $time, $lo_address, $lo_latitude, $lo_longitude
     ) {
         try {
-            info('056303');
+            // info('056303');
             // ✅ Determine contact ID
             $contact_id = $event_type === 'message_received' ? $from : $to;
 
@@ -150,6 +201,8 @@ if (! function_exists('whatsapp_insert_chat')) {
                 'lo_longitude'  => $lo_longitude ?: '',
             ];
 
+            info('chatData');
+            info($chatData);
             // ✅ Push chat message into Firebase
             $chatRef->push($chatData);
             
@@ -161,13 +214,21 @@ if (! function_exists('whatsapp_insert_chat')) {
 
             // 🔄 Get contact image from UltraMsg
             $sett = whatsapp_settings();
-            $response = Http::get("https://api.ultramsg.com/{$sett[0]->ultramsg_whatsapp_instance_id}/contacts/image", [
+            $response_contact_info = Http::get("https://api.ultramsg.com/{$sett[0]->ultramsg_whatsapp_instance_id}/contacts/contact", [
+                'token' => $sett[0]->ultramsg_whatsapp_token,
+                'chatId' => '963938056303@c.us',
+            ]);
+            $response_img = Http::get("https://api.ultramsg.com/{$sett[0]->ultramsg_whatsapp_instance_id}/contacts/image", [
                 'token' => $sett[0]->ultramsg_whatsapp_token,
                 'chatId' => $contact_id,
             ]);
 
-            $imageData = $response->json();
-            $displayImage = $imageData['image'] ?? 'https://i.pravatar.cc/300';
+            $imageData = $response_img->json();
+            $contactData = $response_contact_info->json();
+            info('imageData');
+            info($imageData);
+            $displayImage = $imageData['success'] ?? 'https://i.pravatar.cc/300';
+            $contactName = $pushname ?: $contactData['pushname'];
             // $displayImage = null;
             // if (!empty($imageData['image'])) {
             //     $displayImage = $imageData['image'];
@@ -185,14 +246,32 @@ if (! function_exists('whatsapp_insert_chat')) {
                     'display' => $displayImage,
                 ]);
             } else {
+                // $contactRef->set([
+                //     'id'                => $contact_id,
+                //     'display'           => $displayImage,
+                //     'last_message'      => $body ?: '',
+                //     'name'              => $pushname ?: 'me',
+                //     'date_added'        => now()->format('Y-m-d'),
+                //     'conversation_status' => 'open',
+                // ]);
+                $receiverPhone = explode('@', $contact_id)[0];
                 $contactRef->set([
-                    'id'                => $contact_id,
-                    'display'           => $displayImage,
-                    'last_message'      => $body ?: '',
-                    'name'              => $pushname ?: 'me',
-                    'date_added'        => now()->format('Y-m-d'),
-                    'conversation_status' => 'open',
+                    'id'                  => $contact_id,
+                    'display'             => $displayImage,
+                    'last_message'        => $body ?: '',
+                    'name'                => $contactName,
+                    'conversation_status' => 'open', 
+                    'date_added'          => now()->timestamp,
+                    // all other fields as empty strings
+                    'channel'             => 'Whatsapp',
+                    'email'               => '',
+                    'phone'               => '00'.$receiverPhone,
+                    'tags'                => '',
+                    'country'             => getCountryByPhone($receiverPhone),
+                    'language'            => '',
+                    'assignee'            => ''
                 ]);
+                
             }
             // info('done');
             return ['action' => 'done'];

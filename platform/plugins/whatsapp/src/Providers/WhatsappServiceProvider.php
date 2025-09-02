@@ -36,14 +36,14 @@ class WhatsappServiceProvider extends ServiceProvider
     
                 if (file_exists($autoload)) {
                     require_once $autoload;
-                    info('Plugin autoloader was found and loaded!'); // Add this for debugging
+                    // info('Plugin autoloader was found and loaded!'); // Add this for debugging
                 } else {
-                    info('Plugin autoloader NOT FOUND at: ' . $autoload); // Add this for debugging
+                    // info('Plugin autoloader NOT FOUND at: ' . $autoload); // Add this for debugging
                 }
             }
             else
             {
-                info('no need to autoload');
+                // info('no need to autoload');
             }
         }catch(Exception $ex)
         {

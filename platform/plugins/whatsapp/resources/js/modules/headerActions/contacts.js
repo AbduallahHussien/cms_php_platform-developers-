@@ -2,7 +2,7 @@ import { ref, get, update, remove } from "firebase/database";
 
 import { db } from "./../firebase";
 
-import { sanitizeKey } from "./../helpers.js";
+import { sanitizeKey,convertDateTime,truncateText } from "./../helpers.js";
 
 class Contacts {
     init() {
@@ -24,26 +24,25 @@ class Contacts {
             const data = snapshot.val() || {};
             Object.keys(data).forEach((key) => {
                 const contact = data[key];
+                const status = contact.conversation_status || "close";
+                const badgeClass = status === "open" ? "text-white bg-success" : "text-white bg-danger";
+
                 $("#contactsResults").append(`
-            <tr>
+            <tr class="text-center align-middle">
               <td>
-                <ul class="list-unstyled users-list m-0 avatar-group d-flex align-items-center">
-                  <li class="avatar avatar-xs pull-up">
-                    <img src="${contact.display}" alt="Avatar" style="width: 49px;" class="rounded-circle"/>
-                  </li>
-                </ul>
+                <img src="${contact.display}" alt="Avatar" style="width: 49px;" class="rounded-circle"/>
               </td>
-              <td><strong>${contact.name || ""}</strong></td>
-              <td>${contact.channel || ""}</td>
-              <td>${contact.email || ""}</td>
-              <td>${contact.phone || ""}</td>
-              <td>${contact.tags || ""}</td>
-              <td>${contact.country || ""}</td>
-              <td>${contact.language || ""}</td>
-              <td><span class="badge bg-label-primary me-1">${contact.conversation_status || "open"}</span></td>
-              <td>${contact.assignee || ""}</td>
-              <td>${contact.last_message || ""}</td>
-              <td>${contact.date_added || ""}</td>
+              <td class="fw-bold"><strong>${contact.name || "-"}</td>
+              <td>${contact.channel || "-"}</td>
+              <td>${contact.email || "-"}</td>
+              <td>${contact.phone || "-"}</td>
+              <td>${contact.tags || "-"}</td>
+              <td>${contact.country || "-"}</td>
+              <td>${contact.language || "-"}</td>
+              <td><span class="badge ${badgeClass} me-1">${status}</span></td>
+              <td>${contact.assignee || "-"}</td>
+              <td>${truncateText(contact.last_message, 20)}</td>
+              <td>${convertDateTime(contact.date_added) || "-"}</td>
               <td class="text-end">
                 <div class="dropdown">
                     <button class="btn btn-sm btn-outline-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown">

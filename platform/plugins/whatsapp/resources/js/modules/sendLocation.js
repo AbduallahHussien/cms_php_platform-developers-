@@ -37,16 +37,20 @@ class SendLocation {
                 (error) => {
                     switch (error.code) {
                         case 1:
-                            toastr.error("Location permission denied. Please allow location access.");
+                            // toastr.error("Location permission denied. Please allow location access.");
+                            console.log("Location permission denied. Please allow location access.");
                             break;
                         case 2:
-                            toastr.error("Location unavailable. Please turn on GPS or check your network.");
+                            // toastr.error("Location unavailable. Please turn on GPS or check your network.");
+                            console.log("Location unavailable. Please turn on GPS or check your network.");
                             break;
                         case 3:
-                            toastr.error("Location request timed out. Try again.");
+                            // toastr.error("Location request timed out. Try again.");
+                            console.log("Location request timed out. Try again.");
                             break;
                         default:
-                            toastr.error("Could not get location.");
+                            // toastr.error("Could not get location.");
+                            console.log("Could not get location.");
                     }
                     // fallback to default location if needed
                     callback(this.latitude, this.longitude);
