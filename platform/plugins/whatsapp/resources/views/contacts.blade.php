@@ -80,7 +80,7 @@
                             <th scope="col">Language</th>
                             <th scope="col">Assignee</th>
                             <th scope="col">Last message</th>
-                            <th scope="col">Date Added</th>
+                            <th scope="col">Last Updated</th>
                             <th scope="col">Conversation Status</th>
                             <th scope="col">Actions</th>
                         </tr>

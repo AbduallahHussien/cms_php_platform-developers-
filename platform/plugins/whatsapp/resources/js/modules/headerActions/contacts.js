@@ -22,6 +22,7 @@ class Contacts {
 
         get(contactsRef).then((snapshot) => {
             const data = snapshot.val() || {};
+            console.log('data',data);
             Object.keys(data).forEach((key) => {
                 const contact = data[key];
                 const status = contact.conversation_status || "close";
@@ -41,7 +42,7 @@ class Contacts {
               <td>${contact.language || "-"}</td>
               <td>${contact.assignee || "-"}</td>
               <td>${truncateText(contact.last_message, 20)}</td>
-              <td>${convertDateTime(contact.date_added) || "-"}</td>
+              <td>${convertDateTime(contact.last_updated) || "-"}</td>
               <td><span class="badge ${badgeClass} me-1">${status}</span></td>
               <td class="text-end">
                 <div class="dropdown">
@@ -72,12 +73,17 @@ class Contacts {
 
     // ✅ Open edit modal
     openEditModal(e) {
+        
         $("#spinner").show();
-        const sanitizedId = sanitizeKey($(e.currentTarget).data("id"));
-        const contactRef = ref(db, "whatsapp_contacts/" + sanitizedId);
+        // const sanitizedId = sanitizeKey($(e.currentTarget).data("id"));
+        // console.log('sanitizedId',sanitizedId)
+        const contactRef = ref(db, "whatsapp_contacts");
+        console.log('contactRef',contactRef)
 
+        
         get(contactRef).then((snapshot) => {
             const contact = snapshot.val();
+            console.log('contact',contact)
             if (contact) {
                 $("#id").val(contact.chatId);
                 $("#name").val(contact.name);
