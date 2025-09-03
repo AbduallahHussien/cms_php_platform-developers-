@@ -2,11 +2,10 @@
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Collection;
-use Illuminate\Support\Facades\DB;
-use App\Services\PayUService\Exception;
+use Illuminate\Support\Facades\DB; 
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Http;
-// use Throwable;
+ 
 
 
 if (! function_exists('whatsapp_settings')) {
@@ -163,7 +162,7 @@ if (! function_exists('whatsapp_insert_chat')) {
         try {
             // info('056303');
             // ✅ Determine contact ID
-            $contact_id = $event_type === 'message_received' ? $from : $to;
+            $chatId = $event_type === 'message_received' ? $from : $to;
 
             // ✅ Get Firebase database instance (must be bound in a service provider)
             $database = app('whatsapp.firebase.database');
@@ -200,70 +199,50 @@ if (! function_exists('whatsapp_insert_chat')) {
                 'lo_latitude'   => $lo_latitude ?: '',
                 'lo_longitude'  => $lo_longitude ?: '',
             ];
-
-            info('chatData');
-            info($chatData);
+ 
             // ✅ Push chat message into Firebase
-            $chatRef->push($chatData);
+            $chatRef->push($chatData);  
+ 
+
+            $settings = whatsapp_settings()[0] ?? null;
+            if (!$settings) {
+                throw new Exception('WhatsApp settings not found');
+            }
             
+            $imageResponse = Http::get("https://api.ultramsg.com/{$settings->ultramsg_whatsapp_instance_id}/contacts/image", [
+                'token' => $settings->ultramsg_whatsapp_token,
+                'chatId' =>$chatId,
+            ]);
 
-            // ✅ Handle contact info in Firebase
-            $sanitizedContactId = str_replace('.', '_', $contact_id);
-            $contactRef = $database->getReference('whatsapp_contacts/' . $sanitizedContactId);
+            $imageData = $imageResponse->json(); 
+            $displayImage = $imageData['success'] ?? 'https://i.pravatar.cc/300'; 
 
+            $contactRef = $database->getReference('whatsapp_contacts');
 
-            // 🔄 Get contact image from UltraMsg
-            $sett = whatsapp_settings();
-            $response_contact_info = Http::get("https://api.ultramsg.com/{$sett[0]->ultramsg_whatsapp_instance_id}/contacts/contact", [
-                'token' => $sett[0]->ultramsg_whatsapp_token,
+            
+            $response_contact_info = Http::get("https://api.ultramsg.com/{$settings->ultramsg_whatsapp_instance_id}/contacts/contact", [
+                'token' => $settings->ultramsg_whatsapp_token,
                 'chatId' => '963938056303@c.us',
-            ]);
-            $response_img = Http::get("https://api.ultramsg.com/{$sett[0]->ultramsg_whatsapp_instance_id}/contacts/image", [
-                'token' => $sett[0]->ultramsg_whatsapp_token,
-                'chatId' => $contact_id,
-            ]);
-
-            $imageData = $response_img->json();
-            $contactData = $response_contact_info->json();
-            info('imageData');
-            info($imageData);
-            $displayImage = $imageData['success'] ?? 'https://i.pravatar.cc/300';
-            $contactName = $pushname ?: $contactData['pushname'];
-            // $displayImage = null;
-            // if (!empty($imageData['image'])) {
-            //     $displayImage = $imageData['image'];
-            // } else { 
-            //     $displayImage = 'https://i.pravatar.cc/300';
-            // }
-            
-
-            // ✅ Update or insert contact in Firebase
-            $contactSnapshot = $contactRef->getValue();
-
-            if ($contactSnapshot) {
-                $contactRef->update([
-                    'last_message' => $body,
-                    'display' => $displayImage,
                 ]);
-            } else {
-                // $contactRef->set([
-                //     'id'                => $contact_id,
-                //     'display'           => $displayImage,
-                //     'last_message'      => $body ?: '',
-                //     'name'              => $pushname ?: 'me',
-                //     'date_added'        => now()->format('Y-m-d'),
-                //     'conversation_status' => 'open',
-                // ]);
-                $receiverPhone = explode('@', $contact_id)[0];
-                $contactRef->set([
-                    'id'                  => $contact_id,
+                
+                $contactData = $response_contact_info->json();
+            $contactName = $pushname ?: $contactData['pushname'];
+            $receiverPhone = explode('@',$chatId)[0];
+
+            $results = $contactRef->orderByChild('chatId')->equalTo($chatId)->getValue();
+
+            if ($results && count($results) > 0) 
+            {
+                // Only one child exists, get its key
+                $childKey = array_key_first($results);
+
+                // Update that specific child
+                $contactRef->getChild($childKey)->update([
+                    'last_message'        => $body ?? '',
                     'display'             => $displayImage,
-                    'last_message'        => $body ?: '',
                     'name'                => $contactName,
-                    'conversation_status' => 'open', 
-                    'date_added'          => now()->timestamp,
-                    // all other fields as empty strings
-                    'channel'             => 'Whatsapp',
+                    // 'date_added'          => now()->timestamp, 
+                    'channel'             => 'WhatsApp',
                     'email'               => '',
                     'phone'               => '00'.$receiverPhone,
                     'tags'                => '',
@@ -271,9 +250,28 @@ if (! function_exists('whatsapp_insert_chat')) {
                     'language'            => '',
                     'assignee'            => ''
                 ]);
-                
+            } 
+            else 
+            {
+                $contactData = [
+                    'chatId'              => $chatId,
+                    'display'             => $displayImage,
+                    'last_message'        => $body ?: '',
+                    'name'                => $contactName,
+                    'date_added'          => now()->timestamp, 
+                    'channel'             => 'WhatsApp',
+                    'email'               => '',
+                    'phone'               => '00'.$receiverPhone,
+                    'tags'                => '',
+                    'country'             => getCountryByPhone($receiverPhone),
+                    'language'            => '',
+                    'assignee'            => '',
+                    'conversation_status' => 'open', 
+                ]; 
+
+                $contactRef->push($contactData);
             }
-            // info('done');
+  
             return ['action' => 'done'];
 
         } catch (Throwable $e) {

@@ -32,31 +32,31 @@ class Contacts {
               <td>
                 <img src="${contact.display}" alt="Avatar" style="width: 49px;" class="rounded-circle"/>
               </td>
-              <td class="fw-bold"><strong>${contact.name || "-"}</td>
+              <td class="fw-bold">${contact.name || "-"}</td>
               <td>${contact.channel || "-"}</td>
               <td>${contact.email || "-"}</td>
               <td>${contact.phone || "-"}</td>
               <td>${contact.tags || "-"}</td>
               <td>${contact.country || "-"}</td>
               <td>${contact.language || "-"}</td>
-              <td><span class="badge ${badgeClass} me-1">${status}</span></td>
               <td>${contact.assignee || "-"}</td>
               <td>${truncateText(contact.last_message, 20)}</td>
               <td>${convertDateTime(contact.date_added) || "-"}</td>
+              <td><span class="badge ${badgeClass} me-1">${status}</span></td>
               <td class="text-end">
                 <div class="dropdown">
                     <button class="btn btn-sm btn-outline-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown">
                         <i class="bi bi-three-dots-vertical"></i>
                     </button>
                     <div class="dropdown-menu dropdown-menu-end shadow">
-                        <a class="dropdown-item d-flex align-items-center edit_contact" data-id="${contact.id}" href="javascript:void(0);">
+                        <a class="dropdown-item d-flex align-items-center edit_contact" data-id="${contact.chatId}" href="javascript:void(0);">
                             <i class="bi bi-pencil me-2"></i> Edit
                         </a>
-                        <a class="dropdown-item d-flex align-items-center" data-id="${contact.id}" href="javascript:void(0);">
+                        <a class="dropdown-item d-flex align-items-center" data-id="${contact.chatId}" href="javascript:void(0);">
                             <i class="bi bi-chat-dots me-2"></i> View Messages
                         </a>
                         <div class="dropdown-divider"></div>
-                        <a class="dropdown-item d-flex align-items-center text-danger"  id="DeleteContact"  data-id="${contact.id}" href="javascript:void(0);">
+                        <a class="dropdown-item d-flex align-items-center text-danger"  id="DeleteContact"  data-id="${contact.chatId}" href="javascript:void(0);">
                             <i class="bi bi-trash me-2"></i> Delete
                         </a>
                     </div>
@@ -79,7 +79,7 @@ class Contacts {
         get(contactRef).then((snapshot) => {
             const contact = snapshot.val();
             if (contact) {
-                $("#id").val(contact.id);
+                $("#id").val(contact.chatId);
                 $("#name").val(contact.name);
                 $("#channel").val(contact.channel);
                 $("#email").val(contact.email);

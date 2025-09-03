@@ -67,6 +67,9 @@ $(function () {
     // End send Message
 
     $(document).on("click", ".sideBar-body", function () {
+        // $("#conversation-type-spinner").removeClass("d-none");
+        $("#conversation-type").addClass("d-none");
+
         GlobalState.instance_id = instance.split(/(\d+)/)[1];
         GlobalState.chat_id = $(this).data("chat_id");
 
@@ -93,12 +96,13 @@ $(function () {
 
         var chatName = $(this).find(".name-meta").text();
         $("a.heading-name-meta").empty().text(chatName);
-        var chat_img = $(this).find("img").attr("src");
-        $("#conversation-type").data("chat_img", chat_img);
-        var chat_title = $(this).find(".name-meta").text();
-        $("#conversation-type").data("chat_title", chat_title);
+        // var chat_img = $(this).find("img").attr("src");
+        // $("#conversation-type").data("chat_img", chat_img);
+        // var chat_title = $(this).find(".name-meta").text();
+        // $("#conversation-type").data("chat_title", chat_title);
 
         //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        // alert(GlobalState.chat_id);
         handleConversation(GlobalState.chat_id);
         //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 

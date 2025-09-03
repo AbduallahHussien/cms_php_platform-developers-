@@ -65,7 +65,7 @@
                 </div>
                 
                 <div class="card">
-                    <h3 class="card-header">All Contacts</h3>
+                    <h3 class="card-header">MY CONTACTS</h3>
                     <div class="table-responsive text-nowrap">
                     <table class="table">
                         <thead>
@@ -78,10 +78,10 @@
                             <th scope="col">Tags</th>
                             <th scope="col">Country</th>
                             <th scope="col">Language</th>
-                            <th scope="col">Conversation Status</th>
                             <th scope="col">Assignee</th>
                             <th scope="col">Last message</th>
                             <th scope="col">Date Added</th>
+                            <th scope="col">Conversation Status</th>
                             <th scope="col">Actions</th>
                         </tr>
                         </thead>

@@ -220,7 +220,7 @@
                                             data-chat_img="" 
                                             data-chat_title="">Open Conversation</button>
                                 </div>
-                                {{-- @include('plugins/whatsapp::partials._btn_conversation_type') --}}
+                                @include('plugins/whatsapp::partials._btn_conversation_type')
                                 
                                 <!-- END CONVERSATION TYPE -->
                             </div>
