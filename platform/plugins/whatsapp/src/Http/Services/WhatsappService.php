@@ -14,15 +14,14 @@ class WhatsappService
     public function save_settings(string $token, string $instanceId): array
     {
         try {
-            WhatsappSetting::updateOrCreate(
+            $updatedSettings = WhatsappSetting::updateOrCreate(
                 [], //When the conditions array is empty, updateOrCreate will attempt to find the very first record in the whatsapp_settings table
                 [
                     'ultramsg_whatsapp_token' => $token,
                     'ultramsg_whatsapp_instance_id' => $instanceId,
                 ]
             );
-
-            return ['code' => 1, 'data' => true];
+            return ['code' => 1, 'data' => $updatedSettings];
         } catch (Throwable $ex) {
             return ['code' => 0, 'msg' => $ex->getMessage()];
         }
@@ -147,6 +146,25 @@ class WhatsappService
                 'msg' => $ex->getMessage(),
                 'line' => $ex->getLine()
             ];
+        }
+    }
+
+    public function get_me($instanceId,$token)
+    {
+        try 
+        {
+            $response = $this->ultramsgService->getInstanceMe($instanceId,$token); 
+            if (isset($response['Error'])) {
+                throw new Exception($response['Error']);
+            } 
+            return [
+                'code' => 1, 
+                'data' => $response, 
+            ];
+        }
+        catch(Throwable $th)
+        {
+            return ['code' => 0, 'msg' => $th->getMessage()];
         }
     }
 }

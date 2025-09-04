@@ -1,4 +1,4 @@
-import { ref, get, update, remove } from "firebase/database";
+import { ref, get, update, remove, query, orderByChild, equalTo } from "firebase/database";
 
 import { db } from "./../firebase";
 
@@ -9,7 +9,7 @@ class Contacts {
         this.getContacts();
 
         $(document).on("click", ".edit_contact", (e) => this.openEditModal(e));
-        $(document).on("click", "#EditContact", () => this.editContact());
+        // $(document).on("click", "#EditContact", () => this.editContact());
         $(document).on("click", "#DeleteContact", (e) => this.deleteContact(e));
     }
 
@@ -19,15 +19,22 @@ class Contacts {
         $("#spinner").show();
 
         const contactsRef = ref(db, "whatsapp_contacts");
+        const { whatsappId } = window.ultraMsgConfig;
+        // Query for a specific whatsappId
+        const queryRef = query(
+            contactsRef,
+            orderByChild("whatsappId"),
+            equalTo(whatsappId)
+        );
 
-        get(contactsRef).then((snapshot) => {
+        get(queryRef).then((snapshot) => {
             const data = snapshot.val() || {};
             console.log('data',data);
             Object.keys(data).forEach((key) => {
                 const contact = data[key];
                 const status = contact.conversation_status || "close";
                 const badgeClass = status === "open" ? "text-white bg-success" : "text-white bg-danger";
-
+                
                 $("#contactsResults").append(`
             <tr class="text-center align-middle">
               <td>
@@ -72,12 +79,13 @@ class Contacts {
     }
 
     // ✅ Open edit modal
-    openEditModal(e) {
-        
+    openEditModal(e) { 
+
         $("#spinner").show();
         // const sanitizedId = sanitizeKey($(e.currentTarget).data("id"));
         // console.log('sanitizedId',sanitizedId)
         const contactRef = ref(db, "whatsapp_contacts");
+
         console.log('contactRef',contactRef)
 
         
@@ -102,38 +110,39 @@ class Contacts {
     }
 
     // ✅ Save edits back to RTDB
-    editContact() {
-        $("#spinner").show();
-        const sanitizedId = sanitizeKey($("#id").val());
+    // editContact() 
+    // {
+    //     $("#spinner").show();
+        
 
-        const updatedData = {
-            name: $("#name").val(),
-            channel: $("#channel").val(),
-            email: $("#email").val(),
-            phone: $("#phone").val(),
-            tags: $("#tags").val(),
-            country: $("#country").val(),
-            language: $("#language").val(),
-            conversation_status: $("#conversation_status").val(),
-            assignee: $("#assignee").val(),
-        };
+    //     const updatedData = {
+    //         name: $("#name").val(),
+    //         channel: $("#channel").val(),
+    //         email: $("#email").val(),
+    //         phone: $("#phone").val(),
+    //         tags: $("#tags").val(),
+    //         country: $("#country").val(),
+    //         language: $("#language").val(),
+    //         conversation_status: $("#conversation_status").val(),
+    //         assignee: $("#assignee").val(),
+    //     };
 
-        const contactRef = ref(db, "whatsapp_contacts/" + sanitizedId);
-        // const contactRef = ref(db, "whatsapp_contacts/" + id);
+    //     const contactRef = ref(db, "whatsapp_contacts");
+    //     // const contactRef = ref(db, "whatsapp_contacts/" + id);
 
-        update(contactRef, updatedData)
-            .then(() => {
-                $("#EditModal").modal("hide");
-                $(".alert-success").text("Contact updated successfully").show();
-                setTimeout(() => $(".alert-success").hide(), 3000);
-                this.getContacts();
-            })
-            .catch(() => {
-                $(".alert-danger").text("Failed to update contact").show();
-                setTimeout(() => $(".alert-danger").hide(), 3000);
-            })
-            .finally(() => $("#spinner").hide());
-    }
+    //     update(contactRef, updatedData)
+    //         .then(() => {
+    //             $("#EditModal").modal("hide");
+    //             $(".alert-success").text("Contact updated successfully").show();
+    //             setTimeout(() => $(".alert-success").hide(), 3000);
+    //             this.getContacts();
+    //         })
+    //         .catch(() => {
+    //             $(".alert-danger").text("Failed to update contact").show();
+    //             setTimeout(() => $(".alert-danger").hide(), 3000);
+    //         })
+    //         .finally(() => $("#spinner").hide());
+    // }
 
     // ✅ Delete contact
     deleteContact(e) {

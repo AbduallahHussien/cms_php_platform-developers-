@@ -112,9 +112,20 @@ return new class extends Migration {
                 $table->id();
                 $table->string('ultramsg_whatsapp_token', 50);
                 $table->string('ultramsg_whatsapp_instance_id', 50);
-                // $table->timestamps();
+                $table->string('whatsapp_id', 50)->nullable(); // add it here if creating new table
+                $table->timestamps();
             });
+        } else { 
+            // If table exists but column doesn't, add it
+            if (!Schema::hasColumn('whatsapp_settings', 'whatsapp_id')) {
+                Schema::table('whatsapp_settings', function (Blueprint $table) {
+                    $table->string('whatsapp_id', 50)
+                          ->nullable()
+                          ->after('ultramsg_whatsapp_instance_id');
+                });
+            }
         }
+        
     
         if (!Schema::hasTable('whatsapp_templates')) {
             Schema::create('whatsapp_templates', function (Blueprint $table) {

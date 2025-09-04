@@ -160,6 +160,12 @@ if (! function_exists('whatsapp_insert_chat')) {
         $time, $lo_address, $lo_latitude, $lo_longitude
     ) {
         try {
+
+            $settings = whatsapp_settings()[0] ?? null;
+            if (!$settings) {
+                throw new Exception('WhatsApp settings not found');
+            }
+
             // info('056303');
             // ✅ Determine contact ID
             $chatId = $event_type === 'message_received' ? $from : $to;
@@ -204,11 +210,6 @@ if (! function_exists('whatsapp_insert_chat')) {
             $chatRef->push($chatData);  
  
 
-            $settings = whatsapp_settings()[0] ?? null;
-            if (!$settings) {
-                throw new Exception('WhatsApp settings not found');
-            }
-            
             $imageResponse = Http::get("https://api.ultramsg.com/{$settings->ultramsg_whatsapp_instance_id}/contacts/image", [
                 'token' => $settings->ultramsg_whatsapp_token,
                 'chatId' =>$chatId,
@@ -222,20 +223,21 @@ if (! function_exists('whatsapp_insert_chat')) {
             
             $response_contact_info = Http::get("https://api.ultramsg.com/{$settings->ultramsg_whatsapp_instance_id}/contacts/contact", [
                 'token' => $settings->ultramsg_whatsapp_token,
-                'chatId' => '963938056303@c.us',
-                ]);
+                'chatId' => $chatId,
+            ]);
                 
-                $contactData = $response_contact_info->json();
+            $contactData = $response_contact_info->json();
             $contactName = $pushname ?: $contactData['pushname'];
             $receiverPhone = explode('@',$chatId)[0];
 
             $results = $contactRef->orderByChild('chatId')->equalTo($chatId)->getValue();
-
+            info('a');
             if ($results && count($results) > 0) 
-            {
+            { 
+                info('b');
                 // Only one child exists, get its key
                 $childKey = array_key_first($results);
-
+           
                 // Update that specific child
                 $contactRef->getChild($childKey)->update([
                     'last_message'        => $body ?? '',
@@ -248,17 +250,19 @@ if (! function_exists('whatsapp_insert_chat')) {
                     'tags'                => '',
                     'country'             => getCountryByPhone($receiverPhone),
                     'language'            => '',
-                    'assignee'            => ''
+                    'assignee'            => '',
+                    'whatsappId'          => $settings->whatsapp_id,
                 ]);
             } 
             else 
             {
+                info('c');
                 $contactData = [
                     'chatId'              => $chatId,
                     'display'             => $displayImage,
                     'last_message'        => $body ?: '',
                     'name'                => $contactName,
-                    'last_updated'          => now()->timestamp, 
+                    'last_updated'        => now()->timestamp, 
                     'channel'             => 'WhatsApp',
                     'email'               => '',
                     'phone'               => '00'.$receiverPhone,
@@ -267,6 +271,7 @@ if (! function_exists('whatsapp_insert_chat')) {
                     'language'            => '',
                     'assignee'            => '',
                     'conversation_status' => 'open', 
+                    'whatsappId'          => $settings->whatsapp_id,
                 ]; 
 
                 $contactRef->push($contactData);

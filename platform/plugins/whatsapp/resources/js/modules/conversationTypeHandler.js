@@ -84,6 +84,7 @@ $(document).on("click", "#conversation-type", async function () {
 export async function handleConversation(chat_id) {
     try {
         // resetBtnCovType(chat_id);
+        const { whatsappId } = window.ultraMsgConfig;
         const nodeRef = ref(db, "whatsapp_contacts");
 
         const snapshot = await get(nodeRef);
@@ -122,6 +123,7 @@ export async function handleConversation(chat_id) {
                 await push(nodeRef, {
                     chatId: chat_id,
                     conversation_status: "open",
+                    whatsappId:whatsappId
                 });
 
                 btn_conversation_type.data({ action: "close", chat_id: chat_id })
@@ -134,6 +136,7 @@ export async function handleConversation(chat_id) {
             await push(nodeRef, {
                 chatId: chat_id,
                 conversation_status: "open",
+                whatsappId:whatsappId
             });
 
             btn_conversation_type.data({ action: "close", chat_id: chat_id })

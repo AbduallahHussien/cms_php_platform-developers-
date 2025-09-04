@@ -88,6 +88,7 @@ class WhatsappServiceProvider extends ServiceProvider
                 $settings = WhatsappSetting::first();
                 $instanceId = $settings?->ultramsg_whatsapp_instance_id;
                 $token = $settings?->ultramsg_whatsapp_token; 
+                $whatsappId = $settings?->whatsapp_id; 
                 
             }
             // Return a new instance of the WhatsAppApi.
@@ -95,8 +96,7 @@ class WhatsappServiceProvider extends ServiceProvider
             // which will likely cause an error when you try to use it,
             // reminding you to configure the settings.
 
-
-            return new UltramsgService($token, $instanceId);
+            return new UltramsgService($token, $instanceId,$whatsappId);
         });
 
 
@@ -105,6 +105,7 @@ class WhatsappServiceProvider extends ServiceProvider
 
     public function boot()
     {
+        // info('booted');
         $this
             ->loadAndPublishConfigurations(['permissions'])
             ->loadMigrations()

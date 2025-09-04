@@ -7,16 +7,18 @@ class UltramsgService
 {
 	protected $token = '';
 	protected $instance_id = '';
+	protected $whatsappId = '';
 
 	/**
 	 * Ultramsg constructor.
 	 * @param $token
 	 * @param $instance_id
 	 */
-	public function __construct($token, $instance_id)
+	public function __construct($token, $instance_id,$whatsappId)
 	{
 		$this->token = $token;
 		$this->instance_id = "instance" . preg_replace('/[^0-9]/', '', $instance_id);
+		$this->whatsappId = $whatsappId;
 	}
 
 	// messages
@@ -140,8 +142,10 @@ class UltramsgService
 		return $this->sendRequest("GET", "instance/screenshot", array("encoding" => $encoding));
 	}
 
-	public function getInstanceMe()
+	public function getInstanceMe($instanceId,$token)
 	{
+		$this->instance_id = $instanceId;
+		$this->token = $token;
 		return $this->sendRequest("GET", "instance/me");
 	}
 
@@ -233,8 +237,8 @@ class UltramsgService
 		// }
 
 
-		info('params');
-		info($params);
+		// info('params');
+		// info($params);
 		if (!is_callable('curl_init')) {
 			return array("Error" => "cURL extension is disabled on your server");
 		}

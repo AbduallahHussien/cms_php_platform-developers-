@@ -17,14 +17,14 @@ class Settings {
 
         $("#configurations").on("click", () => {
             $("#token").val(token);
-            $("#instance").val(instance);
+            $("#instance").val(instance); 
             $("#settings_save").addClass("update").html("Update");
             $("#modalSettings").modal("show");
         });
 
         $("#settings_save").on("click", () => {
             const settingsToken = $("#token").val().trim();
-            const settingsInstance = $("#instance").val().trim();
+            const settingsInstance = $("#instance").val().trim(); 
 
             if (!settingsToken) {
                 notification.show("Token is required", "error");

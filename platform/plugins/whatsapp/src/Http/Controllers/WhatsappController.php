@@ -545,23 +545,39 @@ class WhatsappController extends BaseController
     public function save_settings(Request $request)
     {
         abort_unless(Auth::user()->hasPermission('whatsapp.settings'), 403, 'Unauthorized action.');
-
+    
         $token = $request->input('tkn_id');
-        $instanceId = $request->input('instance_id'); 
-
-        $res_save_settings = $this->whatsappService->save_settings($token,$instanceId);
-
+        $instanceId = $request->input('instance_id');
+    
+        DB::beginTransaction();
+    
+        // Save settings
+        $res_save_settings = $this->whatsappService->save_settings($token, $instanceId);
         if ($res_save_settings['code'] == 0) {
-            return response()->json([
-                'message' => $res_save_settings['msg'] ?? 'Something went wrong.',
-            ], 500);
+            DB::rollBack();
+            return response()->json(['message' => $res_save_settings['msg'] ?? 'Something went wrong.'], 500);
         }
-        
-        return response()->json([
-            'message' => 'Settings saved successfully.',
-        ]);
-         
+        $settings = $res_save_settings['data'];
+
+        // Verify
+        $res_get_me = $this->whatsappService->get_me($settings->ultramsg_whatsapp_instance_id,$settings->ultramsg_whatsapp_token);
+        if ($res_get_me['code'] == 0) {
+            DB::rollBack();
+            return response()->json(['message' => $res_get_me['msg'] ?? 'Something went wrong.'], 500);
+        }
+    
+        // Update whatsapp_id
+         // model instance
+        $settings->whatsapp_id = $res_get_me['data']['id'];
+        info('important');
+        info($settings->whatsapp_id);
+        $settings->save();
+    
+        DB::commit();
+    
+        return response()->json(['message' => 'Settings saved successfully.']);
     }
+    
 
     // SEND GROUP MESSAGE
     public function SendGroupMessage(Request $request){

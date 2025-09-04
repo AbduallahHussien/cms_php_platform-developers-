@@ -134,6 +134,7 @@ const chatRef = ref(db, "whatsapp_chat");
 // } else {
 //     console.log("No data available");
 // } 
+// console.log('11'); 
 // 3. Listen for children being added
 onChildAdded(chatRef, (snapshot) => {
     // console.log('22'); 
@@ -152,6 +153,7 @@ onChildAdded(chatRef, (snapshot) => {
 
     // Update unread badge
     if (data.event_type === "message_received") {
+        // console.log('33'); 
         const unreadEl = chatElement.find(".unread");
         if (unreadEl.length) {
             unreadEl.html(parseInt(unreadEl.html()) + 1);
@@ -162,11 +164,15 @@ onChildAdded(chatRef, (snapshot) => {
 
     // ====== RENDER MESSAGE IF CONVERSATION IS OPEN ======
     const receiver_id = $("#conversation").data("receiver_id");
+    // console.log('receiver_id',receiver_id);
+    // console.log('data.from',data.from);
+    // console.log('data.to',data.to);
     if (
         receiver_id &&
         ((data.event_type === "message_received" && receiver_id == data.from) ||
             (data.event_type !== "message_received" && receiver_id == data.to))
     ) {
+        // console.log('44'); 
         renderChatMessages([data], false); // append new message
     }
 });

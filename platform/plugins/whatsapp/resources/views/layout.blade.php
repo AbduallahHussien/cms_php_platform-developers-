@@ -51,9 +51,11 @@
 
 
 @php
-    $whatsappToken = isset($sett[0]) ? $sett[0]->ultramsg_whatsapp_token : '';
-    $instanceId = isset($sett[0]) ? $sett[0]->ultramsg_whatsapp_instance_id : '';
+    $whatsappToken = isset($sett[0]) ? $sett[0]->ultramsg_whatsapp_token : ''; 
+    $instanceId = isset($sett[0]) ? $sett[0]->ultramsg_whatsapp_instance_id : ''; 
+    $whatsappId = isset($sett[0]) ? $sett[0]->whatsapp_id : ''; 
 @endphp
+
 <script>
   var get_temp_route =    "{{route('whatsapp.get.templates')}}";
   var get_Grou_route =    "{{route('whatsapp.get.groups')}}";
@@ -96,7 +98,8 @@
 window.ultraMsgConfig = {
         token: @json($whatsappToken),
         instance: @json($instanceId),
-        referenceId : @json(Auth::user()->id)
+        referenceId : @json(Auth::user()->id),
+        whatsappId:@json($whatsappId)
 };
 
 // const token = 'instance137692';

@@ -175,7 +175,7 @@ class PluginService
                 if (class_exists($content['namespace'] . 'Plugin')) {
                     call_user_func([$content['namespace'] . 'Plugin', 'activate']);
                 }
-
+ 
                 $this->runMigrations($plugin);
 
                 $published = $this->publishAssets($plugin);
@@ -461,14 +461,12 @@ class PluginService
     }
 
     public function runMigrations(string $plugin): void
-    {
-        $migrationPath = plugin_path($plugin . '/database/migrations');
-
-        if (! $this->files->isDirectory($migrationPath)) {
+    { 
+        $migrationPath = plugin_path($plugin . '/database/migrations'); 
+        if (! $this->files->isDirectory($migrationPath)) { 
             return;
-        }
-
-        $this->app['migrator']->run($migrationPath);
+        } 
+        $this->app['migrator']->run($migrationPath); 
     }
 
     public function getDependencies(string $plugin): array

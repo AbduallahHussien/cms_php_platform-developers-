@@ -11,6 +11,7 @@ class WhatsappSetting extends Model
     protected $fillable = [
         'ultramsg_whatsapp_token',
         'ultramsg_whatsapp_instance_id', 
+        'whatsapp_id',
     ];
 
     public $timestamps = false; // if your table has timestamps
